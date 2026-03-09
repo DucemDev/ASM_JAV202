@@ -1,0 +1,94 @@
+USE master
+GO
+
+CREATE DATABASE PolyCafe_JAV202
+GO
+
+USE PolyCafe_JAV202
+GO
+
+CREATE TABLE categories (
+    id INT PRIMARY KEY IDENTITY,
+    name NVARCHAR(250) NOT NULL,
+    active BIT
+);
+
+CREATE TABLE drinks (
+    id INT PRIMARY KEY IDENTITY,
+    category_id INT FOREIGN KEY REFERENCES categories(id),
+    name NVARCHAR(250),
+    price INT,
+    image NVARCHAR(250),
+    description NVARCHAR(MAX),
+    active BIT
+);
+
+CREATE TABLE users (
+    id INT PRIMARY KEY IDENTITY,
+    email VARCHAR(100) UNIQUE,
+    password VARCHAR(255),
+    full_name NVARCHAR(60),
+    phone VARCHAR(10),
+    role BIT,
+    active BIT
+);
+
+CREATE TABLE bills (
+    id INT PRIMARY KEY IDENTITY,
+    user_id INT FOREIGN KEY REFERENCES users(id),
+    code VARCHAR(10) NOT NULL,
+    created_at DATE,
+    total INT,
+    status VARCHAR(10)
+);
+
+CREATE TABLE bill_details (
+    id INT PRIMARY KEY IDENTITY,
+    bill_id INT FOREIGN KEY REFERENCES bills(id),
+    drink_id INT FOREIGN KEY REFERENCES drinks(id),
+    quantity INT,
+    price INT
+);
+
+
+INSERT INTO categories (name, active) VALUES
+(N'Cà phê', 1),
+(N'Trà sữa', 1),
+(N'Nước ép', 1),
+(N'Sinh tố', 1);
+
+INSERT INTO drinks (category_id, name, price, image, description, active) VALUES
+(1, N'Cà phê đen', 20000, 'cf_den.jpg', N'Cà phê đen truyền thống', 1),
+(1, N'Cà phê sữa', 25000, 'cf_sua.jpg', N'Cà phê sữa đá', 1),
+(1, N'Bạc xỉu', 30000, 'bacxiu.jpg', N'Bạc xỉu ngọt béo', 1),
+
+(2, N'Trà sữa trân châu', 35000, 'ts_tc.jpg', N'Trà sữa truyền thống', 1),
+(2, N'Trà sữa matcha', 38000, 'ts_matcha.jpg', N'Trà sữa matcha Nhật', 1),
+
+(3, N'Nước ép cam', 30000, 'cam.jpg', N'Nước ép cam tươi', 1),
+(3, N'Nước ép dưa hấu', 28000, 'duahau.jpg', N'Nước ép dưa hấu mát lạnh', 1),
+
+(4, N'Sinh tố bơ', 35000, 'bo.jpg', N'Sinh tố bơ béo ngậy', 1),
+(4, N'Sinh tố dâu', 33000, 'dau.jpg', N'Sinh tố dâu tươi', 1);
+
+
+INSERT INTO users (email, password, full_name, phone, role, active) VALUES
+('anhhldts02418@gmail.com', '123', N'Huỳnh Lê Đức Anh', '0813716449', 1, 1),
+('truongmk@poly.com', '123', N'Mai Phiến Chi', '0908070605', 1, 1),
+('ngoctm@poly.com', '123', N'Trần Mỹ Ngọc', '0900000003', 1, 1),
+('halvt@poly.com', '123', N'Lê Thanh Vân Hà', '0908070876', 1, 1),
+('anhct@poly.com', '123', N'Chế Trâm Anh', '0908070986', 1, 1),
+('thangtv@poly.com', '123', N'Trần Việt Thắng', '0918970605', 0, 1);
+
+INSERT INTO bills (user_id, code, created_at, total, status) VALUES
+(2, 'B001', GETDATE(), 70000, 'finish'),
+(2, 'B002', GETDATE(), 55000, 'finish'),
+(3, 'B003', GETDATE(), 90000, 'finish'),
+(3, 'B004', GETDATE(), 30000, 'waiting');
+
+
+SELECT * FROM categories
+SELECT * FROM drinks
+SELECT * FROM users
+SELECT * FROM bills
+SELECT * FROM bill_details
