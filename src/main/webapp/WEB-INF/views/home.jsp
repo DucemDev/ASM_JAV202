@@ -2,34 +2,28 @@
 <%@ page isELIgnored="false" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 
-<c:set var="user" value="${sessionScope.user}" />
+<html>
+<head>
 
-<h2>Xin chào ${user.fullname}</h2>
+<title>Home</title>
 
-<div style="display:grid;grid-template-columns:repeat(3,200px);gap:20px">
+<script src="https://cdn.tailwindcss.com"></script>
 
-<c:choose>
+</head>
 
-<c:when test="${user.role}">
+<body class="bg-gray-800 text-white">
 
-<button>Quản lý loại</button>
-<button>Quản lý đồ uống</button>
-<button>Quản lý bàn</button>
-<button>Quản lý nhân viên</button>
-<button>Quản lý hóa đơn</button>
-<button>Thống kê</button>
+<div class="flex">
 
-</c:when>
+<jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
 
-<c:otherwise>
+<div class="flex-1 p-6">
 
-<button>Bán hàng</button>
-<button>Quản lý bàn</button>
-<button>Hóa đơn</button>
-<button>Lịch sử hóa đơn</button>
-
-</c:otherwise>
-
-</c:choose>
+<h1 class="text-3xl font-bold">Trang chủ</h1>
 
 </div>
+
+</div>
+
+</body>
+</html>
