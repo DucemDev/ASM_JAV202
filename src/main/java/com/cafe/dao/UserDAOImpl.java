@@ -1,7 +1,11 @@
 package com.cafe.dao;
 
 import com.cafe.entity.User;
+import com.cafe.util.DBConnect;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
 import java.util.List;
 
 public class UserDAOImpl implements UserDAO {
@@ -25,4 +29,40 @@ public class UserDAOImpl implements UserDAO {
 
     public void update(User user) {
     }
+
+    public User login(String email, String password) {
+
+        String sql = "SELECT * FROM users WHERE email = ? AND password = ? AND active = 1";
+
+        try (
+                Connection conn = DBConnect.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+
+            ps.setString(1, email);
+            ps.setString(2, password);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+
+                return new User(
+                        rs.getInt("id"),
+                        rs.getString("full_name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("phone"),
+                        rs.getBoolean("role"),
+                        rs.getBoolean("active")
+                );
+
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+
 }
