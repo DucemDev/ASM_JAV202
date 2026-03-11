@@ -39,7 +39,7 @@
         <div class="w-[35%] flex items-center justify-center bg-white">
 
             <!-- LOGIN UI -->
-            <jsp:include page="/WEB-INF/views/login.jsp" />
+            <jsp:include page="/WEB-INF/public/login.jsp" />
 
         </div>
 
