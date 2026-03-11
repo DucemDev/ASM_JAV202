@@ -34,24 +34,22 @@ public class LoginServlet extends HttpServlet {
             UserDAO userDAO = new UserDAOImpl();
             User user = userDAO.login(username, password);
             if (user != null) {
+
                 req.getSession().setAttribute("user", user);
-               if(user.isRole()){
 
-                   resp.sendRedirect(req.getContextPath()+"/admin");
-//                   System.out.println(req.getSession().getAttribute("user",));
-               }else{
-                resp.sendRedirect(req.getContextPath()+"/staff");
-               }
-            }else{
-                resp.sendRedirect(req.getContextPath()+"/login");
-                failLogin++;
-                req.getSession().setAttribute("failLogin", failLogin);
-                System.out.println("Số lần đăng nhập sai: "+failLogin+"/5");
-            }
-
-            if (failLogin==5){
+                resp.sendRedirect(req.getContextPath() + "/home");
 
             }
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/login");
+            failLogin++;
+            req.getSession().setAttribute("failLogin", failLogin);
+            System.out.println("Số lần đăng nhập sai: " + failLogin + "/5");
+        }
+
+        if (failLogin == 5) {
+
         }
     }
 }
+

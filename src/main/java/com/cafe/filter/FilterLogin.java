@@ -20,7 +20,6 @@ public class FilterLogin implements Filter {
 
         String uri = req.getRequestURI();
 
-
         if (uri.contains("/login") ||
                 uri.contains("/logining") ||
                 uri.contains("/assets") ||
@@ -38,11 +37,15 @@ public class FilterLogin implements Filter {
         if (user == null) {
 
             resp.sendRedirect(req.getContextPath() + "/login");
-
-        } else {
-
-            chain.doFilter(request, response);
-
+            return;
         }
+
+        // ⭐ kiểm tra quyền admin
+        if (uri.contains("/admin") && !user.isRole()) {
+            resp.sendRedirect(req.getContextPath() + "/home");
+            return;
+        }
+
+        chain.doFilter(request, response);
     }
 }

@@ -1,95 +1,35 @@
-<%@ page contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"
-         isELIgnored="false" %>
+<%@ page contentType="text/html;charset=UTF-8" %>
+<%@ page isELIgnored="false" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
-<!DOCTYPE html>
-<html lang="vi">
 
-<head>
+<c:set var="user" value="${sessionScope.user}" />
 
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<h2>Xin chào ${user.fullname}</h2>
 
-    <title>Trang chủ</title>
+<div style="display:grid;grid-template-columns:repeat(3,200px);gap:20px">
 
-    <!-- TailwindCSS -->
-    <script src="https://cdn.tailwindcss.com"></script>
+<c:choose>
 
-    <style>
+<c:when test="${user.role}">
 
-        /* ảnh nghiêng sang trái khoảng 10 độ */
+<button>Quản lý loại</button>
+<button>Quản lý đồ uống</button>
+<button>Quản lý bàn</button>
+<button>Quản lý nhân viên</button>
+<button>Quản lý hóa đơn</button>
+<button>Thống kê</button>
 
-        .slanted {
-            clip-path: polygon(8% 0, 100% 0, 100% 100%, 0% 100%);
-        }
+</c:when>
 
-    </style>
+<c:otherwise>
 
-</head>
+<button>Bán hàng</button>
+<button>Quản lý bàn</button>
+<button>Hóa đơn</button>
+<button>Lịch sử hóa đơn</button>
 
-<body class="h-screen flex">
+</c:otherwise>
 
-    <!-- SIDEBAR -->
-    <jsp:include page="/WEB-INF/views/layout/sidebar.jsp" />
+</c:choose>
 
-
-
-    <!-- MAIN CONTENT -->
-    <div class="flex flex-1">
-
-        <!-- LOGIN -->
-        <div class="w-[35%] flex items-center justify-center bg-white">
-
-            <!-- LOGIN UI -->
-            <jsp:include page="/WEB-INF/public/login.jsp" />
-
-        </div>
-
-
-
-        <!-- IMAGE -->
-        <div class="w-[65%] slanted relative">
-
-            <img
-                id="slide"
-                src="https://images.unsplash.com/photo-1501785888041-af3ef285b470"
-                class="w-full h-full object-cover"
-            />
-
-        </div>
-
-    </div>
-
-
-
-    <script>
-
-        let images = [
-
-            "https://images.unsplash.com/photo-1501785888041-af3ef285b470",
-
-            "https://images.unsplash.com/photo-1507525428034-b723cf961d3e",
-
-            "https://images.unsplash.com/photo-1493558103817-58b2924bce98"
-
-        ]
-
-        let index = 0
-
-        setInterval(() => {
-
-            index++
-
-            if (index >= images.length) {
-                index = 0
-            }
-
-            document.getElementById("slide").src = images[index]
-
-        }, 4000)
-
-    </script>
-
-</body>
-
-</html>
+</div>

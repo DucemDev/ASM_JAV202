@@ -24,7 +24,7 @@ align-items:center;
 
 .container{
 width:900px;
-height:520px;
+height:90%;
 background:white;
 border-radius:20px;
 display:flex;
@@ -226,6 +226,15 @@ text-align:center;
 
 <div class="footer">
 Hệ thống PolyCafe
+
+
+<p>
+anhhldts02418@gmail.com
+	123	(Admin)
+<hr>
+thangtv@poly.com
+	123	(User)
+ </p>
 </div>
 
 </div>
