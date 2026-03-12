@@ -22,7 +22,6 @@ public class LoginServlet extends HttpServlet {
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String uri = req.getRequestURI();
-
         Integer failLogin = (Integer) req.getSession().getAttribute("failLogin");
 
         if (failLogin == null) {
@@ -34,11 +33,8 @@ public class LoginServlet extends HttpServlet {
             UserDAO userDAO = new UserDAOImpl();
             User user = userDAO.login(username, password);
             if (user != null) {
-
                 req.getSession().setAttribute("user", user);
-
                 resp.sendRedirect(req.getContextPath() + "/home");
-
             }
         } else {
             resp.sendRedirect(req.getContextPath() + "/login");
@@ -46,9 +42,7 @@ public class LoginServlet extends HttpServlet {
             req.getSession().setAttribute("failLogin", failLogin);
             System.out.println("Số lần đăng nhập sai: " + failLogin + "/5");
         }
-
         if (failLogin == 5) {
-
         }
     }
 }
