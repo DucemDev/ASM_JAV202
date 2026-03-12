@@ -3,89 +3,82 @@
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 
 <div id="sidebar"
-class="h-screen bg-gray-900 text-white transition-all duration-300 w-60 flex flex-col">
+class="h-screen bg-gray-800 text-white transition-all duration-300 w-64 flex flex-col">
 
-<div class="flex justify-end p-3">
-<button onclick="toggleSidebar()" class="text-xl">☰</button>
+<!-- LOGO -->
+<div class="flex items-center justify-center py-4 border-b border-gray-700">
+    <img src="${pageContext.request.contextPath}/assets/image/logo.png" class="h-8">
 </div>
 
-<nav class="flex flex-col p-4 space-y-2">
+<!-- TOGGLE -->
+<div class="flex justify-end p-3">
+    <button onclick="toggleSidebar()" class="text-xl">☰</button>
+</div>
 
-<a href="home" class="hover:bg-gray-700 p-2 rounded flex items-center">
-<span>🏠</span>
+<!-- MENU -->
+<nav class="flex flex-col px-4 space-y-2 flex-1">
+
+<!-- HOME -->
+<a href="home"
+class="flex items-center p-2 rounded hover:bg-gray-700">
+
+<span class="text-xl">🏠</span>
 <span class="ml-3 menu-text">Trang chủ</span>
+
 </a>
 
-<!-- ADMIN -->
-<c:if test="${sessionScope.user.role}">
-<a href="categories" class="hover:bg-gray-700 p-2 rounded flex items-center">
-<span>📂</span>
-<span class="ml-3 menu-text">Danh mục</span>
-</a>
 
-<a href="drink" class="hover:bg-gray-700 p-2 rounded flex items-center">
-<span>🥤</span>
-<span class="ml-3 menu-text">Đồ uống</span>
-</a>
+<!-- SELL -->
+<a href="sell"
+class="flex items-center p-2 rounded hover:bg-gray-700">
 
-<a href="tables" class="hover:bg-gray-700 p-2 rounded flex items-center">
-<span>🪑</span>
-<span class="ml-3 menu-text">Bàn</span>
-</a>
-
-<a href="users" class="hover:bg-gray-700 p-2 rounded flex items-center">
-<span>👤</span>
-<span class="ml-3 menu-text">Nhân viên</span>
-</a>
-
-<a href="bills" class="hover:bg-gray-700 p-2 rounded flex items-center">
-<span>🧾</span>
-<span class="ml-3 menu-text">Hóa đơn</span>
-</a>
-
-<a href="report" class="hover:bg-gray-700 p-2 rounded flex items-center">
-<span>📊</span>
-<span class="ml-3 menu-text">Thống kê</span>
-</a>
-</c:if>
-
-<!-- STAFF -->
-<c:if test="${!sessionScope.user.role}">
-<a href="sell" class="hover:bg-gray-700 p-2 rounded flex items-center">
-<span>💰</span>
+<span class="text-xl">☕</span>
 <span class="ml-3 menu-text">Bán hàng</span>
+
 </a>
 
-<a href="tables" class="hover:bg-gray-700 p-2 rounded flex items-center">
-<span>🪑</span>
-<span class="ml-3 menu-text">Bàn</span>
+
+<!-- PROFILE -->
+<a href="profile"
+class="flex items-center p-2 rounded hover:bg-gray-700">
+
+<span class="text-xl">⚙</span>
+<span class="ml-3 menu-text">Cài đặt cá nhân</span>
+
 </a>
 
-<a href="bills" class="hover:bg-gray-700 p-2 rounded flex items-center">
-<span>🧾</span>
-<span class="ml-3 menu-text">Hóa đơn</span>
+
+<!-- ADMIN ONLY -->
+<c:if test="${sessionScope.user.role == true}">
+
+<a href="admin"
+class="flex items-center p-2 rounded hover:bg-gray-700">
+
+<span class="text-xl">👤</span>
+<span class="ml-3 menu-text">Trang quản lý</span>
+
 </a>
 
-<a href="history" class="hover:bg-gray-700 p-2 rounded flex items-center">
-<span>📜</span>
-<span class="ml-3 menu-text">Lịch sử</span>
-</a>
 </c:if>
 
 </nav>
+
+
 <!-- LOGOUT -->
 <div class="p-4 border-t border-gray-700">
 
 <a href="logout"
-class="hover:bg-red-600 p-2 rounded flex items-center">
+class="flex items-center p-2 rounded hover:bg-red-600">
 
-<span>🚪</span>
+<span class="text-xl">🚪</span>
 <span class="ml-3 menu-text">Đăng xuất</span>
 
 </a>
 
 </div>
+
 </div>
+
 
 <script>
 
@@ -93,14 +86,14 @@ let collapsed = false;
 
 function toggleSidebar(){
 
-    let sidebar = document.getElementById("sidebar");
-    let text = document.querySelectorAll(".menu-text");
+    const sidebar = document.getElementById("sidebar");
+    const text = document.querySelectorAll(".menu-text");
 
     collapsed = !collapsed;
 
     if(collapsed){
 
-        sidebar.classList.remove("w-60");
+        sidebar.classList.remove("w-64");
         sidebar.classList.add("w-20");
 
         text.forEach(t => t.style.display = "none");
@@ -108,7 +101,7 @@ function toggleSidebar(){
     }else{
 
         sidebar.classList.remove("w-20");
-        sidebar.classList.add("w-60");
+        sidebar.classList.add("w-64");
 
         text.forEach(t => t.style.display = "inline");
 
