@@ -73,6 +73,18 @@ class="h-screen bg-gray-900 text-white transition-all duration-300 w-60 flex fle
 </c:if>
 
 </nav>
+<!-- LOGOUT -->
+<div class="p-4 border-t border-gray-700">
+
+<a href="logout"
+class="hover:bg-red-600 p-2 rounded flex items-center">
+
+<span>🚪</span>
+<span class="ml-3 menu-text">Đăng xuất</span>
+
+</a>
+
+</div>
 </div>
 
 <script>
