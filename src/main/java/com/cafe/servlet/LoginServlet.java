@@ -44,18 +44,23 @@ public class LoginServlet extends HttpServlet {
             UserDAO userDAO = new UserDAOImpl();
             User user = userDAO.login(email, password);
             if (user != null) {
+
                 req.getSession().setAttribute("user", user);
+
                 resp.sendRedirect(req.getContextPath() + "/home");
                 req.setAttribute("message", "Đã đăng nhập thah công!");
             }
         } else {
             resp.sendRedirect(req.getContextPath() + "/login");
             req.setAttribute("message", "Sai thông tin đăng nhập!");
+
             failLogin++;
             req.getSession().setAttribute("failLogin", failLogin);
             System.out.println("Số lần đăng nhập sai: " + failLogin + "/5");
         }
+
         if (failLogin == 5) {
+
         }
     }
 }
