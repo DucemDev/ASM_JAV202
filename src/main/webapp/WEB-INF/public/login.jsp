@@ -198,6 +198,8 @@
                 <input type="password" name="passwordIp" placeholder="Password">
             </div>
 
+            <p>${message}</p>
+
             <button class="login-btn" type="submit">
                 Đăng nhập
             </button>
