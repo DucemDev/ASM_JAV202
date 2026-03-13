@@ -27,7 +27,7 @@ public class LoginServlet extends HttpServlet {
 
         Integer failLogin = (Integer) req.getSession().getAttribute("failLogin");
         if (failLogin == null) {
-            failLogin = 0;
+            failLogin = 1;
         }
 
 
