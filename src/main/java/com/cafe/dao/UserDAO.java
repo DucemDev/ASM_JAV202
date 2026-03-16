@@ -1,8 +1,8 @@
 package com.cafe.dao;
 
-import com.cafe.entity.User;
-
 import java.util.List;
+
+import com.cafe.entity.User;
 
 public interface UserDAO {
     List<User> findAll(User user);

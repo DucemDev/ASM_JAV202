@@ -1,15 +1,16 @@
 package com.cafe.servlet;
 
+import java.io.IOException;
+
 import com.cafe.dao.UserDAO;
 import com.cafe.dao.UserDAOImpl;
 import com.cafe.entity.User;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
-
-import java.io.IOException;
 
 @WebServlet({"/login", "/logining"})
 public class LoginServlet extends HttpServlet {
@@ -54,4 +55,5 @@ public class LoginServlet extends HttpServlet {
             }
         }
     }
+
 }

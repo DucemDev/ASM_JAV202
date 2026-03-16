@@ -1,9 +1,8 @@
 package com.cafe.dao;
 
-import com.cafe.entity.Drink;
-import com.cafe.entity.User;
-
 import java.util.List;
+
+import com.cafe.entity.Drink;
 
 public interface DrinkDAO {
     List<Drink> findAll(Drink drink);

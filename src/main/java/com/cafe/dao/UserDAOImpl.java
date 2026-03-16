@@ -1,44 +1,53 @@
 package com.cafe.dao;
 
-import com.cafe.entity.User;
-import com.cafe.util.DBConnect;
-
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.List;
 
+import com.cafe.entity.User;
+import com.cafe.util.DBConnect;
+
 public class UserDAOImpl implements UserDAO {
-    public List<User> findAll(User user) {
+    @Override
+	public List<User> findAll(User user) {
         return null;
     }
 
-    public User findById(int id) {
+    @Override
+	public User findById(int id) {
         return null;
     }
 
-    public User findByEmail(String email) {
+    @Override
+	public User findByEmail(String email) {
         return null;
     }
 
-    public void deleteByID(int id) {
+    @Override
+	public void deleteByID(int id) {
     }
 
-    public void create(User user) {
+    @Override
+	public void create(User user) {
     }
 
-    public void update(User user) {
+    @Override
+	public void update(User user) {
     }
 
-    public User login(String email, String password) {
+    @Override
+	public User login(String email, String password) {
 
         String sql = "SELECT * FROM users WHERE email = ? AND password = ? AND active = 1";
 
         try (
                 Connection conn = DBConnect.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
+                
         ) {
-
+        	
+        	System.out.println("CONNECTION = " + conn);
+        	PreparedStatement ps = conn.prepareStatement(sql);
             ps.setString(1, email);
             ps.setString(2, password);
 

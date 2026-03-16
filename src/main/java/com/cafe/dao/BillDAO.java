@@ -1,9 +1,8 @@
 package com.cafe.dao;
 
-import com.cafe.entity.Bill;
-import com.cafe.entity.Drink;
-
 import java.util.List;
+
+import com.cafe.entity.Bill;
 
 public interface BillDAO {
     List<Bill> findAll(Bill bill);
