@@ -12,7 +12,10 @@
     <title>Document</title>
 </head>
 <body>
-<h1>hello đây là trang chur</h1>
-<p>${sessionScope.user.fullname}</p>
+<h1>Trang chỉnh sửa thông tin cá nhân</h1>
+
+<input name="fullname" type="text">
+
+
 </body>
 </html>

@@ -11,4 +11,5 @@ public interface UserDAO {
     void deleteByID(int id);
     void create(User user);
     void update(User user);
+    User login(String email,String password);
 }
