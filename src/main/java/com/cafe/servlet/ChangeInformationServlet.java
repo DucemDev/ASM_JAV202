@@ -8,10 +8,19 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet({"/change-information"})
+@WebServlet({"/change-information", "changing"})
 public class ChangeInformationServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/public/change-information.jsp").forward(req, resp);
+        if (req.getRequestURI().endsWith("change-information")) {
+            req.getRequestDispatcher("/WEB-INF/public/change-information.jsp").forward(req, resp);
+        }else{
+            return;
+        }
+    }
+
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
     }
 }

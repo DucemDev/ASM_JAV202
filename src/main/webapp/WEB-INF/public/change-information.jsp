@@ -13,16 +13,21 @@
 </head>
 <body>
 <h1>Trang chỉnh sửa thông tin cá nhân</h1>
-<p>ID</p>
-<input value="${sessionScope.user.id}" name="id" type="text">
-<p>Fullname</p>
-<input value="${sessionScope.user.fullname}" name="fullname" type="text">
-<p>Email</p>
-<input value="${sessionScope.user.email}" name="email" type="email">
-<p>SDT</p>
-<input value="${sessionScope.user.phone}" name="phone" type="text">
-<p>Role</p>
-<input value="${sessionScope.user.role ? 'Admin' : 'Staff'}" name="role" type="text" readonly>
+<form action="${pageContext.request.contextPath}/changing" method="post">
+    <p>ID</p>
+    <input value="${sessionScope.user.id}" name="id" type="text">
+    <p>Fullname</p>
+    <input value="${sessionScope.user.fullname}" name="fullname" type="text">
+    <p>Email</p>
+    <input value="${sessionScope.user.email}" name="email" type="email">
+    <p>SDT</p>
+    <input value="${sessionScope.user.phone}" name="phone" type="text">
+    <p>Role</p>
+    <input value="${sessionScope.user.role ? 'Admin' : 'Staff'}" name="role" type="text" readonly>
+    <a href="${pageContext.request.contextPath}/change-information">
+        <button type="submit">Sửa thông tin cá nhân</button>
+    </a>
+</form>
 
 </body>
 </html>
