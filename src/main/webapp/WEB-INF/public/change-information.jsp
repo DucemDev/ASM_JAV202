@@ -13,9 +13,16 @@
 </head>
 <body>
 <h1>Trang chỉnh sửa thông tin cá nhân</h1>
-
-<input name="fullname" type="text">
-
+<p>ID</p>
+<input value="${sessionScope.user.id}" name="id" type="text">
+<p>Fullname</p>
+<input value="${sessionScope.user.fullname}" name="fullname" type="text">
+<p>Email</p>
+<input value="${sessionScope.user.email}" name="email" type="email">
+<p>SDT</p>
+<input value="${sessionScope.user.phone}" name="phone" type="text">
+<p>Role</p>
+<input value="${sessionScope.user.role ? 'Admin' : 'Staff'}" name="role" type="text" readonly>
 
 </body>
 </html>
