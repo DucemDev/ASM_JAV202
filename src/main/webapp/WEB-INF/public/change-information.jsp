@@ -13,7 +13,8 @@
 </head>
 <body>
 <h1>Trang chỉnh sửa thông tin cá nhân</h1>
-<form action="${pageContext.request.contextPath}/changing" method="post">
+
+<form action="${pageContext.request.contextPath}change-information/save" method="post">
     <p>ID</p>
     <input value="${sessionScope.user.id}" name="id" type="text">
     <p>Fullname</p>
@@ -24,9 +25,9 @@
     <input value="${sessionScope.user.phone}" name="phone" type="text">
     <p>Role</p>
     <input value="${sessionScope.user.role ? 'Admin' : 'Staff'}" name="role" type="text" readonly>
-    <a href="${pageContext.request.contextPath}/change-information">
-        <button type="submit">Sửa thông tin cá nhân</button>
-    </a>
+
+        <button type="submit">Lưu thông tin thay đổi</button>
+
 </form>
 
 </body>

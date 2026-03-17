@@ -11,7 +11,7 @@ import jakarta.servlet.http.HttpServletResponse;
 
 import java.io.IOException;
 
-@WebServlet({"/change-information", "changing"})
+@WebServlet({"/change-information","/change-information/save"})
 public class ChangeInformationServlet extends HttpServlet {
     UserDAO userDAO = new UserDAOImpl();
     User user = userDAO.login("", "");
@@ -27,13 +27,15 @@ public class ChangeInformationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+if(req.getRequestURI().endsWith("changing")) {
+    if (verifyBeforeChange()==true) {
+        changeInformation();
+    }else {
 
-        if (verifyBeforeChange()==true) {
-            changeInformation();
-        }else {
-
-        }
     }
+}
+}
+
 
     void changeInformation() {
 
