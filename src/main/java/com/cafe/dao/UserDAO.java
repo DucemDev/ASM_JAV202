@@ -12,4 +12,5 @@ public interface UserDAO {
     void create(User user);
     void update(User user);
     User login(String email,String password);
+    void updateChangeInformation(User user);
 }
