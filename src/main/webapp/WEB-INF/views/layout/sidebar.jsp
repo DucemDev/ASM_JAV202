@@ -2,6 +2,8 @@
 <%@ page isELIgnored="false" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 
+<c:set var="uri" value="${pageContext.request.requestURI}" />
+
 <div id="sidebar"
 class="h-screen bg-gray-800 text-white transition-all duration-300 w-64 flex flex-col">
 
@@ -19,8 +21,9 @@ class="h-screen bg-gray-800 text-white transition-all duration-300 w-64 flex fle
 <nav class="flex flex-col px-4 space-y-2 flex-1">
 
 <!-- HOME -->
-<a href="home"
-class="flex items-center p-2 rounded hover:bg-gray-700">
+<a href="${pageContext.request.contextPath}/home"
+class="flex items-center p-2 rounded hover:bg-gray-700
+<c:if test='${uri.contains("home")}'>bg-gray-700</c:if>">
 
 <span class="text-xl">🏠</span>
 <span class="ml-3 menu-text">Trang chủ</span>
@@ -29,8 +32,9 @@ class="flex items-center p-2 rounded hover:bg-gray-700">
 
 
 <!-- SELL -->
-<a href="sell"
-class="flex items-center p-2 rounded hover:bg-gray-700">
+<a href="${pageContext.request.contextPath}/sell"
+class="flex items-center p-2 rounded hover:bg-gray-700
+<c:if test='${uri.contains("sell")}'>bg-gray-700</c:if>">
 
 <span class="text-xl">☕</span>
 <span class="ml-3 menu-text">Bán hàng</span>
@@ -39,8 +43,9 @@ class="flex items-center p-2 rounded hover:bg-gray-700">
 
 
 <!-- PROFILE -->
-<a href="profile"
-class="flex items-center p-2 rounded hover:bg-gray-700">
+<a href="${pageContext.request.contextPath}/profile"
+class="flex items-center p-2 rounded hover:bg-gray-700
+<c:if test='${uri.contains("profile")}'>bg-gray-700</c:if>">
 
 <span class="text-xl">⚙</span>
 <span class="ml-3 menu-text">Cài đặt cá nhân</span>
@@ -49,10 +54,11 @@ class="flex items-center p-2 rounded hover:bg-gray-700">
 
 
 <!-- ADMIN ONLY -->
-<c:if test="${sessionScope.user.role == true}">
+<c:if test="${sessionScope.user.role}">
 
-<a href="admin"
-class="flex items-center p-2 rounded hover:bg-gray-700">
+<a href="${pageContext.request.contextPath}/admin"
+class="flex items-center p-2 rounded hover:bg-gray-700
+<c:if test='${uri.contains("admin")}'>bg-gray-700</c:if>">
 
 <span class="text-xl">👤</span>
 <span class="ml-3 menu-text">Trang quản lý</span>
@@ -63,11 +69,10 @@ class="flex items-center p-2 rounded hover:bg-gray-700">
 
 </nav>
 
-
 <!-- LOGOUT -->
 <div class="p-4 border-t border-gray-700">
 
-<a href="logout"
+<a href="${pageContext.request.contextPath}/logout"
 class="flex items-center p-2 rounded hover:bg-red-600">
 
 <span class="text-xl">🚪</span>
@@ -81,7 +86,6 @@ class="flex items-center p-2 rounded hover:bg-red-600">
 
 
 <script>
-
 let collapsed = false;
 
 function toggleSidebar(){
@@ -92,21 +96,13 @@ function toggleSidebar(){
     collapsed = !collapsed;
 
     if(collapsed){
-
         sidebar.classList.remove("w-64");
         sidebar.classList.add("w-20");
-
         text.forEach(t => t.style.display = "none");
-
     }else{
-
         sidebar.classList.remove("w-20");
         sidebar.classList.add("w-64");
-
         text.forEach(t => t.style.display = "inline");
-
     }
-
 }
-
 </script>

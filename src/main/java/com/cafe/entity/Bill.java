@@ -7,13 +7,18 @@ import lombok.NoArgsConstructor;
 import java.time.LocalDate;
 
 @Data
-@AllArgsConstructor
 @NoArgsConstructor
+@AllArgsConstructor
 public class Bill {
+
     private int id;
-    private int usserId;
+
+    private int tableId;
+    private int userId;
+
     private String code;
-    private LocalDate createdAt;
-    private String total;
+
+    private int total;
+
     private String status;
 }
