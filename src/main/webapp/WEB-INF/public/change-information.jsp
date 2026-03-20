@@ -26,7 +26,7 @@
 
     <br><br>
     <button type="submit">Lưu thông tin thay đổi</button>
-<p>${sessionScope.message}</p>
+<p style="color: red">${sessionScope.message}</p>
 </form>
 
 </body>

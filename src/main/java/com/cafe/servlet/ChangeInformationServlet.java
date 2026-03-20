@@ -39,22 +39,31 @@ public class ChangeInformationServlet extends HttpServlet {
             String phone = req.getParameter("phone");
 
             if (fullname == null || fullname.trim().equals("") || fullname.trim().isEmpty()) {
-                session.setAttribute("message", "Họ tên không hợp lệ");
-                resp.sendRedirect(req.getContextPath()+"/change-information");
+                session.setAttribute("message", "Họ tên không được để trống");
+                resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
             }
-            if (email == null || email.trim().equals("") || email.trim().isEmpty()
-                    || !email.endsWith("@gmail.com") || email.endsWith("@yahoo.com")) {
-                session.setAttribute("message", "Email không hơợp lệ");
-                resp.sendRedirect(req.getContextPath()+"/change-information");
+            if (email == null || email.trim().equals("") || email.trim().isEmpty()) {
+                session.setAttribute("message", "Email không được để trống");
+                resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
             }
-            if (phone == null || phone.trim().equals("") || phone.trim().isEmpty()
-                    || phone.length() < 10 || phone.length() > 10 || !phone.startsWith("0")) {
-                session.setAttribute("message", "Số điện thoại không hợp lệ");
-                resp.sendRedirect(req.getContextPath()+"/change-information");
+            if (!email.endsWith("@gmail.com") || email.endsWith("@yahoo.com")) {
+                session.setAttribute("message", "Email không đúng cú pháp");
+                resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
             }
+            if (phone == null || phone.trim().equals("") || phone.trim().isEmpty()) {
+                session.setAttribute("message", "Số điện thoại không được để trống");
+                resp.sendRedirect(req.getContextPath() + "/change-information");
+                return;
+            }
+            if (phone.length() < 10 || phone.length() > 10 || !phone.startsWith("0")) {
+                session.setAttribute("message", "Số điện thoại không đúng cú pháp!");
+                resp.sendRedirect(req.getContextPath() + "/change-information");
+                return;
+            }
+
             user.setFullname(fullname);
             user.setEmail(email);
             user.setPhone(phone);
