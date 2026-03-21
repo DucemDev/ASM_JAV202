@@ -22,6 +22,7 @@ public class FilterLogin implements Filter {
 
         if (uri.contains("/login") ||
                 uri.contains("/logining") ||
+                uri.contains("/verify-otp") ||
                 uri.contains("/assets") ||
                 uri.contains(".css") ||
                 uri.contains(".js") ||
