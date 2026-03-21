@@ -48,7 +48,7 @@ public class ChangeInformationServlet extends HttpServlet {
                 resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
             }
-            if (!email.endsWith("@gmail.com") || email.endsWith("@yahoo.com")) {
+            if (!email.endsWith("@gmail.com") && !email.endsWith("@yahoo.com")) {
                 session.setAttribute("message", "Email không đúng cú pháp");
                 resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
