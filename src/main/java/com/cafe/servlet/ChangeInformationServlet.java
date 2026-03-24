@@ -16,7 +16,6 @@ public class ChangeInformationServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         req.getRequestDispatcher("/WEB-INF/public/change-information.jsp").forward(req, resp);
     }
 
