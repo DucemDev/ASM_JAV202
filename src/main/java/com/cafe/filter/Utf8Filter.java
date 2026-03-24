@@ -1,4 +1,4 @@
-package com.cafe.util;
+package com.cafe.filter;
 
 import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
