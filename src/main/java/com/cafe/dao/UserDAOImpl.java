@@ -16,28 +16,8 @@ public class UserDAOImpl implements UserDAO {
     public User findById(int id) {
         return null;
     }
+
     public User findByEmail(String email) {
-        String sql = "SELECT * FROM users WHERE email = ? AND active = 1";
-        try (
-                Connection conn = DBConnect.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
-            ps.setString(1, email);
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) {
-                return new User(
-                        rs.getInt("id"),
-                        rs.getString("full_name"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("phone"),
-                        rs.getBoolean("role"),
-                        rs.getBoolean("active")
-                );
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
         return null;
     }
 
@@ -85,23 +65,4 @@ public class UserDAOImpl implements UserDAO {
         return null;
     }
 
-    public void updateChangeInformation(User user) {
-        String sql = "UPDATE users SET full_name = ?, email = ?, phone = ? WHERE id = ?";
-
-        try (
-                Connection conn = DBConnect.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql)
-        ) {
-
-            ps.setString(1, user.getFullname());
-            ps.setString(2, user.getEmail());
-            ps.setString(3, user.getPhone());
-            ps.setInt(4, user.getId());
-
-            ps.executeUpdate();
-
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-    }
 }

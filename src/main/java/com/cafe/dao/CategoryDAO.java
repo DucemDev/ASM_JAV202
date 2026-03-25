@@ -1,9 +1,8 @@
 package com.cafe.dao;
 
-import com.cafe.entity.Category;
-import com.cafe.entity.Drink;
-
 import java.util.List;
+
+import com.cafe.entity.Category;
 
 public interface CategoryDAO {
     List<Category> findAll(Category category);
