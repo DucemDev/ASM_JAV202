@@ -1,17 +1,12 @@
 package com.cafe.filter;
 
-import java.io.IOException;
-
 import com.cafe.entity.User;
-
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
+import java.io.IOException;
 
 @WebFilter("/*")
 public class FilterLogin implements Filter {
@@ -27,6 +22,9 @@ public class FilterLogin implements Filter {
 
         if (uri.contains("/login") ||
                 uri.contains("/logining") ||
+                uri.contains("/forgotpassword")||
+                uri.contains("/changepassword")||
+                uri.contains("/verifyotp")||
                 uri.contains("/assets") ||
                 uri.contains(".css") ||
                 uri.contains(".js") ||

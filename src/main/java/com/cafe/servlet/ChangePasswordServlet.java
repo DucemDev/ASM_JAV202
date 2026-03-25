@@ -1,13 +1,16 @@
 package com.cafe.servlet;
 
+import com.cafe.dao.UserDAO;
+import com.cafe.dao.UserDAOImpl;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
 
 import java.io.IOException;
-
+@WebServlet("/changepassword")
 public class ChangePasswordServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
@@ -16,27 +19,22 @@ public class ChangePasswordServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
+
+        String newPassword = req.getParameter("password");
+
         HttpSession session = req.getSession();
-        String email = (String ) session.getAttribute("email");
-        if(email == null){
-            resp.sendRedirect(req.getContextPath()+"//WEB-INF/public/login.jsp");
-            return;
+        String email = (String) session.getAttribute("email");
 
-        }
-        String password=req.getParameter("password");
-        String confirm = req.getParameter("confirm");
-        if(password == null || password.isEmpty() || confirm == null || confirm.isEmpty()){
-            req.setAttribute("message", "Vui lòng nhập đủ thông tin");
+        if(newPassword == null || newPassword.isEmpty()){
+            req.setAttribute("message", "Vui lòng nhập mật khẩu mới");
             req.getRequestDispatcher("/WEB-INF/public/changepassword.jsp").forward(req, resp);
             return;
         }
-        if(!password.equals(confirm)){
-            req.setAttribute("message","Mật khẩu không khớp");
-            req.getRequestDispatcher("/WEB-INF/public/changepassword.jsp").forward(req, resp);
-            return;
-
-        }
-        req.setAttribute("message", "Đổi mật khẩu thành công");
-        req.getRequestDispatcher("/WEB-INF/public/changepassword.jsp").forward(req, resp);
+        UserDAO dao = new UserDAOImpl();
+        dao.updatePassword(email, newPassword);
+        session.removeAttribute("otp");
+        session.setAttribute("success", "Đổi mật khẩu thành công!");
+        resp.sendRedirect(req.getContextPath() + "/login");
     }
 }
+

@@ -201,7 +201,7 @@ text-align:center;
 </div>
 
 	<p>${message}</p>
-
+<a href="${pageContext.request.contextPath}/forgotpassword">Quên mật khẩu</a>
 <button class="login-btn" type="submit">
 Đăng nhập
 </button>

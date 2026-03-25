@@ -1,26 +1,28 @@
 package com.cafe.servlet;
 
+import com.cafe.util.EmailUtil;
 import jakarta.servlet.ServletException;
+import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.servlet.http.HttpSession;
-
+import java.util.Random;
 import java.io.IOException;
-
+@WebServlet("/forgotpassword")
 public class ForgotPasswordServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/public/forgetpassword.jsp").forward(req,resp);
+        System.out.println("chuyen trang");
+        req.getRequestDispatcher("/WEB-INF/public/forgotpassword.jsp").forward(req,resp);
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String email = req.getParameter("email");
-        String password = req.getParameter("password");
-        if(email.isEmpty()) {
+        if(email == null || email.isEmpty()) {
             req.setAttribute("message","Vui long nhap day du thong tin");
-            req.getRequestDispatcher("/WEB-INF/public/forgetpassword.jsp");
+            req.getRequestDispatcher("/WEB-INF/public/forgotpassword.jsp").forward(req,resp);
             return;
         }
         Random ran=new Random();
@@ -29,7 +31,7 @@ public class ForgotPasswordServlet extends HttpServlet {
         HttpSession session=req.getSession();
         session.setAttribute("otp",otp);
         session.setAttribute("email",email);
-        System.out.println("OTP đã guửi tới email"+otp);
+        EmailUtil.sendOTP(email, otp);
         resp.sendRedirect(req.getContextPath() + "/verifyotp");
     }
 }

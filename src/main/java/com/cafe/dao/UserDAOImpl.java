@@ -73,5 +73,17 @@ public class UserDAOImpl implements UserDAO {
 
         return null;
     }
+    public void updatePassword(String email, String password) {
+        try {
+            Connection con = DBConnect.getConnection();
+            String sql = "UPDATE users SET password=? WHERE email=?";
+            PreparedStatement ps = con.prepareStatement(sql);
+            ps.setString(1, password);
+            ps.setString(2, email);
+            ps.executeUpdate();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+    }
 
 }

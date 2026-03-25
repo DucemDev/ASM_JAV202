@@ -20,8 +20,8 @@
 <p>SDT: ${sessionScope.user.phone}</p>
 
 
-<a href="${pageContext.request.contextPath}/change-information"><button type="button">Chỉnh sửa thông tin cá nhân</button></a>
-<button name="">Đổi mật khẩu</button>
+<a href="${pageContext.request.contextPath}/change-information"><button type="button">Đổi mật khẩu</button></a>
+
 
 </body>
 </html>

@@ -1,7 +1,7 @@
 <%@ page contentType="text/html; charset=UTF-8"
          pageEncoding="UTF-8"
          isELIgnored="false" %>
-<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+
 <!doctype html>
 <html lang="en">
 <head>
@@ -12,13 +12,14 @@
     <title>Document</title>
 </head>
 <body>
-<h1>Đổi mật khẩu</h1>
+<h2>Đổi mật khẩu</h2>
 
-<form method="post" action="${pageContext.request.contextPath}/change-information">
-    <input type="password" name="newPassword" placeholder="Mật khẩu mới" />
-    <input type="password" name="confirmPassword" placeholder="Xác nhận mật khẩu" />
-    <button type="submit">Đổi mật khẩu</button>
+<form action="${pageContext.request.contextPath}/changepassword" method="post">
+
+<input type="password" name="password" placeholder="Mật khẩu mới">
+
+<button type="submit">Đổi mật khẩu</button>
+
 </form>
-
 </body>
 </html>
