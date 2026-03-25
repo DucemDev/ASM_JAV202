@@ -41,7 +41,7 @@ public class FilterLogin implements Filter {
             return;
         }
 
-        // ⭐ kiểm tra quyền admin
+
         if (uri.contains("/admin") && !user.isRole()) {
             resp.sendRedirect(req.getContextPath() + "/home");
             return;
