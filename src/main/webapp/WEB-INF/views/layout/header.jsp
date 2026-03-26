@@ -2,38 +2,45 @@
 <%@ page isELIgnored="false" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 
-<div class="h-16 bg-gray-900 text-white flex items-center justify-between px-8 shadow">
-
+<div class="py-4 bg-gradient-to-r from-[#f1e4d7] to-white border-b border-gray-300 flex items-center justify-between px-8 shadow-md">
     <!-- TITLE -->
-    <div class="text-xl font-bold">
+    <div class="text-xl font-bold text-gray-800 tracking-wide">
 
         <c:choose>
             <c:when test="${sessionScope.user.role}">
-                Thông tin Admin
+
             </c:when>
 
             <c:otherwise>
-                Thông tin User
+                USER DASHBOARD
             </c:otherwise>
         </c:choose>
 
     </div>
 
-
     <!-- USER INFO -->
-    <div class="flex items-center gap-3">
+    <div class="flex items-center gap-4">
 
-        <div class="w-10 h-10 rounded-full bg-gray-600 flex items-center justify-center">
-            👤
+        <!-- AVATAR -->
+        <div class="w-11 h-11 rounded-full bg-[#e6d3c3] flex items-center justify-center shadow-sm">
+
+            <svg class="w-5 h-5 text-[#8b5e3c]"
+            fill="none" stroke="currentColor" stroke-width="2"
+            viewBox="0 0 24 24">
+                <path d="M12 15a4 4 0 100-8 4 4 0 000 8z"/>
+                <path d="M4 21v-1a7 7 0 0114 0v1"/>
+            </svg>
+
         </div>
 
-        <div>
+        <!-- INFO -->
+        <div class="text-right">
 
-            <div class="font-semibold">
+            <div class="font-semibold text-gray-800">
                 ${sessionScope.user.fullname}
             </div>
 
-            <div class="text-sm text-gray-400">
+            <div class="text-xs text-gray-500">
 
                 <c:choose>
                     <c:when test="${sessionScope.user.role}">
