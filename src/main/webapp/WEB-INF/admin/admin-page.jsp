@@ -131,7 +131,7 @@ class="bg-white shadow p-6 rounded-lg text-center hover:bg-gray-50">
 </a>
 
 
-<a href="drink"
+<a href="${pageContext.request.contextPath}/manager/drinks"
 class="bg-white shadow p-6 rounded-lg text-center hover:bg-gray-50">
 
 <div class="text-4xl mb-2">☕</div>

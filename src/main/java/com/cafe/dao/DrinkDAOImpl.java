@@ -56,15 +56,15 @@ public class DrinkDAOImpl implements DrinkDAO {
     }
     @Override
     public int delete(int id) {
-        String sql = "DELETE FROM drinks WHERE id = ?";
+        String sql = "UPDATE drinks SET active = 0 WHERE id = ?";
         try {
             return DBConnect.executeUpdate(sql, id);
         } catch (Exception e) {
             e.printStackTrace();
         }
         return 0;
-
     }
+
     @Override
     public int create(Drink drink) {
         String sql = "INSERT INTO drinks(category_id, name, description, image, price, active) values (?, ?, ?, ?, ?, ?)";
