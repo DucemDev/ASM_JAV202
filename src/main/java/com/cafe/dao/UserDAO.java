@@ -5,16 +5,16 @@ import java.util.List;
 import com.cafe.entity.User;
 
 public interface UserDAO {
-    List<User> findAll(User user);
-    User findById(int id);
-    User findByEmail(String email);
-    void deleteByID(int id);
-    void create(User user);
-    void update(User user);
+    public User findByEmail(String email);
+    public List<User> findBySql(String sql, Object... value);
+    public List<User> findByRole(boolean role);
+    public int create(User user);
+    public int update(User user);
     User login(String email,String password);
-
     void updatePassword(String email, String password);
-
     void updateChangeInformation(User user);
+    public int updateStatus(Integer id, boolean active);
+    public int updateUserInfo(User entity);
+
 
 }

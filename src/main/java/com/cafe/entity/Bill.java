@@ -11,7 +11,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 public class Bill {
     private int id;
-    private int usserId;
+    private int userId;
     private String code;
     private LocalDate createdAt;
     private String total;

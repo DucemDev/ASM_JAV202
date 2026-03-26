@@ -5,9 +5,11 @@ import java.util.List;
 import com.cafe.entity.Category;
 
 public interface CategoryDAO {
-    List<Category> findAll(Category category);
-    Category findById(int id);
-    void deleteByID(int id);
-    void create(Category category);
-    void update(Category category);
+    public List<Category> findAll();
+    public Category findById(int id);
+    public int deleteByID(int id);
+    public int create(Category category);
+    public int update(Category category);
+    public int delete(int id);
+    public int countDrinkInCategory(int categoryId);
 }
