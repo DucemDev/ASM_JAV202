@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class Drink {
     private int id;
+
     private String categoryId;
     private int price;
     private String name;

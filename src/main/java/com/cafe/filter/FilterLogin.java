@@ -26,6 +26,7 @@ public class FilterLogin implements Filter {
                 uri.contains("/verify-forgot-password")||
                 uri.contains("/changing-password")||
                 uri.contains("/verifyotp")||
+                uri.contains("/verify-otp") ||
                 uri.contains("/assets") ||
                 uri.contains(".css") ||
                 uri.contains(".js") ||
