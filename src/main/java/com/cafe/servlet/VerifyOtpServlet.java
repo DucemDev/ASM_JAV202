@@ -21,7 +21,7 @@ public class VerifyOtpServlet  extends HttpServlet {
         HttpSession session=req.getSession();
         int otp=(int) session.getAttribute("otp");
         if(Integer.parseInt(userOtp)==otp){
-            resp.sendRedirect(req.getContextPath()+"/changepassword");
+            resp.sendRedirect(req.getContextPath()+"/verify-forgot-password");
 
         } else {
             req.setAttribute("message", "OTP không đúng");

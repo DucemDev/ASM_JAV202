@@ -23,7 +23,8 @@ public class FilterLogin implements Filter {
         if (uri.contains("/login") ||
                 uri.contains("/logining") ||
                 uri.contains("/forgotpassword")||
-                uri.contains("/changepassword")||
+                uri.contains("/verify-forgot-password")||
+                uri.contains("/changing-password")||
                 uri.contains("/verifyotp")||
                 uri.contains("/assets") ||
                 uri.contains(".css") ||

@@ -14,7 +14,7 @@
 <body>
 <h2>Đổi mật khẩu</h2>
 
-<form action="${pageContext.request.contextPath}/changepassword" method="post">
+<form action="${pageContext.request.contextPath}/verify-forgot-password" method="post">
 
 <input type="password" name="password" placeholder="Mật khẩu mới">
 

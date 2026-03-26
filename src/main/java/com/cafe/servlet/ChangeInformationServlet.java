@@ -20,35 +20,6 @@ public class ChangeInformationServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        String newPassword = req.getParameter("newPassword");
-        String confirmPassword = req.getParameter("confirmPassword");
-
-        if (newPassword == null || confirmPassword == null
-                || newPassword.isEmpty() || confirmPassword.isEmpty()) {
-            req.setAttribute("message", "Vui lòng nhập đầy đủ thông tin");
-            req.getRequestDispatcher("/WEB-INF/public/change-information.jsp").forward(req, resp);
-            return;
-        }
-
-        if (!newPassword.equals(confirmPassword)) {
-            req.setAttribute("message", "Mật khẩu không khớp");
-            req.getRequestDispatcher("/WEB-INF/public/change-information.jsp").forward(req, resp);
-            return;
-        }
-
-
-        User user = (User) req.getSession().getAttribute("user");
-
-        if (user == null) {
-            resp.sendRedirect(req.getContextPath() + "/login");
-            return;
-        }
-
-        UserDAO dao = new UserDAOImpl();
-        dao.updatePassword(user.getEmail(), newPassword);
-        user.setPassword(newPassword);
-        req.getSession().setAttribute("user", user);
-        resp.sendRedirect(req.getContextPath() + "/profile");
     }
     }
 
