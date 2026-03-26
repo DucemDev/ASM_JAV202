@@ -6,9 +6,10 @@ import com.cafe.entity.User;
 import java.util.List;
 
 public interface DrinkDAO {
-    List<Drink> findAll(Drink drink);
-    Drink findById(int id);
-    void deleteByID(int id);
-    void create(Drink drink);
-    void update(Drink drink);
+    public List<Drink> findAll();
+    public Drink findById(int id);
+    public int delete(int id);
+    public int create(Drink drink);
+    public int update(Drink drink);
+    public List<Drink> findBySql(String sql, Object... value);
 }

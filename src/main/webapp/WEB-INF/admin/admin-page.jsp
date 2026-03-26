@@ -123,12 +123,11 @@ class="bg-white shadow p-6 rounded-lg text-center hover:bg-gray-50">
 </a>
 
 
-<a href="categories"
+<a href="${pageContext.request.contextPath}/manager/categories"
 class="bg-white shadow p-6 rounded-lg text-center hover:bg-gray-50">
 
 <div class="text-4xl mb-2">📂</div>
 <div>Loại đồ uống</div>
-
 </a>
 
 
