@@ -49,7 +49,6 @@ CREATE TABLE drinks (
 CREATE TABLE tables (
     id INT PRIMARY KEY IDENTITY,
     name NVARCHAR(50) NOT NULL,
-    capacity INT,
     status VARCHAR(20), -- empty / using
     active BIT DEFAULT 1
 )
@@ -135,12 +134,12 @@ INSERT INTO drinks (category_id, name, price, image, description) VALUES
 /* =========================
    INSERT TABLES
 ========================= */
-INSERT INTO tables (name, capacity, status) VALUES
-(N'Bàn 1', 4, 'empty'),
-(N'Bàn 2', 4, 'empty'),
-(N'Bàn 3', 2, 'empty'),
-(N'Bàn 4', 6, 'empty'),
-(N'Bàn 5', 4, 'empty')
+INSERT INTO tables (name,  status) VALUES
+(N'Bàn 1',  'empty'),
+(N'Bàn 2',  'empty'),
+(N'Bàn 3',  'empty'),
+(N'Bàn 4',  'empty'),
+(N'Bàn 5',  'empty')
 
 
 
@@ -185,10 +184,8 @@ INSERT INTO bill_details (bill_id, drink_id, quantity, price) VALUES
 
 
 
-
-
 /* =========================
-   TEST SELECT TABLE
+   TEST SELECT
 ========================= */
 
 SELECT * FROM categories
@@ -197,3 +194,8 @@ SELECT * FROM tables
 SELECT * FROM users
 SELECT * FROM bills
 SELECT * FROM bill_details
+
+/*UPDATE CÁI NÀY NHEN  */
+
+ALTER TABLE tables
+DROP COLUMN capacity

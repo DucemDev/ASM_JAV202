@@ -200,8 +200,13 @@ text-align:center;
 <input type="password" name="passwordIp" placeholder="Password">
 </div>
 
+
 	<p>${message}</p>
 <a href="${pageContext.request.contextPath}/forgotpassword">Quên mật khẩu</a>
+
+	<p style="color: red">${message}</p>
+
+
 <button class="login-btn" type="submit">
 Đăng nhập
 </button>

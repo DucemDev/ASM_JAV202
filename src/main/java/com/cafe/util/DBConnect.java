@@ -23,7 +23,6 @@ public class DBConnect {
     public static Connection getConnection() {
         String connectionUrl = "jdbc:sqlserver://" + HOSTNAME + ":" + PORT + ";"
                 + "databaseName=" + DBNAME + ";encrypt=true;trustServerCertificate=true";
-
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             return DriverManager.getConnection(connectionUrl, USERNAME, PASSWORD);

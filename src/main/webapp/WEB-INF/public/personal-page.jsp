@@ -21,6 +21,7 @@
 
 
 <a href="${pageContext.request.contextPath}/change-password"><button type="button">Đổi mật khẩu</button></a>
+<a href="${pageContext.request.contextPath}/change-information"><button type="button">Đổi thông tin cá nhân</button></a>
 
 
 </body>
