@@ -28,9 +28,9 @@ public class UserDAOImpl implements UserDAO {
             while (rs.next()) {
                 return new User(
                         rs.getInt("id"),
+                        rs.getString("full_name"),
                         rs.getString("email"),
                         rs.getString("password"),
-                        rs.getString("full_name"),
                         rs.getString("phone"),
                         rs.getBoolean("role"),
                         rs.getBoolean("active")
@@ -58,9 +58,9 @@ public class UserDAOImpl implements UserDAO {
             if (rs.next()) {
                 return new User(
                         rs.getInt("id"),
-                        rs.getString("email"),
-                        rs.getString("password"),
-                        rs.getString("full_name"),
+                        rs.getString("full_name"),  // ✅ fullname
+                        rs.getString("email"),      // ✅ email
+                        rs.getString("password"),   // ✅ password
                         rs.getString("phone"),
                         rs.getBoolean("role"),
                         rs.getBoolean("active")

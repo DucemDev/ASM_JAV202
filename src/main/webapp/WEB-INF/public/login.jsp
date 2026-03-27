@@ -1,3 +1,4 @@
+
 <%@ page contentType="text/html; charset=UTF-8"
 		 pageEncoding="UTF-8"
 		 isELIgnored="false" %>
@@ -13,27 +14,29 @@
 		body{
 			margin:0;
 			font-family:'Segoe UI', sans-serif;
-			background: linear-gradient(135deg,#d7b899,#f3e5d4);
 			height:100vh;
 			display:flex;
 			justify-content:center;
 			align-items:center;
+			background: linear-gradient(135deg,#e6d3c3,#f6efe7);
 		}
 
+		/* CARD */
 		.container{
 			width:900px;
 			height:90%;
-			background:white;
+			background:rgba(255,255,255,0.95);
+			backdrop-filter: blur(10px);
 			border-radius:20px;
 			display:flex;
 			overflow:hidden;
-			box-shadow:0 15px 40px rgba(0,0,0,0.15);
+			box-shadow:0 20px 50px rgba(0,0,0,0.15);
 		}
 
+		/* LEFT */
 		.left{
 			width:45%;
 			position:relative;
-			overflow:hidden;
 		}
 
 		.slide-img{
@@ -43,16 +46,35 @@
 			position:absolute;
 		}
 
-		.welcome{
+		/* overlay đẹp hơn */
+		.left::before{
+			content:'';
 			position:absolute;
-			bottom:40px;
-			left:20px;
-			color:white;
-			background:rgba(0,0,0,0.4);
-			padding:15px;
-			border-radius:10px;
+			inset:0;
+			background:linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+			z-index:1;
 		}
 
+		.welcome{
+			position:absolute;
+			bottom:30px;
+			left:25px;
+			color:white;
+			z-index:2;
+		}
+
+		.welcome h2{
+			margin:0;
+			font-size:24px;
+		}
+
+		.welcome p{
+			margin-top:5px;
+			font-size:14px;
+			opacity:0.9;
+		}
+
+		/* RIGHT */
 		.right{
 			width:55%;
 			padding:60px;
@@ -63,6 +85,7 @@
 			margin-bottom:30px;
 		}
 
+		/* INPUT */
 		.input-box{
 			margin-bottom:20px;
 		}
@@ -71,25 +94,38 @@
 			width:100%;
 			padding:14px;
 			border:none;
-			border-radius:20px;
-			background:#f3f3f3;
+			border-radius:12px;
+			background:#f5f5f5;
+			font-size:14px;
+			transition:0.2s;
 		}
 
+		.input-box input:focus{
+			outline:none;
+			background:#eee;
+			box-shadow:0 0 0 2px #d7b899;
+		}
+
+		/* LOGIN BUTTON */
 		.login-btn{
 			width:100%;
 			padding:14px;
 			border:none;
-			border-radius:20px;
-			background:#6f4e37;
+			border-radius:12px;
+			background:linear-gradient(135deg,#8b5e3c,#6f4e37);
 			color:white;
 			font-size:16px;
 			cursor:pointer;
+			transition:0.3s;
+			box-shadow:0 5px 15px rgba(0,0,0,0.15);
 		}
 
 		.login-btn:hover{
-			background:#563b28;
+			transform:translateY(-2px);
+			box-shadow:0 8px 20px rgba(0,0,0,0.2);
 		}
 
+		/* DIVIDER */
 		.divider{
 			display:flex;
 			align-items:center;
@@ -106,12 +142,60 @@
 		.divider span{
 			margin:0 10px;
 			color:#777;
+			font-size:13px;
 		}
 
+		/* GOOGLE BUTTON */
+		.google-btn{
+			width:100%;
+			padding:12px;
+			border-radius:12px;
+			border:1px solid #ddd;
+			background:white;
+			font-size:15px;
+			cursor:pointer;
+			display:flex;
+			align-items:center;
+			justify-content:center;
+			gap:10px;
+			transition:0.2s;
+			box-shadow:0 3px 10px rgba(0,0,0,0.05);
+		}
+
+		.google-btn:hover{
+			background:#f9f9f9;
+			transform:translateY(-1px);
+		}
+
+		.google-btn img{
+			width:20px;
+			height:20px;
+		}
+
+		/* LINK */
+		a{
+			color:#6f4e37;
+			text-decoration:none;
+			font-size:13px;
+		}
+
+		a:hover{
+			text-decoration:underline;
+		}
+
+		/* ERROR */
+		.error{
+			color:red;
+			font-size:13px;
+			margin-bottom:10px;
+		}
+
+		/* FOOTER */
 		.footer{
 			margin-top:15px;
-			font-size:14px;
+			font-size:13px;
 			text-align:center;
+			color:#555;
 		}
 	</style>
 </head>

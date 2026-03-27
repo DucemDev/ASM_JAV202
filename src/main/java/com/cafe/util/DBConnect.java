@@ -11,7 +11,9 @@ public class DBConnect {
     public static final String HOSTNAME = "localhost";
     public static final String PORT = "1433";
     public static final String DBNAME = "PolyCafe_JAV202";
-    public static final String USERNAME = "Sa";
+
+    public static final String USERNAME = "sa";
+
     public static final String PASSWORD = "123456789";
 
     public static Connection getConnection() {

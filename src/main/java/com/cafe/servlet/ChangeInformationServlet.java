@@ -81,7 +81,7 @@ public class ChangeInformationServlet extends HttpServlet {
 
             session.setAttribute("user", user);
 
-            resp.sendRedirect(req.getContextPath() + "/change-information");
+            resp.sendRedirect(req.getContextPath() + "/profile");
 
         }
     }
