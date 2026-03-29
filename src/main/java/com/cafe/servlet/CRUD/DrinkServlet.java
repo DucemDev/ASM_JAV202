@@ -63,7 +63,6 @@ public class DrinkServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/manager/drinks");
     }
 
-    // ✅ FIX: bỏ validate phức tạp để chạy ổn định trước
     private Drink getData(HttpServletRequest req) {
 
         Drink d = new Drink();
@@ -72,7 +71,6 @@ public class DrinkServlet extends HttpServlet {
         d.setPrice(ParamUtil.getInt(req, "price"));
         d.setImage(ParamUtil.getString(req, "image"));
 
-        // 👇 FIX cứng để tránh lỗi
         d.setCategoryId(1);
         d.setDescription("demo");
         d.setActive(true);

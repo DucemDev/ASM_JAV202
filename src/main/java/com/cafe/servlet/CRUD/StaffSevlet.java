@@ -31,7 +31,6 @@ public class StaffSevlet extends HttpServlet {
     public void create(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User staff = getStaffFromRequestAndValidate(req, resp);
         if (staff != null) {
-//			Kiểm tra email đã tồn tại chưa
             User existingUser = userDAO.findByEmail(staff.getEmail());
             if (existingUser != null) {
                 req.setAttribute("emailError", "Email đã được sử dụng.");
