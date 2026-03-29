@@ -115,6 +115,7 @@ public class CategoryDAOImpl implements CategoryDAO {
         }
         return rs;
     }
+    @Override
     public boolean existsByName(String name) {
         String sql = "SELECT COUNT(*) FROM categories WHERE name = ?";
         try {
@@ -127,6 +128,7 @@ public class CategoryDAOImpl implements CategoryDAO {
         }
         return false;
     }
+    @Override
     public boolean existsByNameExceptId(String name, int id) {
         String sql = "SELECT COUNT(*) FROM categories WHERE name = ? AND id != ?";
         try {
