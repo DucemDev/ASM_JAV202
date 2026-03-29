@@ -21,15 +21,14 @@ public class BillDAOImpl implements BillDAO {
     @Override
     public int create(Bill bill) {
 
-        String sql = "INSERT INTO bills(table_id, user_id, code, created_at, total, status) VALUES (?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO bills(table_id, user_id, code, total, status) VALUES (?, ?, ?, ?, ?)";
 
         try {
             return DBConnect.executeUpdate(sql,
                     bill.getTableId(),
                     bill.getUserId(),
                     bill.getCode(),
-                    bill.getCreatedAt(),
-                    bill.getTotal(),
+                    0,
                     bill.getStatus()
             );
         } catch (Exception e) {
@@ -117,7 +116,7 @@ public class BillDAOImpl implements BillDAO {
     @Override
     public int updateStatus(int billId, String status) {
 
-        
+
         Bill bill = this.findById(billId);
 
         if (bill == null) {

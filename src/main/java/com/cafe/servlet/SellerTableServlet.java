@@ -11,37 +11,98 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet({"/seller/tables", "/seller/tables/add"})
+@WebServlet({
+        "/seller/tables",
+        "/seller/tables/add",
+        "/seller/tables/hide",
+        "/seller/tables/show"
+})
 public class SellerTableServlet extends HttpServlet {
 
-    TableDAO tableDAO = new TableDAOImpl();
+    private TableDAO tableDAO = new TableDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        List<Table> list = tableDAO.findAll();
+        try {
+            String status = req.getParameter("status");
+            String keyword = req.getParameter("keyword");
 
-        req.setAttribute("tables", list);
+            List<Table> list = tableDAO.search(status, keyword);
 
-        req.getRequestDispatcher("/WEB-INF/public/seller/table.jsp")
-                .forward(req, resp);
+            req.setAttribute("tables", list);
+            req.setAttribute("currentStatus", status);
+            req.setAttribute("keyword", keyword);
+
+            req.getRequestDispatcher("/WEB-INF/public/seller/table.jsp")
+                    .forward(req, resp);
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            resp.sendRedirect(req.getContextPath() + "/seller/tables");
+        }
     }
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        String uri = req.getRequestURI();
+        try {
+            String uri = req.getRequestURI();
 
-        if (uri.contains("add")) {
+            // ===== ADD =====
+            if (uri.contains("/add")) {
 
-            Table t = new Table();
-            t.setName(req.getParameter("name"));
-            t.setStatus("empty");
-            t.setActive(true);
+                String name = req.getParameter("name");
 
-            tableDAO.create(t);
+                if (name != null && !name.trim().isEmpty()) {
+
+                    // check duplicate
+                    if (tableDAO.existsByName(name.trim())) {
+                        resp.sendRedirect(req.getContextPath() + "/seller/tables?error=duplicate");
+                        return;
+                    }
+
+                    Table t = new Table();
+                    t.setName(name.trim());
+                    t.setStatus("empty");
+
+                    tableDAO.create(t);
+                }
+            }
+
+            // ===== HIDE =====
+            else if (uri.contains("/hide")) {
+
+                String idParam = req.getParameter("id");
+                String status = req.getParameter("status");
+
+                if (idParam != null && status != null) {
+
+                    int id = Integer.parseInt(idParam);
+
+                    // 🔥 chỉ cho ẩn khi bàn trống
+                    if ("empty".equalsIgnoreCase(status)) {
+                        tableDAO.hide(id);
+                    }
+                }
+            }
+
+
+            // ===== SHOW =====
+            else if (uri.contains("/show")) {
+
+                String idParam = req.getParameter("id");
+
+                if (idParam != null) {
+                    int id = Integer.parseInt(idParam);
+                    tableDAO.show(id);
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
         }
 
         resp.sendRedirect(req.getContextPath() + "/seller/tables");

@@ -10,7 +10,11 @@ import jakarta.servlet.http.*;
 import java.io.IOException;
 import java.util.List;
 
-@WebServlet("/seller/order")
+@WebServlet({
+        "/seller/order",
+        "/seller/order/pay",
+        "/seller/order/cancel"
+})
 public class OrderServlet extends HttpServlet {
 
     private BillDAO billDAO = new BillDAOImpl();
@@ -32,47 +36,35 @@ public class OrderServlet extends HttpServlet {
             int tableId = Integer.parseInt(tableIdParam);
             req.setAttribute("tableId", tableId);
 
-            // ===== LẤY BILL =====
             Bill bill = billDAO.findOpenByTableId(tableId);
 
-            // ===== TẠO BILL NẾU CHƯA CÓ =====
+            // 🔥 tạo bill nếu chưa có
             if (bill == null) {
-
                 Bill newBill = new Bill();
                 newBill.setTableId(tableId);
                 newBill.setUserId(1);
                 newBill.setCode("B" + (System.currentTimeMillis() % 100000));
                 newBill.setStatus("waiting");
 
-                int result = billDAO.create(newBill);
+                int rs = billDAO.create(newBill);
 
-                if (result <= 0) {
-                    throw new RuntimeException("Không tạo được bill");
-                }
+                if (rs <= 0) throw new RuntimeException("Tạo bill thất bại");
 
                 tableDAO.updateStatus(tableId, "using");
 
                 bill = billDAO.findOpenByTableId(tableId);
-
-                if (bill == null) {
-                    throw new RuntimeException("Không lấy được bill sau khi tạo");
-                }
             }
 
-            // ===== LOAD DRINK =====
             List<Drink> drinks = drinkDAO.findAll();
 
-            // ===== LOAD BILL DETAIL =====
             BillDetailDAO billDetailDAO = new BillDetailDAOImpl();
             List<BillDetail> billDetails = billDetailDAO.findByBillId(bill.getId());
 
-            // ===== TÍNH TOTAL =====
             int total = 0;
             for (BillDetail bd : billDetails) {
                 total += bd.getPrice() * bd.getQuantity();
             }
 
-            // ===== SET DATA =====
             req.setAttribute("bill", bill);
             req.setAttribute("drinks", drinks);
             req.setAttribute("billDetails", billDetails);
@@ -92,34 +84,93 @@ public class OrderServlet extends HttpServlet {
             throws ServletException, IOException {
 
         try {
-            String billIdParam = req.getParameter("billId");
-            String drinkIdParam = req.getParameter("drinkId");
-            String tableIdParam = req.getParameter("tableId");
+            String uri = req.getRequestURI();
+            int tableId = Integer.parseInt(req.getParameter("tableId"));
 
-            if (billIdParam == null || drinkIdParam == null || tableIdParam == null
-                    || billIdParam.isEmpty() || drinkIdParam.isEmpty() || tableIdParam.isEmpty()) {
+            // ================= UPDATE QUANTITY =================
+            String action = req.getParameter("action");
 
-                throw new RuntimeException("Thiếu param");
+            if ("update".equals(action)) {
+
+                int billId = Integer.parseInt(req.getParameter("billId"));
+                int drinkId = Integer.parseInt(req.getParameter("drinkId"));
+                int quantity = Integer.parseInt(req.getParameter("quantity"));
+
+                BillDetailDAO dao = new BillDetailDAOImpl();
+                dao.updateQuantity(billId, drinkId, quantity);
+
+                resp.setStatus(HttpServletResponse.SC_OK);
+                return;
             }
 
-            int billId = Integer.parseInt(billIdParam);
-            int drinkId = Integer.parseInt(drinkIdParam);
-            int tableId = Integer.parseInt(tableIdParam);
+            // ================= CANCEL =================
+            if (uri.contains("/cancel")) {
 
-            BillDetailDAO billDetailDAO = new BillDetailDAOImpl();
-            int rs = billDetailDAO.addDrinkToBill(billId, drinkId);
+                Bill bill = billDAO.findOpenByTableId(tableId);
 
-            if (rs <= 0) {
-                throw new RuntimeException("Thêm món thất bại");
+                if (bill != null) {
+                    BillDetailDAO dao = new BillDetailDAOImpl();
+                    List<BillDetail> list = dao.findByBillId(bill.getId());
+
+                    for (BillDetail bd : list) {
+                        dao.updateQuantity(bill.getId(), bd.getDrinkId(), 0);
+                    }
+
+                    billDAO.updateStatus(bill.getId(), "cancel");
+                }
+
+                tableDAO.updateStatus(tableId, "empty");
+
+                resp.sendRedirect(req.getContextPath() + "/seller/tables");
+                return;
             }
 
-            resp.sendRedirect(req.getContextPath() + "/seller/order?tableId=" + tableId);
+            // ================= PAY =================
+            if (uri.contains("/pay")) {
+
+                int billId = Integer.parseInt(req.getParameter("billId"));
+
+                BillDetailDAO dao = new BillDetailDAOImpl();
+                List<BillDetail> list = dao.findByBillId(billId);
+
+                if (list == null || list.isEmpty()) {
+                    resp.sendRedirect(req.getContextPath() + "/seller/order?tableId=" + tableId + "&error=empty");
+                    return;
+                }
+
+                Bill bill = billDAO.findById(billId);
+
+                List<Drink> drinks = drinkDAO.findAll();
+
+                billDAO.updateStatus(billId, "finish");
+                tableDAO.updateStatus(tableId, "empty");
+
+                req.setAttribute("bill", bill);
+                req.setAttribute("billDetails", list);
+                req.setAttribute("drinks", drinks);
+                req.setAttribute("total", bill.getTotal());
+
+                req.getRequestDispatcher("/WEB-INF/public/seller/payment-success.jsp")
+                        .forward(req, resp);
+
+                return;
+            }
+
+            // ================= ADD =================
+            int drinkId = Integer.parseInt(req.getParameter("drinkId"));
+
+            Bill bill = billDAO.findOpenByTableId(tableId);
+
+            int billId = bill.getId();
+
+            BillDetailDAO dao = new BillDetailDAOImpl();
+            dao.addDrinkToBill(billId, drinkId);
+
+            resp.setStatus(HttpServletResponse.SC_OK);
 
         } catch (Exception e) {
             e.printStackTrace();
-
-            // ❗ KHÔNG redirect về tables nữa
-            resp.sendRedirect(req.getContextPath() + "/seller/order?tableId=" + req.getParameter("tableId"));
+            resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
         }
     }
 }
