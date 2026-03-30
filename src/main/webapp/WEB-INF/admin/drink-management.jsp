@@ -1,148 +1,238 @@
 <%@ page contentType="text/html; charset=UTF-8" isELIgnored="false" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 
-<html>
+<!DOCTYPE html>
+<html lang="vi">
+
 <head>
+    <meta charset="UTF-8">
     <title>Quản lý đồ uống</title>
 
-    <style>
-        body { font-family: Arial; background: #f5f6fa; padding: 20px; }
-        .btn { padding: 6px 12px; border-radius: 6px; border: none; cursor: pointer; }
-        .btn-add { background: #44bd32; color: white; }
-        .btn-edit { background: #0984e3; color: white; }
-        .btn-delete { background: #d63031; color: white; }
+    <script src="https://cdn.tailwindcss.com"></script>
 
-        table { width: 100%; background: white; margin-top: 20px; }
-        th, td { padding: 10px; text-align: center; }
-
-        img { width: 60px; height: 60px; border-radius: 8px; }
-
-        .modal {
-            display: none;   /* chỉ để 1 cái này */
-            position: fixed;
-            top: 0;
-            left: 0;
-
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-
-            justify-content: center;
-            align-items: center;
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cafe: {
+                            bg: '#f6efe7',
+                            brown: '#8b5e3c'
+                        }
+                    }
+                }
+            }
         }
-
-        .modal-content {
-            background: white;
-            width: 400px;
-            margin: 100px auto;
-            padding: 20px;
-            border-radius: 10px;
-        }
-        .error {
-            border: 1px solid red;
-        }
-        input { width: 100%; padding: 8px; margin: 5px 0; }
-    </style>
+    </script>
 </head>
 
-<body>
+<body class="bg-cafe-bg">
 
-<h2>🍹 Quản lý đồ uống</h2>
+<div class="flex">
 
-<button type="button" class="btn btn-add" onclick="openModal()">+ Thêm</button>
-<c:if test="${not empty error}">
-    <div style="color:red; margin:10px 0;">
-            ${error}
+    <!-- SIDEBAR -->
+    <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
+
+    <!-- MAIN -->
+    <div id="mainContent" class="flex-1 ml-64 transition-all duration-300">
+
+        <!-- HEADER -->
+        <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+
+        <div class="p-8">
+
+            <div class="max-w-[1400px] mx-auto">
+
+                <!-- CARD -->
+                <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+
+                    <h2 class="text-xl font-semibold text-gray-800 mb-6">
+                        🍹 Quản lý đồ uống
+                    </h2>
+
+                    <!-- ERROR -->
+                    <c:if test="${not empty error}">
+                        <p class="mb-4 text-red-500 font-medium">${error}</p>
+                    </c:if>
+
+                    <!-- ADD BUTTON -->
+                    <button onclick="openModal()"
+                            class="mb-6 bg-cafe-brown text-white px-5 py-2 rounded-lg hover:opacity-90 transition">
+                        + Thêm đồ uống
+                    </button>
+
+                    <!-- TABLE -->
+                    <div class="overflow-x-auto">
+
+                        <table class="w-full border border-gray-200 rounded-xl overflow-hidden">
+
+                            <thead class="bg-[#f1e4d7] text-gray-700 text-sm">
+                            <tr>
+                                <th class="py-3">ID</th>
+                                <th>Ảnh</th>
+                                <th>Tên</th>
+                                <th>Giá</th>
+                                <th>Hành động</th>
+                            </tr>
+                            </thead>
+
+                            <tbody class="text-center text-sm">
+
+                            <c:forEach items="${drinks}" var="d">
+                                <tr class="border-t hover:bg-gray-50">
+
+                                    <td class="py-3">${d.id}</td>
+
+                                    <td>
+                                        <img src="${pageContext.request.contextPath}/${d.image}"
+                                             class="w-14 h-14 object-cover rounded-lg mx-auto"/>
+                                    </td>
+
+                                    <td class="font-medium">${d.name}</td>
+
+                                    <td class="text-gray-600">${d.price} đ</td>
+
+                                    <td class="space-x-2">
+
+                                        <!-- EDIT -->
+                                        <button
+                                                class="px-3 py-1 text-sm bg-blue-500 text-white rounded-lg hover:opacity-90"
+                                                data-id="${d.id}"
+                                                data-name="${d.name}"
+                                                data-price="${d.price}"
+                                                onclick="editDrink(this)">
+                                            Sửa
+                                        </button>
+
+                                        <!-- DELETE -->
+                                        <form action="${pageContext.request.contextPath}/manager/drinks/delete"
+                                              method="post"
+                                              class="inline">
+
+                                            <input type="hidden" name="id" value="${d.id}">
+
+                                            <button onclick="return confirm('Bạn có chắc muốn xóa?')"
+                                                    class="px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:opacity-90">
+                                                Xóa
+                                            </button>
+
+                                        </form>
+
+                                    </td>
+
+                                </tr>
+                            </c:forEach>
+
+                            </tbody>
+
+                        </table>
+
+                    </div>
+
+                </div>
+
+            </div>
+
+        </div>
+
     </div>
-</c:if>
-<table border="1">
-    <tr>
-        <th>ID</th>
-        <th>Ảnh</th>
-        <th>Tên</th>
-        <th>Giá</th>
-        <th>Action</th>
-    </tr>
 
-    <c:forEach items="${drinks}" var="d">
-        <tr>
-            <td>${d.id}</td>
-            <td><img src="${pageContext.request.contextPath}/${d.image}"></td>
-            <td>${d.name}</td>
-            <td>${d.price}</td>
+</div>
 
-            <td>
-                <button class="btn btn-edit"
-                        data-id="${d.id}"
-                        data-name="${d.name}"
-                        data-price="${d.price}"
-                        onclick="editDrink(this)">
-                    Sửa
-                </button>
+<!-- MODAL -->
+<div class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50" id="modal">
 
-                <form action="${pageContext.request.contextPath}/manager/drinks/delete" method="post" style="display:inline;">
-                    <input type="hidden" name="id" value="${d.id}">
-                    <button type="submit" class="btn btn-delete">Xóa</button>
-                </form>
-            </td>
-        </tr>
-    </c:forEach>
-</table>
+    <div class="bg-white rounded-xl p-6 w-[400px] shadow-lg">
 
-<div class="modal" id="modal">
-    <div class="modal-content">
+        <h3 class="text-lg font-semibold mb-4">Thông tin đồ uống</h3>
 
-        <h3 id="title">Form</h3>
-
-        <form id="form" method="post" enctype="multipart/form-data">
+        <form id="form" method="post" enctype="multipart/form-data" class="space-y-4">
 
             <input type="hidden" name="id" id="id">
 
-            <input name="name" id="name" placeholder="Tên" value="${oldName}" class="${not empty errorName ? 'error' : ''}">
-            <c:if test="${not empty errorName}">
-                <div style="color:red; font-size:13px;">
-                        ${errorName}
-                </div>
-            </c:if>
-            <select name="categoryId">
-                <c:forEach items="${categories}" var="c">
-                    <option value="${c.id}"
-                        ${c.id == oldCategory ? 'selected' : ''}>
-                            ${c.name}
-                    </option>
-                </c:forEach>
-            </select>
-            <input name="price" id="price" placeholder="Giá" value="${oldPrice}" class="${not empty errorPrice ? 'error' : ''}">
-            <c:if test="${not empty errorPrice}">
-                <div style="color:red; font-size:13px;">
-                        ${errorPrice}
-                </div>
-            </c:if>
-            <input type="file" name="image" id="image">
+            <!-- NAME -->
+            <div>
+                <label class="text-sm text-gray-600">Tên</label>
+                <input name="name" id="name"
+                       value="${oldName}"
+                       class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2
+                      focus:ring-2 focus:ring-cafe-brown outline-none
+                      ${not empty errorName ? 'border-red-500' : ''}">
+                <c:if test="${not empty errorName}">
+                    <p class="text-red-500 text-sm">${errorName}</p>
+                </c:if>
+            </div>
 
-            <button type="submit" class="btn btn-add">Lưu</button>
-            <button type="button" onclick="closeModal()">Hủy</button>
+            <!-- CATEGORY -->
+            <div>
+                <label class="text-sm text-gray-600">Loại</label>
+                <select name="categoryId"
+                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2">
+                    <c:forEach items="${categories}" var="c">
+                        <option value="${c.id}" ${c.id == oldCategory ? 'selected' : ''}>
+                                ${c.name}
+                        </option>
+                    </c:forEach>
+                </select>
+            </div>
+
+            <!-- PRICE -->
+            <div>
+                <label class="text-sm text-gray-600">Giá</label>
+                <input name="price" id="price"
+                       value="${oldPrice}"
+                       class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2
+                      focus:ring-2 focus:ring-cafe-brown outline-none
+                      ${not empty errorPrice ? 'border-red-500' : ''}">
+                <c:if test="${not empty errorPrice}">
+                    <p class="text-red-500 text-sm">${errorPrice}</p>
+                </c:if>
+            </div>
+
+            <!-- IMAGE -->
+            <div>
+                <label class="text-sm text-gray-600">Ảnh</label>
+                <input type="file" name="image"
+                       class="w-full mt-1 text-sm">
+            </div>
+
+            <!-- BUTTON -->
+            <div class="flex gap-2 pt-2">
+
+                <button type="submit"
+                        class="w-1/2 bg-cafe-brown text-white py-2 rounded-lg hover:opacity-90">
+                    Lưu
+                </button>
+
+                <button type="button"
+                        onclick="closeModal()"
+                        class="w-1/2 bg-gray-400 text-white py-2 rounded-lg">
+                    Hủy
+                </button>
+
+            </div>
 
         </form>
+
     </div>
 </div>
 
 <script>
     function openModal() {
-        console.log("CLICK ADD");
-        document.getElementById("modal").style.display = "flex";
+        document.getElementById("modal").classList.remove("hidden");
+        document.getElementById("modal").classList.add("flex");
 
         document.getElementById("form").action =
             "${pageContext.request.contextPath}/manager/drinks/add";
 
-        // reset form
         document.getElementById("id").value = "";
         document.getElementById("name").value = "";
         document.getElementById("price").value = "";
     }
 
     function editDrink(btn) {
-        document.getElementById("modal").style.display = "flex";
+        document.getElementById("modal").classList.remove("hidden");
+        document.getElementById("modal").classList.add("flex");
 
         document.getElementById("form").action =
             "${pageContext.request.contextPath}/manager/drinks/edit";
@@ -153,19 +243,18 @@
     }
 
     function closeModal() {
-        document.getElementById("modal").style.display = "none";
+        document.getElementById("modal").classList.add("hidden");
     }
 </script>
+
 <script>
     window.onload = function () {
         const open = "${openModal}";
         if (open === "true") {
-            document.getElementById("modal").style.display = "flex";
-
-            document.getElementById("form").action =
-                "${pageContext.request.contextPath}/manager/drinks/add";
+            openModal();
         }
     }
 </script>
+
 </body>
 </html>
