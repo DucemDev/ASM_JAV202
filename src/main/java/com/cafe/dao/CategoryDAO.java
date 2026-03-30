@@ -12,4 +12,6 @@ public interface CategoryDAO {
     public int update(Category category);
     public int delete(int id);
     public int countDrinkInCategory(int categoryId);
+    public boolean existsByName(String name);
+    public boolean existsByNameExceptId(String name, int id);
 }

@@ -16,13 +16,6 @@ import java.util.List;
 public class StaffSevlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private UserDAOImpl userDAO = new UserDAOImpl();
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    }
 
     public void listStaff(HttpServletRequest req, HttpServletResponse resp) {
         List<User> staffList = userDAO.findByRole(false);
@@ -31,7 +24,6 @@ public class StaffSevlet extends HttpServlet {
     public void create(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         User staff = getStaffFromRequestAndValidate(req, resp);
         if (staff != null) {
-//			Kiểm tra email đã tồn tại chưa
             User existingUser = userDAO.findByEmail(staff.getEmail());
             if (existingUser != null) {
                 req.setAttribute("emailError", "Email đã được sử dụng.");
@@ -82,6 +74,7 @@ public class StaffSevlet extends HttpServlet {
             req.setAttribute("emailError", "Email không hợp lệ.");
             hasError = true;
         }
+
         if (password == null || password.length() < 6) {
             req.setAttribute("passwordError", "Mật khẩu phải có ít nhất 6 ký tự.");
             hasError = true;

@@ -33,13 +33,17 @@ public class CategoryServlet extends HttpServlet {
         String uri = req.getRequestURI();
 
         if (uri.contains("add")) {
-            create(req);
-            req.getSession().setAttribute("message", "Thêm loại thành công!");
+            boolean success = create(req);
+            if (success) {
+                req.getSession().setAttribute("message", "Thêm loại thành công!");
+            }
         }
 
         if (uri.contains("edit")) {
-            update(req);
-            req.getSession().setAttribute("message", "Cập nhật thành công!");
+            boolean success = update(req);
+            if (success) {
+                req.getSession().setAttribute("message", "Cập nhật thành công!");
+            }
         }
 
         if (uri.contains("delete")) {
@@ -49,19 +53,31 @@ public class CategoryServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/manager/categories");
     }
 
-    private void create(HttpServletRequest req) {
+    private boolean create(HttpServletRequest req) {
         String name = req.getParameter("name");
         boolean active = Boolean.parseBoolean(req.getParameter("active"));
 
+        if (dao.existsByName(name)) {
+            req.getSession().setAttribute("error", "Tên loại đã tồn tại!");
+            return false;
+        }
+
         dao.create(new Category(0, name, active));
+        return true;
     }
 
-    private void update(HttpServletRequest req) {
+    private boolean update(HttpServletRequest req) {
         int id = ParamUtil.getInt(req, "id");
         String name = req.getParameter("name");
         boolean active = Boolean.parseBoolean(req.getParameter("active"));
 
+        if (dao.existsByNameExceptId(name, id)) {
+            req.getSession().setAttribute("error", "Tên loại đã tồn tại!");
+            return false;
+        }
+
         dao.update(new Category(id, name, active));
+        return true;
     }
 
     private void delete(HttpServletRequest req) {
@@ -70,7 +86,6 @@ public class CategoryServlet extends HttpServlet {
         int count = dao.countDrinkInCategory(id);
 
         if (count > 0) {
-            // ❗ KHÔNG xóa → báo lỗi
             req.getSession().setAttribute("error",
                     "Không thể xóa! Có " + count + " đồ uống đang sử dụng loại này.");
         } else {

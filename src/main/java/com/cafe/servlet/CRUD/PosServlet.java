@@ -44,6 +44,7 @@ public class PosServlet extends HttpServlet {
             }
         }
 
+
         req.getRequestDispatcher("/views/pos/view.jsp").forward(req, resp);
     }
 

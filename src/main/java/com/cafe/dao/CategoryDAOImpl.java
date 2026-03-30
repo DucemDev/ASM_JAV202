@@ -114,7 +114,31 @@ public class CategoryDAOImpl implements CategoryDAO {
             e.printStackTrace();
         }
         return rs;
-
-
+    }
+    @Override
+    public boolean existsByName(String name) {
+        String sql = "SELECT COUNT(*) FROM categories WHERE name = ?";
+        try {
+            ResultSet rs = DBConnect.executeQuery(sql, name);
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    @Override
+    public boolean existsByNameExceptId(String name, int id) {
+        String sql = "SELECT COUNT(*) FROM categories WHERE name = ? AND id != ?";
+        try {
+            ResultSet rs = DBConnect.executeQuery(sql, name, id);
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
