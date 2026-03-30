@@ -74,6 +74,7 @@ public class StaffSevlet extends HttpServlet {
             req.setAttribute("emailError", "Email không hợp lệ.");
             hasError = true;
         }
+
         if (password == null || password.length() < 6) {
             req.setAttribute("passwordError", "Mật khẩu phải có ít nhất 6 ký tự.");
             hasError = true;
