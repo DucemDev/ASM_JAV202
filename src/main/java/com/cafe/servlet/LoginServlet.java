@@ -108,10 +108,12 @@ public class LoginServlet extends HttpServlet {
                 req.getSession().setAttribute("user", user);
                 req.getSession().removeAttribute("failLogin");
 
-                if (user.isRole()) {
+                if (user.isRole()&&user.isAdmin()) {
                     resp.sendRedirect(req.getContextPath() + "/admin");
-                } else {
+                } else if(user.isRole()&&!user.isAdmin()) {
                     resp.sendRedirect(req.getContextPath() + "/staff");
+                }else{
+                    resp.sendRedirect(req.getContextPath() + "/customer");
                 }
 
             } else {
@@ -123,6 +125,8 @@ public class LoginServlet extends HttpServlet {
 
                 System.out.println("Số lần đăng nhập sai: " + failLogin + "/5");
             }
+
+
         }
     }
 }

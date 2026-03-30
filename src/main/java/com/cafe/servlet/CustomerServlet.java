@@ -1,18 +1,17 @@
 package com.cafe.servlet;
 
-import java.io.IOException;
-
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-@WebServlet("/staff")
-public class StaffServlet extends HttpServlet {
+import java.io.IOException;
+
+@WebServlet("/customer")
+public class CustomerServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("/WEB-INF/views/home.jsp").forward(req, resp);
-
+        req.getRequestDispatcher("/WEB-INF/public/index-customer.jsp").forward(req, resp);
     }
 }

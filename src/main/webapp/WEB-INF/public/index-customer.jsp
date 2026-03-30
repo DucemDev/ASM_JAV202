@@ -1,7 +1,3 @@
-<%@ page contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"
-         isELIgnored="false" %>
-<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 <!doctype html>
 <html lang="en">
 <head>
@@ -12,7 +8,6 @@
     <title>Document</title>
 </head>
 <body>
-<h1>hello đây là trang chur</h1>
-<p>${sessionScope.user.fullname}</p>
+<h1>here is customer's page</h1>
 </body>
 </html>
