@@ -16,13 +16,6 @@ import java.util.List;
 public class StaffSevlet extends HttpServlet {
     private static final long serialVersionUID = 1L;
     private UserDAOImpl userDAO = new UserDAOImpl();
-    @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    }
-
-    @Override
-    protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-    }
 
     public void listStaff(HttpServletRequest req, HttpServletResponse resp) {
         List<User> staffList = userDAO.findByRole(false);
