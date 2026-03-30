@@ -109,6 +109,29 @@ public class DrinkDAOImpl implements DrinkDAO {
             e.printStackTrace();
         }
         return list;
-
+    }
+    public boolean isNameExists(String name) {
+        String sql = "SELECT COUNT(*) FROM drinks WHERE name = ? AND active = 1";
+        try {
+            ResultSet rs = DBConnect.executeQuery(sql, name);
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    public boolean isNameExistsForUpdate(String name, int id) {
+        String sql = "SELECT COUNT(*) FROM drinks WHERE name = ? AND id <> ? AND active = 1";
+        try {
+            ResultSet rs = DBConnect.executeQuery(sql, name, id);
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }
