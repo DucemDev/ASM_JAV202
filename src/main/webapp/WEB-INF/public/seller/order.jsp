@@ -73,7 +73,7 @@ tailwind.config = {
         <c:forEach var="d" items="${drinks}">
             <div class="border rounded-xl shadow hover:shadow-lg transition">
 
-                <img src="${pageContext.request.contextPath}/assets/image/${d.image}"
+                <img src="${pageContext.request.contextPath}/${d.image}"
                      class="w-full h-36 object-cover"/>
 
                 <div class="p-3">
