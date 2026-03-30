@@ -178,10 +178,11 @@ public class UserDAOImpl implements UserDAO {
     }
 
     // ===== OPTIONAL =====
-    @Override
-    public List<User> findBySql(String sql, Object... value) {
-        return null;
-    }
+//    @Override
+//    public List<User> findBySql(String sql, Object... value) {
+//        return null;
+//    }
+//
 
     public List<User> findByRole(boolean role) {
         String sql = "SELECT * FROM users WHERE role = ?";
@@ -191,5 +192,46 @@ public class UserDAOImpl implements UserDAO {
             e.printStackTrace();
         }
         return null;
+    }
+
+    public List<User> findAll() {
+        String sql = "SELECT * FROM users";
+        return findBySql(sql);
+    }
+
+    @Override
+    public List<User> findBySql(String sql, Object... values) {
+
+        List<User> list = new java.util.ArrayList<>();
+
+        try (
+                Connection conn = DBConnect.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+
+            for (int i = 0; i < values.length; i++) {
+                ps.setObject(i + 1, values[i]);
+            }
+
+            ResultSet rs = ps.executeQuery();
+
+            while (rs.next()) {
+                User u = new User(
+                        rs.getInt("id"),
+                        rs.getString("full_name"),
+                        rs.getString("email"),
+                        rs.getString("password"),
+                        rs.getString("phone"),
+                        rs.getBoolean("role"),
+                        rs.getBoolean("active")
+                );
+                list.add(u);
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 }
