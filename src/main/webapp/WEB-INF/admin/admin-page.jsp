@@ -164,7 +164,7 @@ Quản lý
 <div class="grid grid-cols-4 gap-6">
 
 <!-- NHÂN VIÊN -->
-<a href="users"
+<a href="${pageContext.request.contextPath}/manager/staff"
 class="group bg-white border border-gray-200 p-5 rounded-xl text-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition">
 
 <svg class="w-6 h-6 mx-auto text-gray-500 group-hover:text-cafe-brown transition mb-2"
@@ -213,7 +213,7 @@ viewBox="0 0 24 24">
 
 
 <!-- HÓA ĐƠN -->
-<a href="bills"
+<a href="${pageContext.request.contextPath}/bills"
 class="group bg-white border border-gray-200 p-5 rounded-xl text-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition">
 
 <svg class="w-6 h-6 mx-auto text-gray-500 group-hover:text-cafe-brown transition mb-2"

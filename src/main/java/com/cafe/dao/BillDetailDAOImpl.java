@@ -11,6 +11,7 @@ import java.util.List;
 public class BillDetailDAOImpl implements BillDetailDAO {
     BillDAO billDAO = new BillDAOImpl();
     DrinkDAO drinkDAO = new DrinkDAOImpl();
+
     @Override
     public List<BillDetail> findByBillId(int billId) {
         String sql = "SELECT * FROM bill_details WHERE bill_id = ?";
@@ -21,6 +22,7 @@ public class BillDetailDAOImpl implements BillDetailDAO {
         }
         return new ArrayList<BillDetail>();
     }
+
     @Override
     public int addDrinkToBill(int billId, int drinkId) {
         Bill bill = billDAO.findById(billId);
@@ -47,6 +49,7 @@ public class BillDetailDAOImpl implements BillDetailDAO {
         }
         return 0;
     }
+
     @Override
     public int updateQuantity(int billId, int drinkId, int quantity) {
         Bill bill = billDAO.findById(billId);
@@ -77,6 +80,7 @@ public class BillDetailDAOImpl implements BillDetailDAO {
         }
         return 0;
     }
+
     @Override
     public int create(BillDetail billdetail) {
         String sql = "INSERT INTO bill_details(bill_id, drink_id, quantity, price) values(?, ?, ?, ?)";
@@ -89,6 +93,7 @@ public class BillDetailDAOImpl implements BillDetailDAO {
         }
         return 0;
     }
+
     @Override
     public int update(BillDetail billdetail) {
         String sql = "UPDATE bill_details SET bill_id = ?, drink_id = ?, quantity = ?, price = ? WHERE id = ?";
@@ -105,9 +110,27 @@ public class BillDetailDAOImpl implements BillDetailDAO {
     public BillDetail findById(Integer id) {
         return null;
     }
-        @Override
-        public List<BillDetail> findBySql(String sql, Object... value) {
-            return null;
+
+    @Override
+    public List<BillDetail> findBySql(String sql, Object... value) {
+        List<BillDetail> list = new ArrayList<>();
+        try {
+            var rs = DBConnect.executeQuery(sql, value);
+            while (rs.next()) {
+                BillDetail bd = new BillDetail();
+                bd.setId(rs.getInt("id"));
+                bd.setBillId(rs.getInt("bill_id"));
+                bd.setDrinkId(rs.getInt("drink_id"));
+                bd.setQuantity(rs.getInt("quantity"));
+                bd.setPrice((int) rs.getDouble("price"));
+                list.add(bd);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
         }
+        return list; // ✅ LUÔN trả list
     }
+
+
+}
 

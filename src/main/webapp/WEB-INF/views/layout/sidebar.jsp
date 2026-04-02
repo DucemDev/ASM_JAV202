@@ -42,7 +42,7 @@ viewBox="0 0 24 24">
 </a>
 
 <!-- SELL -->
-<a href="${pageContext.request.contextPath}/sell"
+<a href="${pageContext.request.contextPath}/seller/tables"
 class="group flex items-center gap-3 p-3 rounded-xl hover:bg-cafe-bg transition">
 
 <svg class="w-5 h-5 text-gray-500 group-hover:text-gray-800 transition"

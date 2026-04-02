@@ -14,6 +14,7 @@ public class Bill {
     private int userId;
     private String code;
     private LocalDate createdAt;
-    private String total;
+    private String total; // tiền sao dùng string vậy ní double thì phải ní
     private String status;
+    private int tableId;
 }
