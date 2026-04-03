@@ -9,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 @WebServlet({"/login", "/logining", "/verify-otp"})
@@ -96,23 +97,37 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
+            if (!username.contains("@gmail.com")) {
+                req.setAttribute("message", "Email không đúng cú pháp!");
+                req.getRequestDispatcher("/WEB-INF/public/login.jsp").forward(req, resp);
+                return;
+            }
+
             if (password == null || password.trim().isEmpty()) {
                 req.setAttribute("message", "Không được để trống Password!");
                 req.getRequestDispatcher("/WEB-INF/public/login.jsp").forward(req, resp);
                 return;
             }
-
+            if (password.contains("#") || password.contains("$") || password.contains("%") || password.contains("^")
+                    || password.contains("*") || password.contains("?") || password.contains("{") || password.contains("}")
+                    || password.contains("[") || password.contains("]") || password.contains("`") || password.contains("~")
+                    || password.contains("|") || password.contains(",") || password.contains(";") || password.contains("!")
+                    || password.contains("@") || password.contains("=")) {
+                req.setAttribute("message", "Password không được chứa các ký hiệu đặc biệt!");
+                req.getRequestDispatcher("/WEB-INF/public/login.jsp").forward(req, resp);
+                return;
+            }
             User user = userDAO.login(username, password);
 
             if (user != null) {
                 req.getSession().setAttribute("user", user);
                 req.getSession().removeAttribute("failLogin");
 
-                if (user.isRole()&&user.isAdmin()) {
-                    resp.sendRedirect(req.getContextPath() + "/admin");
-                } else if(user.isRole()&&!user.isAdmin()) {
+                if (user.isRole()) {
                     resp.sendRedirect(req.getContextPath() + "/staff");
-                }else{
+                } else if (user.isRole()) {
+                    resp.sendRedirect(req.getContextPath() + "/staff");
+                } else {
                     resp.sendRedirect(req.getContextPath() + "/customer");
                 }
 

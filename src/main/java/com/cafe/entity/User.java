@@ -15,7 +15,6 @@ public class User {
     private String password;
     private String phone;
     private boolean role;
-	private boolean admin;
     private boolean active;
 
 //	public User(int id, String fullname, String email, String password, String phone, boolean role, boolean admin, boolean active) {

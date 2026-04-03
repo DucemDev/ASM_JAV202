@@ -33,7 +33,6 @@ public class UserDAOImpl implements UserDAO {
                         rs.getString("password"),
                         rs.getString("phone"),
                         rs.getBoolean("role"),
-                        rs.getBoolean("admin"),
                         rs.getBoolean("active")
                 );
             }
@@ -64,7 +63,7 @@ public class UserDAOImpl implements UserDAO {
                         rs.getString("password"),   // ✅ password
                         rs.getString("phone"),
                         rs.getBoolean("role"),
-                        rs.getBoolean("admin"),
+
                         rs.getBoolean("active")
                 );
             }
