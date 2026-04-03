@@ -12,11 +12,11 @@ import java.io.IOException;
 @WebServlet({"/change-information", "/change-information/save"})
 public class ChangeInformationServlet extends HttpServlet {
 
-    UserDAO userDAO = new UserDAOImpl();
+
+    private UserDAO userDAO = new UserDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-
         req.getRequestDispatcher("/WEB-INF/public/change-information.jsp").forward(req, resp);
     }
 
@@ -28,62 +28,70 @@ public class ChangeInformationServlet extends HttpServlet {
             HttpSession session = req.getSession();
             User user = (User) session.getAttribute("user");
 
+            // chưa login
             if (user == null) {
-                resp.sendRedirect("login");
+                resp.sendRedirect(req.getContextPath() + "/login");
                 return;
             }
-
 
             String fullname = req.getParameter("fullname");
             String email = req.getParameter("email");
             String phone = req.getParameter("phone");
 
-            if (fullname == null || fullname.trim().equals("") || fullname.trim().isEmpty()) {
+            // ===== VALIDATE =====
+
+            if (fullname == null || fullname.trim().isEmpty()) {
                 session.setAttribute("message", "Họ tên không được để trống");
                 resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
             }
-            if (email == null || email.trim().equals("") || email.trim().isEmpty()) {
+
+            if (email == null || email.trim().isEmpty()) {
                 session.setAttribute("message", "Email không được để trống");
                 resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
             }
-            if (!email.endsWith("@gmail.com") || email.endsWith("@yahoo.com")) {
-                session.setAttribute("message", "Email không đúng cú pháp");
+
+            // regex email chuẩn
+            if (!email.matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+$")) {
+                session.setAttribute("message", "Email không đúng định dạng");
                 resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
             }
-            if (phone == null || phone.trim().equals("") || phone.trim().isEmpty()) {
+
+            if (phone == null || phone.trim().isEmpty()) {
                 session.setAttribute("message", "Số điện thoại không được để trống");
                 resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
             }
-            if (phone.length() < 10 || phone.length() > 10 || !phone.startsWith("0")) {
-                session.setAttribute("message", "Số điện thoại không đúng cú pháp!");
+
+            // regex phone VN
+            if (!phone.matches("^0\\d{9}$")) {
+                session.setAttribute("message", "Số điện thoại không hợp lệ!");
                 resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
             }
+
+            // ===== UPDATE =====
 
             user.setFullname(fullname);
             user.setEmail(email);
             user.setPhone(phone);
 
-
             try {
                 userDAO.updateChangeInformation(user);
-                session.setAttribute("message", "Đổi thông tin thành công!");
-                System.out.print("changed");
+                session.setAttribute("message", "Cập nhật thông tin thành công!");
             } catch (Exception e) {
-                session.setAttribute("message", "Đổi thông tin thất bại!");
-                System.out.print("fail change");
+                session.setAttribute("message", "Cập nhật thất bại!");
+                e.printStackTrace();
             }
 
-
+            // cập nhật lại session
             session.setAttribute("user", user);
 
             resp.sendRedirect(req.getContextPath() + "/profile");
-
         }
     }
-}
 
+
+}
