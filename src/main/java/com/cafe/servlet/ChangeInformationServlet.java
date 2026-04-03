@@ -39,27 +39,27 @@ public class ChangeInformationServlet extends HttpServlet {
             String phone = req.getParameter("phone");
 
             if (fullname == null || fullname.trim().equals("") || fullname.trim().isEmpty()) {
-                session.setAttribute("message", "Họ tên không được để trống");
+                session.setAttribute("messageInfo", "Họ tên không được để trống");
                 resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
             }
             if (email == null || email.trim().equals("") || email.trim().isEmpty()) {
-                session.setAttribute("message", "Email không được để trống");
+                session.setAttribute("messageInfo", "Email không được để trống");
                 resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
             }
             if (!email.endsWith("@gmail.com") || email.endsWith("@yahoo.com")) {
-                session.setAttribute("message", "Email không đúng cú pháp");
+                session.setAttribute("messageInfo", "Email không đúng cú pháp");
                 resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
             }
             if (phone == null || phone.trim().equals("") || phone.trim().isEmpty()) {
-                session.setAttribute("message", "Số điện thoại không được để trống");
+                session.setAttribute("messageInfo", "Số điện thoại không được để trống");
                 resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
             }
             if (phone.length() < 10 || phone.length() > 10 || !phone.startsWith("0")) {
-                session.setAttribute("message", "Số điện thoại không đúng cú pháp!");
+                session.setAttribute("messageInfo", "Số điện thoại không đúng cú pháp!");
                 resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
             }
@@ -71,10 +71,10 @@ public class ChangeInformationServlet extends HttpServlet {
 
             try {
                 userDAO.updateChangeInformation(user);
-                session.setAttribute("message", "Đổi thông tin thành công!");
+                session.setAttribute("messageInfo", "Đổi thông tin thành công!");
                 System.out.print("changed");
             } catch (Exception e) {
-                session.setAttribute("message", "Đổi thông tin thất bại!");
+                session.setAttribute("messageInfo", "Đổi thông tin thất bại!");
                 System.out.print("fail change");
             }
 

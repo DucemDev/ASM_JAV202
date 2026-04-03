@@ -91,7 +91,10 @@ class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 focus:ring-2 focu
 type="text"
 class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2 bg-gray-100" readonly>
 </div>
-
+        <!-- ERROR MESSAGE -->
+        <c:if test="${not empty messageInfo}">
+            <p class="text-red-500 text-sm">${messageInfo}</p>
+        </c:if>
 <!-- BUTTON -->
 <div class="flex gap-4 pt-4">
 

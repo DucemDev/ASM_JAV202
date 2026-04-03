@@ -97,11 +97,11 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
-            if (!username.contains("@gmail.com")) {
-                req.setAttribute("message", "Email không đúng cú pháp!");
-                req.getRequestDispatcher("/WEB-INF/public/login.jsp").forward(req, resp);
-                return;
-            }
+//            if (!username.contains("@gmail.com")) {
+//                req.setAttribute("message", "Email không đúng cú pháp!");
+//                req.getRequestDispatcher("/WEB-INF/public/login.jsp").forward(req, resp);
+//                return;
+//            }
 
             if (password == null || password.trim().isEmpty()) {
                 req.setAttribute("message", "Không được để trống Password!");
@@ -124,9 +124,9 @@ public class LoginServlet extends HttpServlet {
                 req.getSession().removeAttribute("failLogin");
 
                 if (user.isRole()) {
-                    resp.sendRedirect(req.getContextPath() + "/staff");
+                    resp.sendRedirect(req.getContextPath() + "/home");
                 } else if (user.isRole()) {
-                    resp.sendRedirect(req.getContextPath() + "/staff");
+                    resp.sendRedirect(req.getContextPath() + "/home");
                 } else {
                     resp.sendRedirect(req.getContextPath() + "/customer");
                 }
