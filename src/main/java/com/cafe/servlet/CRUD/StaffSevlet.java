@@ -139,7 +139,7 @@ public class StaffSevlet extends HttpServlet {
         staff.setFullname(fullName);
         staff.setPhone(phone);
         staff.setActive(active == 1);
-        staff.setRole(false);
+        staff.setRole(1);
 
         return staff;
     }

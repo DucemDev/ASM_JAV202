@@ -15,9 +15,13 @@ import java.io.IOException;
 @WebServlet({"/login", "/logining", "/verify-otp"})
 public class LoginServlet extends HttpServlet {
 
+
+    private UserDAO userDAO = new UserDAOImpl();
+
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
         String path = req.getServletPath();
+
         if ("/verify-otp".equals(path)) {
             if (req.getSession().getAttribute("pendingUser") == null) {
                 resp.sendRedirect(req.getContextPath() + "/login");
@@ -33,8 +37,6 @@ public class LoginServlet extends HttpServlet {
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         String path = req.getServletPath();
-        String uri = req.getRequestURI();
-        UserDAO userDAO = new UserDAOImpl();
 
         // ===== 1. VERIFY OTP =====
         if ("/verify-otp".equals(path)) {
@@ -46,7 +48,10 @@ public class LoginServlet extends HttpServlet {
                 req.getSession().setAttribute("user", pendingUser);
                 req.getSession().removeAttribute("otpVerify");
                 req.getSession().removeAttribute("pendingUser");
-                resp.sendRedirect(req.getContextPath() + "/home");
+
+                // redirect theo role
+                redirectByRole(pendingUser, req, resp);
+
             } else {
                 req.setAttribute("message", "Mã OTP không chính xác!");
                 req.getRequestDispatcher("/WEB-INF/public/verify-otp.jsp").forward(req, resp);
@@ -86,7 +91,7 @@ public class LoginServlet extends HttpServlet {
             return;
         }
 
-        if (uri.endsWith("/logining")) {
+        if ("/logining".equals(path)) {
             String password = req.getParameter("passwordIp");
             String username = req.getParameter("emailIp");
 
@@ -123,13 +128,10 @@ public class LoginServlet extends HttpServlet {
                 req.getSession().setAttribute("user", user);
                 req.getSession().removeAttribute("failLogin");
 
-                if (user.isRole()) {
-                    resp.sendRedirect(req.getContextPath() + "/home");
-                } else if (user.isRole()) {
-                    resp.sendRedirect(req.getContextPath() + "/home");
-                } else {
-                    resp.sendRedirect(req.getContextPath() + "/customer");
-                }
+
+                // redirect theo role
+                redirectByRole(user, req, resp);
+
 
             } else {
                 failLogin++;
@@ -144,4 +146,17 @@ public class LoginServlet extends HttpServlet {
 
         }
     }
+
+    // ===== HELPER REDIRECT ROLE =====
+    private void redirectByRole(User user, HttpServletRequest req, HttpServletResponse resp) throws IOException {
+        if (user.getRole() == 2) {
+            resp.sendRedirect(req.getContextPath() + "/admin");
+        } else if (user.getRole() == 1) {
+            resp.sendRedirect(req.getContextPath() + "/manager/staff");
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/home");
+        }
+    }
+
+
 }

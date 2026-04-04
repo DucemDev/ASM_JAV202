@@ -32,7 +32,7 @@ public class UserDAOImpl implements UserDAO {
                         rs.getString("email"),
                         rs.getString("password"),
                         rs.getString("phone"),
-                        rs.getBoolean("role"),
+                        rs.getInt("role"),
                         rs.getBoolean("active")
                 );
             }
@@ -62,8 +62,7 @@ public class UserDAOImpl implements UserDAO {
                         rs.getString("email"),      // ✅ email
                         rs.getString("password"),   // ✅ password
                         rs.getString("phone"),
-                        rs.getBoolean("role"),
-
+                        rs.getInt("role"),
                         rs.getBoolean("active")
                 );
             }
@@ -85,7 +84,7 @@ public class UserDAOImpl implements UserDAO {
                     user.getPassword(),
                     user.getFullname(),
                     user.getPhone(),
-                    user.isRole(),
+                    user.getRole(),
                     user.isActive()
             );
         } catch (Exception e) {
@@ -104,7 +103,7 @@ public class UserDAOImpl implements UserDAO {
                     user.getPassword(),
                     user.getFullname(),
                     user.getPhone(),
-                    user.isRole(),
+                    user.getRole(),
                     user.isActive(),
                     user.getId()
             );
@@ -223,7 +222,7 @@ public class UserDAOImpl implements UserDAO {
                         rs.getString("email"),
                         rs.getString("password"),
                         rs.getString("phone"),
-                        rs.getBoolean("role"),
+                        rs.getInt("role"),
                         rs.getBoolean("active")
                 );
                 list.add(u);
