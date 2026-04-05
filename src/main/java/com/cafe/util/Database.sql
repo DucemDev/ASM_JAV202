@@ -147,10 +147,10 @@ INSERT INTO tables (name,  status) VALUES
    INSERT USERS
 ========================= */
 INSERT INTO users (email, password, full_name, phone, role) VALUES
-                                                                ('anhhldts02418@gmail.com', '123', N'Huỳnh Lê Đức Anh', '0813716449', 3),
-                                                                ('truongmk@gmail.com', '123', N'Mai Phiến Chi', '0908070605', 3),
+                                                                ('anhhldts02418@gmail.com', '123', N'Huỳnh Lê Đức Anh', '0813716449', 2),
+                                                                ('truongmk@gmail.com', '123', N'Mai Phiến Chi', '0908070605', 2),
                                                                 ('ngoctm@gmail.com', '123', N'Trần Mỹ Ngọc', '0900000003', 1),
-                                                                ('halvt@gmail.com', '123', N'Lê Thanh Vân Hà', '0908070876', 3),
+                                                                ('halvt@gmail.com', '123', N'Lê Thanh Vân Hà', '0908070876', 2),
                                                                 ('anhct@gmail.com', '123', N'Chế Trâm Anh', '0908070986', 1),
                                                                 ('thangtv@gmail.com', '123', N'Trần Việt Thắng', '0918970605', 0)
 
