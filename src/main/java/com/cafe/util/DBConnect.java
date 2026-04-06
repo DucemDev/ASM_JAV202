@@ -4,26 +4,21 @@
  */
 package com.cafe.util;
 
-/**
- *
- * @author HUYNH
- */
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.SQLException;
+import java.sql.*;
 
 public class DBConnect {
 
     public static final String HOSTNAME = "localhost";
     public static final String PORT = "1433";
     public static final String DBNAME = "PolyCafe_JAV202";
-    public static final String USERNAME = "Sa";
+
+    public static final String USERNAME = "sa";
+
     public static final String PASSWORD = "123456789";
 
     public static Connection getConnection() {
         String connectionUrl = "jdbc:sqlserver://" + HOSTNAME + ":" + PORT + ";"
                 + "databaseName=" + DBNAME + ";encrypt=true;trustServerCertificate=true";
-
         try {
             Class.forName("com.microsoft.sqlserver.jdbc.SQLServerDriver");
             return DriverManager.getConnection(connectionUrl, USERNAME, PASSWORD);
@@ -32,6 +27,42 @@ public class DBConnect {
         }
         return null;
     }
-    
+
+
+    public static PreparedStatement createPreStmt(String sql, Object... values) throws SQLException {
+        Connection connection = getConnection();
+        PreparedStatement stmt = null;
+        if (sql.trim().startsWith("{")) {
+            stmt = connection.prepareCall(sql);
+        } else {
+            stmt = connection.prepareStatement(sql);
+        }
+
+        for (int i = 0; i < values.length; i++) {
+            if (values[i] == null) {
+                stmt.setNull(i + 1, Types.NULL);
+            } else {
+                stmt.setObject(i + 1, values[i]);
+            }
+        }
+
+        return stmt;
+    }
+
+    public static int executeUpdate(String sql, Object... values) throws SQLException {
+        try (PreparedStatement stmt = DBConnect.createPreStmt(sql, values)) {
+            return stmt.executeUpdate();
+        }
+    }
+
+    /**
+     * Truy vấn dữ liệu
+     */
+    public static ResultSet executeQuery(String sql, Object... values) throws SQLException {
+        PreparedStatement stmt = DBConnect.createPreStmt(sql, values);
+        return stmt.executeQuery();
+
+    }
+
 }
 
