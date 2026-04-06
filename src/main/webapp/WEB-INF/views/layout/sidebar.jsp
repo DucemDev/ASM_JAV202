@@ -48,7 +48,7 @@
 
         <!-- SELL (STAFF + ADMIN) -->
 
-        <c:if test="${sessionScope.user != null && (sessionScope.user.role == 1 || sessionScope.user.role == 2)}"> <a href="${pageContext.request.contextPath}/seller/tables"
+        <c:if test="${sessionScope.user != null && (sessionScope.user.role == 1 || sessionScope.user.role == 2 || sessionScope.user.role == 0)}"> <a href="${pageContext.request.contextPath}/seller/tables"
                                                                                                                       class="group flex items-center gap-3 p-3 rounded-xl hover:bg-cafe-bg transition">
 
             <svg class="w-5 h-5 text-gray-500 group-hover:text-gray-800 transition"
