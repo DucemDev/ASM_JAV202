@@ -104,6 +104,21 @@ public class StaffSevlet extends HttpServlet {
 
         User u = getFormData(req);
 
+        if (u.getEmail() == null || u.getEmail().isBlank()
+                || u.getFullname() == null || u.getFullname().isBlank()
+                || u.getPhone() == null || u.getPhone().isBlank()
+                || u.getPassword() == null || u.getPassword().isBlank()) {
+
+            req.setAttribute("error", "Vui lòng nhập đầy đủ thông tin!");
+            req.setAttribute("user", u); // giữ lại dữ liệu đã nhập
+            listStaff(req);
+            req.setAttribute("formMode", "add");
+
+            req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp")
+                    .forward(req, resp);
+            return;
+        }
+
         if (userDAO.findByEmail(u.getEmail()) != null) {
             req.setAttribute("error", "Email đã tồn tại!");
             listStaff(req);
@@ -118,7 +133,7 @@ public class StaffSevlet extends HttpServlet {
 
     // UPDATE
     private void update(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+            throws IOException, ServletException{
 
         int id = ParamUtil.getInt(req, "userId");
         User old = userDAO.findById(id);
@@ -129,6 +144,20 @@ public class StaffSevlet extends HttpServlet {
         if (u.getPassword() == null || u.getPassword().isBlank()) {
             u.setPassword(old.getPassword());
         }
+
+        if (u.getEmail() == null || u.getEmail().isBlank()
+                || u.getFullname() == null || u.getFullname().isBlank()
+                || u.getPhone() == null || u.getPhone().isBlank()) {
+
+            req.setAttribute("error", "Không được để trống thông tin!");
+            req.setAttribute("user", u);
+            listStaff(req);
+            req.setAttribute("formMode", "edit");
+
+            req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp").forward(req, resp);
+            return;
+        }
+
 
         userDAO.update(u);
         resp.sendRedirect(req.getContextPath() + "/manager/staff");

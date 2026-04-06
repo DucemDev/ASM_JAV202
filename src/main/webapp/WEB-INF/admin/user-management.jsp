@@ -43,6 +43,11 @@
                 <h2 class="text-xl font-bold mb-4">
                         ${formMode == 'add' ? 'Add User' : 'Edit User'}
                 </h2>
+                <c:if test="${error != null}">
+                    <div class="bg-red-100 text-red-600 px-4 py-2 rounded mb-4">
+                            ${error}
+                    </div>
+                </c:if>
 
                 <form method="post"
                       action="${pageContext.request.contextPath}/manager/staff/${formMode}">

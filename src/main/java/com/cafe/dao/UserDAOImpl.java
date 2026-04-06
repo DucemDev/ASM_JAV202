@@ -11,7 +11,6 @@ import com.cafe.util.DBConnect;
 
 public class UserDAOImpl implements UserDAO {
 
-    // ===== FIND BY ID =====
     @Override
     public User findById(int id) {
         String sql = "SELECT * FROM users WHERE id = ?";
@@ -44,7 +43,6 @@ public class UserDAOImpl implements UserDAO {
         String sql = "SELECT * FROM users WHERE email LIKE ?";
         return findBySql(sql, "%" + keyword + "%");
     }
-    // ===== FIND BY EMAIL =====
     public User findByEmail(String email) {
         String sql = "SELECT * FROM users WHERE email = ? AND active = 1";
         try (
