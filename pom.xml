@@ -46,19 +46,19 @@
             <version>3.0.1</version>
         </dependency>
 
-<!--        &lt;!&ndash; ================= JPA API ================= &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>jakarta.persistence</groupId>-->
-<!--            <artifactId>jakarta.persistence-api</artifactId>-->
-<!--            <version>3.1.0</version>-->
-<!--        </dependency>-->
+        <!--        &lt;!&ndash; ================= JPA API ================= &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>jakarta.persistence</groupId>-->
+        <!--            <artifactId>jakarta.persistence-api</artifactId>-->
+        <!--            <version>3.1.0</version>-->
+        <!--        </dependency>-->
 
-<!--        &lt;!&ndash; ================= HIBERNATE ================= &ndash;&gt;-->
-<!--        <dependency>-->
-<!--            <groupId>org.hibernate.orm</groupId>-->
-<!--            <artifactId>hibernate-core</artifactId>-->
-<!--            <version>6.4.4.Final</version>-->
-<!--        </dependency>-->
+        <!--        &lt;!&ndash; ================= HIBERNATE ================= &ndash;&gt;-->
+        <!--        <dependency>-->
+        <!--            <groupId>org.hibernate.orm</groupId>-->
+        <!--            <artifactId>hibernate-core</artifactId>-->
+        <!--            <version>6.4.4.Final</version>-->
+        <!--        </dependency>-->
 
         <!-- ================= SQL SERVER JDBC ================= -->
         <dependency>

@@ -1,6 +1,0 @@
-<component name="ArtifactManager">
-  <artifact type="war" name="JAV202_ASM">
-    <output-path>$PROJECT_DIR$/out/artifacts/JAV202_ASM</output-path>
-    <root id="archive" name="JAV202_ASM.war" />
-  </artifact>
-</component>
