@@ -71,15 +71,21 @@ CREATE TABLE users (
 /* =========================
    BILLS (HÓA ĐƠN)
 ========================= */
+
+
 CREATE TABLE bills (
                        id INT PRIMARY KEY IDENTITY,
-                       table_id INT NOT NULL,
-                       user_id INT NOT NULL,
+                       table_id INT NULL,
+                       user_id INT NULL,
                        code VARCHAR(10) NOT NULL,
                        created_at DATETIME DEFAULT GETDATE(),
                        total INT,
-                       status VARCHAR(20), -- waiting / finish
-
+                       status VARCHAR(20),
+                       type VARCHAR(20) DEFAULT 'pos',
+                       customer_name NVARCHAR(100),
+                       customer_phone VARCHAR(10),
+                       address NVARCHAR(255),
+                       note NVARCHAR(255),
                        FOREIGN KEY (table_id) REFERENCES tables(id),
                        FOREIGN KEY (user_id) REFERENCES users(id)
 )
@@ -94,7 +100,6 @@ CREATE TABLE bill_details (
                               drink_id INT NOT NULL,
                               quantity INT,
                               price INT,
-
                               FOREIGN KEY (bill_id) REFERENCES bills(id),
                               FOREIGN KEY (drink_id) REFERENCES drinks(id)
 )
@@ -104,7 +109,7 @@ CREATE TABLE bill_details (
 /* =========================
    INSERT CATEGORIES
 ========================= */
-INSERT INTO categories (name) VALUES
+    INSERT INTO categories (name) VALUES
                                   (N'Cà phê'),
                                   (N'Trà sữa'),
                                   (N'Nước ép'),
@@ -194,3 +199,6 @@ SELECT * FROM tables
 SELECT * FROM users
 SELECT * FROM bills
 SELECT * FROM bill_details
+
+
+
