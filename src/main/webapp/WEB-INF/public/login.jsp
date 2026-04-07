@@ -251,8 +251,10 @@
 		<div class="footer">
 			Hệ thống PolyCafe
 			<p>
-				anhhldts02418@gmail.com | 123 (Admin)<br>
-				thangtv@poly.com | 123 (User)
+				truongmk@gmail.com | 123 (Admin)<br>
+				ngoctm@gmail.com | 123 (nhân viên)<br>
+				thangtv@poly.com | 123 (khách hàng)
+
 			</p>
 		</div>
 	</div>
