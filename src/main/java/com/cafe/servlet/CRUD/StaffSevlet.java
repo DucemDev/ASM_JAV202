@@ -14,133 +14,186 @@ import java.util.List;
         "/manager/staff",
         "/manager/staff/add",
         "/manager/staff/edit",
+        "/manager/staff/delete",
         "/manager/staff/update-status"
 })
 public class StaffSevlet extends HttpServlet {
 
-    private static final long serialVersionUID = 1L;
     private UserDAOImpl userDAO = new UserDAOImpl();
-    List<User> staffList = userDAO.findAll();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
-        List<User> staffList = userDAO.findAll();
-//        List<User> staffList = userDAO.findByRole(false);
-        req.setAttribute("staffList", staffList);
 
-        req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp")
-                .forward(req, resp);
-    }
-    // =========================
+        String path = req.getServletPath();
 
-    public void listStaff(HttpServletRequest req, HttpServletResponse resp) {
-        List<User> staffList = userDAO.findByRole(false);
-        req.setAttribute("staffList", staffList);
-    }
+        switch (path) {
 
-    public void create(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+            // LIST
+            case "/manager/staff":
+                listStaff(req);
+                req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp")
+                        .forward(req, resp);
+                break;
 
-        User staff = getStaffFromRequestAndValidate(req, resp);
+            // 👉 ADD FORM
+            case "/manager/staff/add":
+                listStaff(req);
+                req.setAttribute("formMode", "add");
+                req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp")
+                        .forward(req, resp);
+                break;
 
-        if (staff != null) {
-            User existingUser = userDAO.findByEmail(staff.getEmail());
+            // 👉 EDIT FORM
+            case "/manager/staff/edit":
+                int id = ParamUtil.getInt(req, "userId");
+                User user = userDAO.findById(id);
 
-            if (existingUser != null) {
-                req.setAttribute("emailError", "Email đã được sử dụng.");
-                req.getRequestDispatcher("/views/staff/staff-form.jsp").forward(req, resp);
-                return;
-            }
+                listStaff(req);
+                req.setAttribute("formMode", "edit");
+                req.setAttribute("user", user);
 
-            int rs = userDAO.create(staff);
+                req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp")
+                        .forward(req, resp);
+                break;
 
-            if (rs > 0) {
-                resp.sendRedirect(req.getContextPath() + "/manager/staff?error=true");
-            } else {
-                resp.sendRedirect(req.getContextPath() + "/manager/staff?error=false");
-            }
+            case "/manager/staff/delete":
+                delete(req, resp);
+                break;
+
+            case "/manager/staff/update-status":
+                updateStatus(req, resp);
+                break;
         }
     }
 
-    public void edit(HttpServletRequest req, HttpServletResponse resp)
+    @Override
+    protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        User staff = getStaffFromRequestAndValidate(req, resp);
+        String path = req.getServletPath();
 
-        if (staff != null) {
-            int userId = ParamUtil.getInt(req, "userId");
-            staff.setId(userId);
+        switch (path) {
+            case "/manager/staff/add":
+                create(req, resp);
+                break;
 
-            int rs = userDAO.updateUserInfo(staff);
-
-            if (rs > 0) {
-                resp.sendRedirect(req.getContextPath() + "/manager/staff?error=true");
-            } else {
-                resp.sendRedirect(req.getContextPath() + "/manager/staff?error=false");
-            }
+            case "/manager/staff/edit":
+                update(req, resp);
+                break;
         }
     }
 
-    public void updateStatus(HttpServletRequest req, HttpServletResponse resp)
+    // LIST
+    private void listStaff(HttpServletRequest req) {
+        String keyword = req.getParameter("keyword");
+        List<User> staffList;
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            staffList = userDAO.findByKeyword(keyword);
+        } else {
+            staffList = userDAO.findAll();
+        }
+
+        req.setAttribute("staffList", staffList);
+    }
+
+    // CREATE
+    private void create(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException, ServletException {
+
+        User u = getFormData(req);
+
+        if (u.getEmail() == null || u.getEmail().isBlank()
+                || u.getFullname() == null || u.getFullname().isBlank()
+                || u.getPhone() == null || u.getPhone().isBlank()
+                || u.getPassword() == null || u.getPassword().isBlank()) {
+
+            req.setAttribute("error", "Vui lòng nhập đầy đủ thông tin!");
+            req.setAttribute("user", u); // giữ lại dữ liệu đã nhập
+            listStaff(req);
+            req.setAttribute("formMode", "add");
+
+            req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp")
+                    .forward(req, resp);
+            return;
+        }
+
+        if (userDAO.findByEmail(u.getEmail()) != null) {
+            req.setAttribute("error", "Email đã tồn tại!");
+            listStaff(req);
+            req.setAttribute("formMode", "add");
+            req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp").forward(req, resp);
+            return;
+        }
+
+        userDAO.create(u);
+        resp.sendRedirect(req.getContextPath() + "/manager/staff");
+    }
+
+    // UPDATE
+    private void update(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException, ServletException{
+
+        int id = ParamUtil.getInt(req, "userId");
+        User old = userDAO.findById(id);
+
+        User u = getFormData(req);
+        u.setId(id);
+
+        if (u.getPassword() == null || u.getPassword().isBlank()) {
+            u.setPassword(old.getPassword());
+        }
+
+        if (u.getEmail() == null || u.getEmail().isBlank()
+                || u.getFullname() == null || u.getFullname().isBlank()
+                || u.getPhone() == null || u.getPhone().isBlank()) {
+
+            req.setAttribute("error", "Không được để trống thông tin!");
+            req.setAttribute("user", u);
+            listStaff(req);
+            req.setAttribute("formMode", "edit");
+
+            req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp").forward(req, resp);
+            return;
+        }
+
+
+        userDAO.update(u);
+        resp.sendRedirect(req.getContextPath() + "/manager/staff");
+    }
+
+    // DELETE
+    private void delete(HttpServletRequest req, HttpServletResponse resp)
             throws IOException {
 
-        int userId = ParamUtil.getInt(req, "userId");
-        int status = ParamUtil.getInt(req, "status");
+        int id = ParamUtil.getInt(req, "userId");
+        userDAO.updateStatus(id, false);
 
-        int rs = userDAO.updateStatus(userId, status == 1);
-
-        if (rs > 0) {
-            resp.sendRedirect(req.getContextPath() + "/manager/staff?error=true");
-        } else {
-            resp.sendRedirect(req.getContextPath() + "/manager/staff?error=false");
-        }
+        resp.sendRedirect(req.getContextPath() + "/manager/staff");
     }
 
-    public User getStaffFromRequestAndValidate(HttpServletRequest req, HttpServletResponse resp)
-            throws ServletException, IOException {
+    // STATUS
+    private void updateStatus(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
 
-        String email = ParamUtil.getString(req, "email");
-        String password = ParamUtil.getString(req, "password");
-        String fullName = ParamUtil.getString(req, "fullName");
-        String phone = ParamUtil.getString(req, "phone");
-        int active = ParamUtil.getInt(req, "active");
+        int id = ParamUtil.getInt(req, "userId");
+        int status = ParamUtil.getInt(req, "status");
 
-        boolean hasError = false;
+        userDAO.updateStatus(id, status == 1);
 
-        if (email == null || !email.matches("^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\\.[a-zA-Z]{2,}$")) {
-            req.setAttribute("emailError", "Email không hợp lệ.");
-            hasError = true;
-        }
+        resp.sendRedirect(req.getContextPath() + "/manager/staff");
+    }
 
-        if (password == null || password.length() < 6) {
-            req.setAttribute("passwordError", "Mật khẩu phải có ít nhất 6 ký tự.");
-            hasError = true;
-        }
-
-        if (fullName == null || fullName.isBlank()) {
-            req.setAttribute("fullNameError", "Họ và tên không được để trống.");
-            hasError = true;
-        }
-
-        if (phone == null || !phone.matches("^0\\d{9}$")) {
-            req.setAttribute("phoneError", "Số điện thoại không hợp lệ.");
-            hasError = true;
-        }
-
-        if (hasError) {
-            req.getRequestDispatcher("/views/staff/staff-form.jsp").forward(req, resp);
-            return null;
-        }
-
-        User staff = new User();
-        staff.setEmail(email);
-        staff.setPassword(password);
-        staff.setFullname(fullName);
-        staff.setPhone(phone);
-        staff.setActive(active == 1);
-        staff.setRole(1);
-
-        return staff;
+    // FORM DATA
+    private User getFormData(HttpServletRequest req) {
+        User u = new User();
+        u.setEmail(req.getParameter("email"));
+        u.setPassword(req.getParameter("password"));
+        u.setFullname(req.getParameter("fullName"));
+        u.setPhone(req.getParameter("phone"));
+        u.setActive("1".equals(req.getParameter("active")));
+        u.setRole(0);
+        return u;
     }
 }
