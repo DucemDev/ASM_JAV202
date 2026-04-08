@@ -1,272 +1,285 @@
+
 <%@ page contentType="text/html; charset=UTF-8"
-         pageEncoding="UTF-8"
-         isELIgnored="false" %>
+		 pageEncoding="UTF-8"
+		 isELIgnored="false" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
+
 <!DOCTYPE html>
 <html>
 <head>
-<meta charset="UTF-8">
-<title>PolyCafe Login</title>
+	<meta charset="UTF-8">
+	<title>PolyCafe Login</title>
 
-<style>
+	<style>
+		body{
+			margin:0;
+			font-family:'Segoe UI', sans-serif;
+			height:100vh;
+			display:flex;
+			justify-content:center;
+			align-items:center;
+			background: linear-gradient(135deg,#e6d3c3,#f6efe7);
+		}
 
-body{
-margin:0;
-font-family:'Segoe UI', sans-serif;
-background: linear-gradient(135deg,#d7b899,#f3e5d4);
-height:100vh;
-display:flex;
-justify-content:center;
-align-items:center;
-}
+		/* CARD */
+		.container{
+			width:900px;
+			height:90%;
+			background:rgba(255,255,255,0.95);
+			backdrop-filter: blur(10px);
+			border-radius:20px;
+			display:flex;
+			overflow:hidden;
+			box-shadow:0 20px 50px rgba(0,0,0,0.15);
+		}
 
-/* CARD */
+		/* LEFT */
+		.left{
+			width:45%;
+			position:relative;
+		}
 
-.container{
-width:900px;
-height:90%;
-background:white;
-border-radius:20px;
-display:flex;
-overflow:hidden;
-box-shadow:0 15px 40px rgba(0,0,0,0.15);
-}
+		.slide-img{
+			width:100%;
+			height:100%;
+			object-fit:cover;
+			position:absolute;
+		}
 
-/* LEFT SIDE (SLIDESHOW) */
+		/* overlay đẹp hơn */
+		.left::before{
+			content:'';
+			position:absolute;
+			inset:0;
+			background:linear-gradient(to top, rgba(0,0,0,0.6), transparent);
+			z-index:1;
+		}
 
-.left{
-width:45%;
-position:relative;
-overflow:hidden;
-}
+		.welcome{
+			position:absolute;
+			bottom:30px;
+			left:25px;
+			color:white;
+			z-index:2;
+		}
 
-.slide-img{
-width:100%;
-height:100%;
-object-fit:cover;
-position:absolute;
-top:0;
-left:0;
-}
+		.welcome h2{
+			margin:0;
+			font-size:24px;
+		}
 
-.welcome{
-position:absolute;
-bottom:40px;
-left:20px;
-color:white;
-background:rgba(0,0,0,0.4);
-padding:15px;
-border-radius:10px;
-}
+		.welcome p{
+			margin-top:5px;
+			font-size:14px;
+			opacity:0.9;
+		}
 
-/* RIGHT SIDE */
+		/* RIGHT */
+		.right{
+			width:55%;
+			padding:60px;
+		}
 
-.right{
-width:55%;
-padding:60px;
-}
+		.subtitle{
+			color:#777;
+			margin-bottom:30px;
+		}
 
-.right h1{
-margin-bottom:10px;
-}
+		/* INPUT */
+		.input-box{
+			margin-bottom:20px;
+		}
 
-.subtitle{
-color:#777;
-margin-bottom:30px;
-}
+		.input-box input{
+			width:100%;
+			padding:14px;
+			border:none;
+			border-radius:12px;
+			background:#f5f5f5;
+			font-size:14px;
+			transition:0.2s;
+		}
 
-/* INPUT */
+		.input-box input:focus{
+			outline:none;
+			background:#eee;
+			box-shadow:0 0 0 2px #d7b899;
+		}
 
-.input-box{
-margin-bottom:20px;
-}
+		/* LOGIN BUTTON */
+		.login-btn{
+			width:100%;
+			padding:14px;
+			border:none;
+			border-radius:12px;
+			background:linear-gradient(135deg,#8b5e3c,#6f4e37);
+			color:white;
+			font-size:16px;
+			cursor:pointer;
+			transition:0.3s;
+			box-shadow:0 5px 15px rgba(0,0,0,0.15);
+		}
 
-.input-box input{
-width:100%;
-padding:14px;
-border:none;
-border-radius:20px;
-background:#f3f3f3;
-font-size:14px;
-}
+		.login-btn:hover{
+			transform:translateY(-2px);
+			box-shadow:0 8px 20px rgba(0,0,0,0.2);
+		}
 
-/* BUTTON */
+		/* DIVIDER */
+		.divider{
+			display:flex;
+			align-items:center;
+			margin:25px 0;
+		}
 
-.login-btn{
-width:100%;
-padding:14px;
-border:none;
-border-radius:20px;
-background:#6f4e37;
-color:white;
-font-size:16px;
-cursor:pointer;
-}
+		.divider hr{
+			flex:1;
+			height:1px;
+			background:#ddd;
+			border:none;
+		}
 
-.login-btn:hover{
-background:#563b28;
-}
+		.divider span{
+			margin:0 10px;
+			color:#777;
+			font-size:13px;
+		}
 
-/* DIVIDER */
+		/* GOOGLE BUTTON */
+		.google-btn{
+			width:100%;
+			padding:12px;
+			border-radius:12px;
+			border:1px solid #ddd;
+			background:white;
+			font-size:15px;
+			cursor:pointer;
+			display:flex;
+			align-items:center;
+			justify-content:center;
+			gap:10px;
+			transition:0.2s;
+			box-shadow:0 3px 10px rgba(0,0,0,0.05);
+		}
 
-.divider{
-display:flex;
-align-items:center;
-margin:25px 0;
-}
+		.google-btn:hover{
+			background:#f9f9f9;
+			transform:translateY(-1px);
+		}
 
-.divider hr{
-flex:1;
-border:none;
-height:1px;
-background:#ddd;
-}
+		.google-btn img{
+			width:20px;
+			height:20px;
+		}
 
-.divider span{
-margin:0 10px;
-color:#777;
-font-size:14px;
-}
+		/* LINK */
+		a{
+			color:#6f4e37;
+			text-decoration:none;
+			font-size:13px;
+		}
 
-/* GOOGLE BUTTON */
+		a:hover{
+			text-decoration:underline;
+		}
 
-.google-btn{
-width:100%;
-padding:12px;
-border-radius:20px;
-border:1px solid #ddd;
-background:white;
-font-size:15px;
-cursor:pointer;
-display:flex;
-align-items:center;
-justify-content:center;
-gap:10px;
-transition:0.2s;
-}
+		/* ERROR */
+		.error{
+			color:red;
+			font-size:13px;
+			margin-bottom:10px;
+		}
 
-.google-btn:hover{
-background:#f5f5f5;
-}
-
-.google-btn img{
-width:20px;
-}
-
-/* FOOTER */
-
-.footer{
-margin-top:15px;
-font-size:14px;
-text-align:center;
-}
-
-</style>
-
+		/* FOOTER */
+		.footer{
+			margin-top:15px;
+			font-size:13px;
+			text-align:center;
+			color:#555;
+		}
+	</style>
 </head>
 
 <body>
 
 <div class="container">
 
-<!-- LEFT SIDE SLIDESHOW -->
+	<!-- LEFT -->
+	<div class="left">
+		<img id="slide" src="<c:url value='/assets/image/slide1.jpg'/>" class="slide-img">
+		<div class="welcome">
+			<h2>Chào mừng đến PolyCafe</h2>
+			<p>Ngon hơn với PolyCafe ☕</p>
+		</div>
+	</div>
 
-<div class="left">
+	<!-- RIGHT -->
+	<div class="right">
+		<h1>Đăng nhập</h1>
+		<p class="subtitle">Vui lòng đăng nhập để vào hệ thống</p>
 
-<img src="${pageContext.request.contextPath}/assets/image/slide1.jpg">
+		<!-- LOGIN FORM -->
+		<form action="<c:url value='/logining'/>" method="post">
+			<div class="input-box">
+				<input type="text" name="emailIp" placeholder="Email" required>
+			</div>
 
-<div class="welcome">
-<h2>Chào mừng đến PolyCafe</h2>
-<p>Ngon hơn với PolyCafe ☕</p>
-</div>
+			<div class="input-box">
+				<input type="password" name="passwordIp" placeholder="Password" required>
+			</div>
 
-</div>
+			<c:if test="${not empty message}">
+				<p style="color:red; font-size:13px;">${message}</p>
+			</c:if>
 
+			<div style="text-align:right; margin-bottom:10px;">
+				<a href="<c:url value='/forgotpassword'/>">Quên mật khẩu?</a>
+			</div>
 
-<!-- RIGHT SIDE LOGIN -->
+			<button class="login-btn" type="submit">Đăng nhập</button>
+		</form>
 
-<div class="right">
+		<!-- DIVIDER -->
+		<div class="divider">
+			<hr><span>Hoặc</span><hr>
+		</div>
 
-<h1>Đăng nhập</h1>
-<p class="subtitle">Vui lòng đăng nhập để vào hệ thống</p>
+		<!-- GOOGLE LOGIN -->
+		<jsp:include page="login-google.jsp" />
 
-<form action="${pageContext.request.contextPath}/logining" method="post">
-
-<div class="input-box">
-<input type="text" name="emailIp" placeholder="Email">
-</div>
-
-<div class="input-box">
-<input type="password" name="passwordIp" placeholder="Password">
-</div>
-
-	<p>${message}</p>
-
-<button class="login-btn" type="submit">
-Đăng nhập
-</button>
-
-</form>
-
-<div class="divider">
-<hr>
-<span>Hoặc</span>
-<hr>
-</div>
-
-<form action="${pageContext.request.contextPath}/login-google" method="get">
-
-<button class="google-btn" type="submit">
-
-<img src="https://developers.google.com/identity/images/g-logo.png">
-
-Đăng nhập với Google
-
-</button>
-
-</form>
-
-<div class="footer">
-Hệ thống PolyCafe
-
-
-<p>
-anhhldts02418@gmail.com
-	123	(Admin)
-<hr>
-thangtv@poly.com
-	123	(User)
- </p>
-</div>
-
-</div>
-
+		<!-- FOOTER -->
+		<div class="footer">
+			Hệ thống PolyCafe
+			<p>
+				anhhldts02418@gmail.com | 123 (Admin)<br>
+				thangtv@poly.com | 123 (User)
+			</p>
+		</div>
+	</div>
 </div>
 
 <script>
+	const ctx = "${pageContext.request.contextPath}";
 
-let images = [
+	let images = [
+		ctx + "/assets/image/slide1.jpg",
+		ctx + "/assets/image/slide2.jpg",
+		ctx + "/assets/image/slide3.jpg"
+	];
 
-"${pageContext.request.contextPath}/images/slide1.jpg",
-"${pageContext.request.contextPath}/images/slide2.jpg",
-"${pageContext.request.contextPath}/images/slide3.jpg"
+	let index = 0;
+	const slideImg = document.getElementById("slide");
 
-]
+	setInterval(() => {
+		index++;
+		if(index >= images.length) index = 0;
 
-let index = 0
-
-setInterval(() => {
-
-index++
-
-if(index >= images.length){
-index = 0
-}
-
-document.getElementById("slide").src = images[index]
-
-},4000)
-
+		slideImg.style.opacity = "0.7";
+		setTimeout(() => {
+			slideImg.src = images[index];
+			slideImg.style.opacity = "1";
+		}, 200);
+	}, 4000);
 </script>
 
 </body>

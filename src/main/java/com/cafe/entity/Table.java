@@ -10,7 +10,6 @@ import lombok.NoArgsConstructor;
 public class Table {
     private int id;
     private String name;
-    private String capacity;
     private String status;
     private boolean active;
 }

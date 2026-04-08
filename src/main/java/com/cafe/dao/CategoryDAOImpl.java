@@ -1,24 +1,144 @@
 package com.cafe.dao;
 
+
 import com.cafe.entity.Category;
+import com.cafe.util.DBConnect;
+
+import java.sql.ResultSet;
+import java.util.ArrayList;
 
 import java.util.List;
 
+import com.cafe.entity.Category;
+
 public class CategoryDAOImpl implements CategoryDAO {
-    public List<Category> findAll(Category category) {
-        return null;
+    @Override
+    public List<Category> findAll() {
+        List<Category> list = new ArrayList<Category>();
+        String sql = "SELECT * FROM categories";
+        try {
+            ResultSet resultSet = DBConnect.executeQuery(sql);
+            while (resultSet.next()) {
+                int id = resultSet.getInt("id");
+                String name = resultSet.getString("name");
+                boolean active = resultSet.getBoolean("active");
+                Category category = new Category(id, name, active);
+                list.add(category);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return list;
     }
 
+    @Override
     public Category findById(int id) {
-        return null;
+        Category category = null;
+        String sql = "SELECT * FROM categories WHERE id = ?";
+        try {
+            ResultSet resultSet = DBConnect.executeQuery(sql, id);
+            while (resultSet.next()) {
+                String name = resultSet.getString("name");
+                boolean active = resultSet.getBoolean("active");
+                category = new Category(id, name, active);
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return category;
     }
 
-    public void deleteByID(int id) {
+    @Override
+    public int deleteByID(int id) {
+        String sql = "DELETE FROM categories WHERE id = ?";
+        try {
+            return DBConnect.executeUpdate(sql, id);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return 0;
     }
 
-    public void create(Category category) {
+    @Override
+    public int create(Category category) {
+        String sql = "INSERT INTO categories(name, active) values (?, ?)";
+        try {
+            return DBConnect.executeUpdate(sql, category.getName(), category.isActive());
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return 1;
     }
 
-    public void update(Category category) {
+    @Override
+    public int update(Category category) {
+        String sql = "UPDATE categories SET name = ?, active = ? WHERE id = ?";
+        try {
+            return DBConnect.executeUpdate(sql, category.getName(), category.isActive(), category.getId());
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+
+    }
+
+    @Override
+    public int delete(int id) {
+        // TODO Auto-generated method stub
+        String sql = "DELETE FROM categories WHERE id = ?";
+        try {
+            return DBConnect.executeUpdate(sql, id);
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return 0;
+    }
+
+    @Override
+    public int countDrinkInCategory(int categoryId) {
+        int rs = 0;
+        String sql = "select count(id) as num_drink from drinks where category_id = ?";
+        try {
+            ResultSet resultSet = DBConnect.executeQuery(sql, categoryId);
+
+            while (resultSet.next()) {
+                rs = resultSet.getInt("num_drink");
+            }
+        } catch (Exception e) {
+            // TODO: handle exception
+            e.printStackTrace();
+        }
+        return rs;
+    }
+    @Override
+    public boolean existsByName(String name) {
+        String sql = "SELECT COUNT(*) FROM categories WHERE name = ?";
+        try {
+            ResultSet rs = DBConnect.executeQuery(sql, name);
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
+    @Override
+    public boolean existsByNameExceptId(String name, int id) {
+        String sql = "SELECT COUNT(*) FROM categories WHERE name = ? AND id != ?";
+        try {
+            ResultSet rs = DBConnect.executeQuery(sql, name, id);
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

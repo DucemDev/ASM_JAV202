@@ -22,6 +22,11 @@ public class FilterLogin implements Filter {
 
         if (uri.contains("/login") ||
                 uri.contains("/logining") ||
+                uri.contains("/forgotpassword")||
+                uri.contains("/verify-forgot-password")||
+                uri.contains("/changing-password")||
+                uri.contains("/verifyotp")||
+                uri.contains("/verify-otp") ||
                 uri.contains("/assets") ||
                 uri.contains(".css") ||
                 uri.contains(".js") ||
@@ -41,7 +46,7 @@ public class FilterLogin implements Filter {
         }
 
         // ⭐ kiểm tra quyền admin
-        if (uri.contains("/admin") && !user.isRole()) {
+        if (uri.contains("/admin") && user.getRole()!=2) {
             resp.sendRedirect(req.getContextPath() + "/home");
             return;
         }
