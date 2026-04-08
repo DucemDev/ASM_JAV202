@@ -213,7 +213,7 @@ viewBox="0 0 24 24">
 
 
 <!-- HÓA ĐƠN -->
-<a href="${pageContext.request.contextPath}/bills"
+<a href="${pageContext.request.contextPath}/manager/bill"
 class="group bg-white border border-gray-200 p-5 rounded-xl text-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition">
 
 <svg class="w-6 h-6 mx-auto text-gray-500 group-hover:text-cafe-brown transition mb-2"

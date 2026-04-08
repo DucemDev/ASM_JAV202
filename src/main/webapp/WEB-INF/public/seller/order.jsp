@@ -31,7 +31,7 @@ tailwind.config = {
 <div class="flex">
 <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
 
-<div id="mainContent" class="flex-1 flex flex-col ml-64">
+<div id="mainContent" class="flex-1 flex flex-col ml-64">s
 
 <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 
