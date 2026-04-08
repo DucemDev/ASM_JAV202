@@ -102,11 +102,11 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
-//            if (!username.contains("@gmail.com")) {
-//                req.setAttribute("message", "Email không đúng cú pháp!");
-//                req.getRequestDispatcher("/WEB-INF/public/login.jsp").forward(req, resp);
-//                return;
-//            }
+            if (!username.contains("@gmail.com")) {
+                req.setAttribute("message", "Email không đúng cú pháp!");
+                req.getRequestDispatcher("/WEB-INF/public/login.jsp").forward(req, resp);
+                return;
+            }
 
             if (password == null || password.trim().isEmpty()) {
                 req.setAttribute("message", "Không được để trống Password!");
@@ -149,12 +149,12 @@ public class LoginServlet extends HttpServlet {
 
     // ===== HELPER REDIRECT ROLE =====
     private void redirectByRole(User user, HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        if (user.getRole() == 2) {
-            resp.sendRedirect(req.getContextPath() + "/admin");
+        if (user.getRole() == 0) {
+            resp.sendRedirect(req.getContextPath() + "/customer");
         } else if (user.getRole() == 1) {
-            resp.sendRedirect(req.getContextPath() + "/manager/staff");
-        } else {
-            resp.sendRedirect(req.getContextPath() + "/home");
+            resp.sendRedirect(req.getContextPath() + "/admin");
+        } else if(user.getRole() == 2) {
+            resp.sendRedirect(req.getContextPath() + "/staff");
         }
     }
 

@@ -74,7 +74,7 @@
                 <div class="bg-gradient-to-br from-white to-[#f1e4d7] rounded-xl shadow-md p-6 flex flex-col justify-center">
 
                     <div class="text-gray-500 text-sm mb-2">
-                        Số bàn đang có khách
+                       Lịch sử mua hàng
                     </div>
 
                     <div class="text-3xl font-bold text-gray-800">
