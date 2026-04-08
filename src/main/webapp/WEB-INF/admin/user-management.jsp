@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page isELIgnored="false" %>
-<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
 <html>
 <head>
@@ -36,7 +36,78 @@
 
         <!-- HEADER -->
         <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+        <!-- FORM ADD / EDIT -->
+        <c:if test="${formMode != null}">
+            <div class="bg-white p-6 rounded-xl shadow-md mb-6">
 
+                <h2 class="text-xl font-bold mb-4">
+                        ${formMode == 'add' ? 'Add User' : 'Edit User'}
+                </h2>
+                <c:if test="${error != null}">
+                    <div class="bg-red-100 text-red-600 px-4 py-2 rounded mb-4">
+                            ${error}
+                    </div>
+                </c:if>
+
+                <form method="post"
+                      action="${pageContext.request.contextPath}/manager/staff/${formMode}">
+
+                    <input type="hidden" name="userId" value="${user.id}"/>
+
+                    <div class="grid grid-cols-2 gap-4">
+
+                        <div>
+                            <label>Email</label>
+                            <input type="text" name="email"
+                                   value="${user.email}"
+                                   class="w-full border px-3 py-2 rounded">
+                        </div>
+
+                        <div>
+                            <label>Password</label>
+                            <input type="password" name="password"
+                                   class="w-full border px-3 py-2 rounded">
+                        </div>
+
+                        <div>
+                            <label>Full Name</label>
+                            <input type="text" name="fullName"
+                                   value="${user.fullname}"
+                                   class="w-full border px-3 py-2 rounded">
+                        </div>
+
+                        <div>
+                            <label>Phone</label>
+                            <input type="text" name="phone"
+                                   value="${user.phone}"
+                                   class="w-full border px-3 py-2 rounded">
+                        </div>
+
+                        <div>
+                            <label>Status</label>
+                            <select name="active" class="w-full border px-3 py-2 rounded">
+                                <option value="1" ${user.active ? 'selected' : ''}>Active</option>
+                                <option value="0" ${!user.active ? 'selected' : ''}>Locked</option>
+                            </select>
+                        </div>
+
+                    </div>
+
+                    <div class="mt-4">
+                        <button class="bg-green-600 text-white px-5 py-2 rounded">
+                                ${formMode == 'add' ? 'Create' : 'Update'}
+                        </button>
+
+                        <a href="${pageContext.request.contextPath}/manager/staff"
+                           class="ml-3 text-gray-600">
+                            Cancel
+                        </a>
+                    </div>
+
+                </form>
+
+            </div>
+        </c:if>
         <!-- CONTENT -->
         <div class="p-8">
 
@@ -55,7 +126,7 @@
                 <!-- SEARCH -->
                 <form method="get" action="${pageContext.request.contextPath}/manager/staff" class="mb-4 flex gap-3">
                     <input type="text" name="keyword"
-                           placeholder="Search by name or email..."
+                           placeholder="Search by email..."
                            class="border rounded-lg px-4 py-2 w-72">
 
                     <button class="bg-gray-700 text-white px-5 py-2 rounded-lg hover:opacity-90">
@@ -95,7 +166,7 @@
 
                                 <td>
                                     <c:choose>
-                                        <c:when test="${u.role}">
+                                        <c:when test="${u.role == 2}">
                                             <span class="text-green-600 font-semibold">Admin</span>
                                         </c:when>
                                         <c:otherwise>
@@ -106,7 +177,7 @@
 
                                 <td>
                                     <c:choose>
-                                        <c:when test="${u.active}">
+                                        <c:when test="${u.active == true}">
                                             <span class="text-green-600 font-semibold">Active</span>
                                         </c:when>
                                         <c:otherwise>

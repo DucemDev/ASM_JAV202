@@ -6,8 +6,10 @@ import com.cafe.entity.User;
 
 public interface UserDAO {
     public User findByEmail(String email);
+    public User findById(int id);
+    List<User> findByKeyword(String keyword);
     public List<User> findBySql(String sql, Object... value);
-    public List<User> findByRole(boolean role);
+    List<User> findByRole(int role);
     public int create(User user);
     public int update(User user);
     User login(String email,String password);
