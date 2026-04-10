@@ -1,9 +1,7 @@
 package com.cafe.dao;
 
-
 import com.cafe.entity.Bill;
 import com.cafe.entity.BillDetail;
-import com.cafe.entity.Drink;
 import com.cafe.util.DBConnect;
 
 import java.sql.Connection;
@@ -12,16 +10,12 @@ import java.sql.ResultSet;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.cafe.entity.Bill;
-
 public class BillDAOImpl implements BillDAO {
-
-//    BillDetailDAO billDetailDAO = new BillDetailDAOImpl();
 
     @Override
     public int create(Bill bill) {
 
-        String sql = "INSERT INTO bills(table_id, user_id, code, total, status) VALUES (?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO bills(table_id, user_id, code, total, status, type) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
             return DBConnect.executeUpdate(sql,
@@ -29,7 +23,8 @@ public class BillDAOImpl implements BillDAO {
                     bill.getUserId(),
                     bill.getCode(),
                     0,
-                    bill.getStatus()
+                    bill.getStatus(),
+                    bill.getType()
             );
         } catch (Exception e) {
             e.printStackTrace();
@@ -40,17 +35,22 @@ public class BillDAOImpl implements BillDAO {
 
     @Override
     public int update(Bill bill) {
-        String sql = "UPDATE bills SET user_id = ?, code = ?, created_at = ?, total = ?, status = ? WHERE id = ?";
+        String sql = "UPDATE bills SET user_id = ?, code = ?, created_at = ?, total = ?, status = ?, type = ? WHERE id = ?";
         try {
-            return DBConnect.executeUpdate(sql, bill.getUserId(), bill.getCode(), bill.getCreatedAt(),
-                    bill.getTotal(), bill.getStatus(), bill.getId());
+            return DBConnect.executeUpdate(sql,
+                    bill.getUserId(),
+                    bill.getCode(),
+                    bill.getCreatedAt(),
+                    bill.getTotal(),
+                    bill.getStatus(),
+                    bill.getType(),
+                    bill.getId()
+            );
         } catch (Exception e) {
-            // TODO: handle exception
             e.printStackTrace();
         }
         return 0;
     }
-
 
     @Override
     public Bill findByIdAndUserId(int id, int userId) {
@@ -69,17 +69,17 @@ public class BillDAOImpl implements BillDAO {
     @Override
     public int createWithBillDetails(Bill bill, List<BillDetail> billDetails) {
 
-        String sqlBill = "INSERT INTO bills(user_id, code, created_at, total, status) values (?, ?, ?, ?, ?)";
+        String sqlBill = "INSERT INTO bills(user_id, code, created_at, total, status, type) VALUES (?, ?, ?, ?, ?, ?)";
 
         try {
             PreparedStatement stmt = DBConnect.createPreStmt(
                     sqlBill,
-
                     bill.getUserId(),
                     bill.getCode(),
                     bill.getCreatedAt(),
                     bill.getTotal(),
-                    bill.getStatus()
+                    bill.getStatus(),
+                    bill.getType()
             );
 
             int rs = stmt.executeUpdate();
@@ -92,7 +92,6 @@ public class BillDAOImpl implements BillDAO {
 
                     int billId = generatedKeys.getInt(1);
 
-                    // FIX Ở ĐÂY
                     BillDetailDAO billDetailDAO = new BillDetailDAOImpl();
 
                     for (BillDetail billDetail : billDetails) {
@@ -112,28 +111,24 @@ public class BillDAOImpl implements BillDAO {
 
         return 0;
     }
-
     @Override
     public int updateStatus(int billId, String status) {
-
 
         Bill bill = this.findById(billId);
 
         if (bill == null) {
             return 0;
         }
-        if (bill.getStatus().equals(BillDAOImpl.STATUS_WAITING)) {
 
-            if (status.equals(BillDAOImpl.STATUS_FINISH) || status.equals(BillDAOImpl.STATUS_CANCEL)) {
-                String sql = "UPDATE bills SET status = ? WHERE id = ?";
-                try {
-                    return DBConnect.executeUpdate(sql, status, billId);
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-            }
-        } else if (bill.getStatus().equals(BillDAOImpl.STATUS_FINISH)) {
-            if (status.equals(BillDAOImpl.STATUS_CANCEL)) {
+        String currentStatus = bill.getStatus();
+
+        // waiting -> pending_verify / finish / cancel
+        if (currentStatus.equals(BillDAOImpl.STATUS_WAITING)) {
+
+            if (status.equals("pending_verify")
+                    || status.equals(BillDAOImpl.STATUS_FINISH)
+                    || status.equals(BillDAOImpl.STATUS_CANCEL)) {
+
                 String sql = "UPDATE bills SET status = ? WHERE id = ?";
                 try {
                     return DBConnect.executeUpdate(sql, status, billId);
@@ -142,15 +137,43 @@ public class BillDAOImpl implements BillDAO {
                 }
             }
         }
+
+        // pending_verify -> finish / cancel
+        else if (currentStatus.equals("pending_verify")) {
+
+            if (status.equals(BillDAOImpl.STATUS_FINISH)
+                    || status.equals(BillDAOImpl.STATUS_CANCEL)) {
+
+                String sql = "UPDATE bills SET status = ? WHERE id = ?";
+                try {
+                    return DBConnect.executeUpdate(sql, status, billId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
+        // finish -> cancel
+        else if (currentStatus.equals(BillDAOImpl.STATUS_FINISH)) {
+
+            if (status.equals(BillDAOImpl.STATUS_CANCEL)) {
+
+                String sql = "UPDATE bills SET status = ? WHERE id = ?";
+                try {
+                    return DBConnect.executeUpdate(sql, status, billId);
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        }
+
         return 0;
     }
 
     @Override
     public int updateTotal(int billId) {
 
-        // tạo tại đây (KHÔNG tạo global)
         BillDetailDAO billDetailDAO = new BillDetailDAOImpl();
-
         List<BillDetail> billDetails = billDetailDAO.findByBillId(billId);
 
         int total = 0;
@@ -169,20 +192,34 @@ public class BillDAOImpl implements BillDAO {
     }
 
     public List<Bill> findByUserId(int userId) {
-        String sql = "SELECT * FROM bills WHERE user_id = ? ORDER BY CASE status WHEN 'waiting' THEN 1 WHEN 'finish' THEN 2 WHEN 'cancel' THEN 3 END";
+        String sql = """
+                SELECT * FROM bills 
+                WHERE user_id = ? 
+                ORDER BY CASE status
+                    WHEN 'waiting' THEN 1
+                    WHEN 'pending_verify' THEN 2
+                    WHEN 'finish' THEN 3
+                    WHEN 'cancel' THEN 4
+                END
+                """;
+
         try {
             return this.findBySql(sql, userId);
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return new ArrayList<Bill>();
+
+        return new ArrayList<>();
     }
 
     @Override
     public List<Bill> findBySql(String sql, Object... value) {
+
         List<Bill> list = new ArrayList<>();
+
         try {
             ResultSet rs = DBConnect.executeQuery(sql, value);
+
             while (rs.next()) {
                 Bill b = new Bill();
                 b.setId(rs.getInt("id"));
@@ -190,12 +227,15 @@ public class BillDAOImpl implements BillDAO {
                 b.setUserId(rs.getInt("user_id"));
                 b.setCode(rs.getString("code"));
                 b.setStatus(rs.getString("status"));
-                b.setTotal(rs.getString("total"));
+                b.setTotal(rs.getInt("total"));
+                b.setType(rs.getString("type"));
                 list.add(b);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         return list;
     }
 
@@ -225,6 +265,8 @@ public class BillDAOImpl implements BillDAO {
                 b.setUserId(rs.getInt("user_id"));
                 b.setCode(rs.getString("code"));
                 b.setStatus(rs.getString("status"));
+                b.setTotal(rs.getInt("total"));
+                b.setType(rs.getString("type"));
                 return b;
             }
 
@@ -233,5 +275,42 @@ public class BillDAOImpl implements BillDAO {
         }
 
         return null;
+    }
+
+    @Override
+    public Bill findOpenByUserId(int userId) {
+
+        String sql = "SELECT TOP 1 * FROM bills WHERE user_id=? AND status='waiting' ORDER BY id DESC";
+
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, userId);
+
+            ResultSet rs = ps.executeQuery();
+
+            if (rs.next()) {
+                Bill b = new Bill();
+                b.setId(rs.getInt("id"));
+                b.setTableId(rs.getInt("table_id"));
+                b.setUserId(rs.getInt("user_id"));
+                b.setCode(rs.getString("code"));
+                b.setStatus(rs.getString("status"));
+                b.setTotal(rs.getInt("total"));
+                b.setType(rs.getString("type"));
+                return b;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
+    }
+
+    @Override
+    public List<Bill> findPendingOnlineOrders() {
+
+        String sql = "SELECT * FROM bills WHERE type='online' AND status='pending_verify' ORDER BY id DESC";
+
+        return findBySql(sql);
     }
 }
