@@ -107,6 +107,21 @@
         </a>
         </c:if>
 
+        <%--CHECK ĐƠN--%>
+        <c:if test="${sessionScope.user != null && (sessionScope.user.role == 1 || sessionScope.user.role == 2)}">
+            <a href="${pageContext.request.contextPath}/seller/online-orders"
+               class="group flex items-center gap-3 p-3 rounded-xl hover:bg-cafe-bg transition">
+
+                <svg class="w-5 h-5 text-gray-500 group-hover:text-gray-800 transition"
+                     fill="none" stroke="currentColor" stroke-width="2"
+                     viewBox="0 0 24 24">
+                    <path d="M5 13l4 4L19 7"/>
+                </svg>
+
+                <span class="menu-text text-gray-700">Đơn hàng online</span>
+
+            </a>
+        </c:if>
     </nav>
 
     <!-- LOGOUT -->
