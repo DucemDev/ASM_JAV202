@@ -68,7 +68,7 @@ public class PosServlet extends HttpServlet {
             bill.setUserId(userId);
             bill.setCode("BILL-" + now.getTime());
             bill.setCreatedAt(localDate);
-            bill.setTotal(String.valueOf(drink.getPrice()));
+            bill.setTotal(Integer.valueOf(drink.getPrice()));
             bill.setStatus(BillDAO.STATUS_WAITING);
 
             List<BillDetail> billDetails = List.of(new BillDetail(0, 0, drinkId, 1, drink.getPrice()));

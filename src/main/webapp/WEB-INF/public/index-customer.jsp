@@ -5,10 +5,12 @@
 <html>
 
 <head>
-
     <title>Home</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
+
+    <!-- auto refresh 10s -->
+    <meta http-equiv="refresh" content="10">
 
     <script>
         tailwind.config = {
@@ -24,7 +26,6 @@
             }
         }
     </script>
-
 </head>
 
 <body class="bg-cafe-bg">
@@ -70,58 +71,83 @@
 
                 </div>
 
-                <!-- BOX 1 -->
-                <div class="bg-gradient-to-br from-white to-[#f1e4d7] rounded-xl shadow-md p-6 flex flex-col justify-center">
+                <!-- ORDER HISTORY -->
+                <div class="col-span-2 bg-white border border-gray-200 rounded-xl shadow-sm">
 
-                    <div class="text-gray-500 text-sm mb-2">
-                       Lịch sử mua hàng
-                    </div>
-
-                    <div class="text-3xl font-bold text-gray-800">
-                        0
-                    </div>
-
-                </div>
-
-
-                <!-- BOX 2 -->
-                <div class="bg-white border border-gray-200 rounded-xl shadow-sm">
-
-                    <div class="flex justify-end gap-3 p-4">
-
-                        <button class="bg-cafe-brown text-white px-5 py-1 rounded-full text-sm hover:opacity-90 transition">
-                            Tìm kiếm
-                        </button>
-
-                        <button class="bg-gray-700 text-white px-5 py-1 rounded-full text-sm hover:opacity-90 transition">
-                            Bộ lọc
-                        </button>
-
+                    <div class="flex justify-between items-center p-4">
+                        <h2 class="text-lg font-semibold text-cafe-brown">
+                            Lịch sử đơn hàng của tôi
+                        </h2>
                     </div>
 
                     <table class="w-full text-center text-sm">
 
                         <thead class="bg-[#f1e4d7] text-gray-700">
                         <tr>
-                            <th class="p-3">Tên</th>
-                            <th>Ngày tháng</th>
-                            <th>Chi tiết</th>
+                            <th class="p-3">Mã Bill</th>
+                            <th>Ngày tạo</th>
+                            <th>Tổng tiền</th>
+                            <th>Trạng thái</th>
                         </tr>
                         </thead>
 
                         <tbody>
 
-                        <tr class="border-t hover:bg-gray-50">
-                            <td class="p-3">--</td>
-                            <td>--</td>
-                            <td>--</td>
-                        </tr>
+                        <c:choose>
 
-                        <tr class="border-t hover:bg-gray-50">
-                            <td class="p-3">--</td>
-                            <td>--</td>
-                            <td>--</td>
-                        </tr>
+                            <c:when test="${empty orders}">
+                                <tr class="border-t">
+                                    <td colspan="4" class="p-4 text-gray-500">
+                                        Chưa có đơn hàng nào
+                                    </td>
+                                </tr>
+                            </c:when>
+
+                            <c:otherwise>
+                                <c:forEach var="o" items="${orders}">
+                                    <tr class="border-t hover:bg-gray-50">
+
+                                        <td class="p-3 font-medium">${o.code}</td>
+
+                                        <td>${o.createdAt}</td>
+
+                                        <td>${o.total} đ</td>
+
+                                        <td>
+                                            <c:choose>
+
+                                                <c:when test="${o.status == 'waiting'}">
+                                                    <span class="text-gray-500 font-medium">
+                                                        Chờ thanh toán
+                                                    </span>
+                                                </c:when>
+
+                                                <c:when test="${o.status == 'pending_verify'}">
+                                                    <span class="text-yellow-600 font-semibold">
+                                                        Chờ xác nhận
+                                                    </span>
+                                                </c:when>
+
+                                                <c:when test="${o.status == 'finish'}">
+                                                    <span class="text-green-600 font-semibold">
+                                                        Hoàn tất
+                                                    </span>
+                                                </c:when>
+
+                                                <c:otherwise>
+                                                    <span class="text-red-500 font-semibold">
+                                                        Đã hủy
+                                                    </span>
+                                                </c:otherwise>
+
+                                            </c:choose>
+                                        </td>
+
+                                    </tr>
+                                </c:forEach>
+                            </c:otherwise>
+
+                        </c:choose>
 
                         </tbody>
 
@@ -138,7 +164,6 @@
 </div>
 
 <script>
-
     let index = 0;
     let slides;
 
@@ -160,15 +185,11 @@
             showSlide(index);
         }
 
-        // chạy lần đầu
         showSlide(0);
-
-        // auto chạy
         setInterval(nextSlide, 3000);
 
     });
 </script>
 
 </body>
-
 </html>
