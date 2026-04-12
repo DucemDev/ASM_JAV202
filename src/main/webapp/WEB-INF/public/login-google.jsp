@@ -1,4 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" language="java" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+
 <script type="module">
     import { initializeApp } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-app.js";
     import { getAuth, signInWithPopup, GoogleAuthProvider } from "https://www.gstatic.com/firebasejs/10.8.0/firebase-auth.js";
@@ -21,43 +23,27 @@
         const btn = document.getElementById("btnGoogleLogin");
         if(btn) {
             btn.addEventListener("click", function() {
-                // Hiển thị popup đăng nhập Google
                 signInWithPopup(auth, provider).then((result) => {
                     const user = result.user;
-                    console.log("Đăng nhập thành công, email:", user.email);
 
-                    // 3. TẠO FORM ẨN ĐỂ SUBMIT VỀ SERVLET
                     const form = document.createElement('form');
                     form.method = 'POST';
 
-                    /* SỬA LỖI TẠI ĐÂY: Dùng đường dẫn tương đối 'logining'.
-                       Nó sẽ tự động nối vào Context Path (ví dụ: /JAV202_Nhom01_ASM/logining)
-                       mà không cần tính toán chuỗi 'cp' phức tạp dễ gây lỗi.
-                    */
-                    form.action = 'logining';
+                    // SỬA Ở ĐÂY: Dùng c:url để tránh lỗi 404 đường dẫn
+                    form.action = '<c:url value="/login-google"/>';
 
-                    // Input chứa Email
                     const emailInput = document.createElement('input');
                     emailInput.type = 'hidden';
                     emailInput.name = 'emailIp';
                     emailInput.value = user.email;
 
-                    // Input đánh dấu đây là đăng nhập bằng Google
-                    const googleFlag = document.createElement('input');
-                    googleFlag.type = 'hidden';
-                    googleFlag.name = 'googleLogin';
-                    googleFlag.value = 'true';
-
                     form.appendChild(emailInput);
-                    form.appendChild(googleFlag);
                     document.body.appendChild(form);
-
-                    // 4. GỬI DỮ LIỆU ĐI
                     form.submit();
 
                 }).catch((error) => {
                     console.error("Firebase Error:", error.code);
-                    alert("Lỗi đăng nhập Google: " + error.message);
+                    alert("Lỗi: " + error.message);
                 });
             });
         }
