@@ -30,9 +30,10 @@ public interface BillDAO {
     public Bill findById(int id);
 
     public Bill findOpenByTableId(int tableId);
-
+    Bill findOpenByUserId(int userId);
+    List<Bill> findPendingOnlineOrders();
     public static final String STATUS_WAITING = "waiting";
     public static final String STATUS_FINISH = "finish";
     public static final String STATUS_CANCEL = "cancel";
-
+    public static final String STATUS_PENDING_VERIFY = "pending_verify";
 }

@@ -10,7 +10,6 @@ import java.io.IOException;
 
 @WebFilter("/*")
 public class FilterLogin implements Filter {
-
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -22,6 +21,9 @@ public class FilterLogin implements Filter {
 
         if (uri.contains("/login") ||
                 uri.contains("/logining") ||
+                uri.contains("/register") ||
+                uri.contains("/registering") ||
+                uri.contains("/customer") ||
                 uri.contains("/forgotpassword")||
                 uri.contains("/verify-forgot-password")||
                 uri.contains("/changing-password")||

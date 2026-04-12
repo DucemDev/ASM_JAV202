@@ -15,7 +15,7 @@ public class DrinkDAOImpl implements DrinkDAO {
     @Override
     public List<Drink> findAll(){
         List<Drink> list = new ArrayList<Drink>();
-        String sql = "SELECT * FROM drinks";
+        String sql = "SELECT * FROM drinks WHERE active=1";
         try {
             ResultSet rs = DBConnect.executeQuery(sql);
             while (rs.next()) {
