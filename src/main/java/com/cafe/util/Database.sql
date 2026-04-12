@@ -123,7 +123,6 @@ VALUES (N'Cà phê'),
        (N'Sinh tố')
 
 
-
 /* =========================
    INSERT DRINKS
 ========================= */
@@ -196,9 +195,15 @@ VALUES (1, 1, 2, 20000),
    TEST SELECT
 ========================= */
 
-SELECT * FROM categories
-SELECT * FROM drinks
-SELECT * FROM tables
-SELECT * FROM users
-SELECT * FROM bills
-SELECT * FROM bill_details
+SELECT *
+FROM categories
+SELECT *
+FROM drinks
+SELECT *
+FROM tables
+SELECT *
+FROM users
+SELECT *
+FROM bills
+SELECT *
+FROM bill_details
