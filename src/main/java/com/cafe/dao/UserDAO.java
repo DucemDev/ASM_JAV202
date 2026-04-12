@@ -18,6 +18,6 @@ public interface UserDAO {
     public int updateStatus(Integer id, boolean active);
     public int updateUserInfo(User entity);
     boolean checkEmailExists(String email);
-
+    public boolean checkPhoneExists(String phone);
 
 }

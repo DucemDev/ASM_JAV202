@@ -23,44 +23,82 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doPost(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        // Sửa lại name cho đúng với JSP bạn vừa gửi
-        String fullName = req.getParameter("fullname"); // Bỏ chữ Ip ở đuôi
+        // 1. Lấy dữ liệu từ form
+        String fullName = req.getParameter("fullname");
         String email = req.getParameter("email");
         String password = req.getParameter("password");
         String phone = req.getParameter("phone");
         String confirmPass = req.getParameter("confirmPassword");
 
-        // Logic kiểm tra mật khẩu
-        if (password != null && !password.equals(confirmPass)) {
-            req.setAttribute("message", "Mật khẩu xác nhận không khớp!");
-            req.getRequestDispatcher("WEB-INF/public/register.jsp").forward(req, resp);
+        // 2. Định nghĩa các Regex chuẩn
+        // Email: Phải có đuôi @gmail.com
+        String emailRegex = "^[a-zA-Z0-9._%+-]+@gmail\\.com$";
+        // Phone: Bắt đầu bằng số 0 và đúng 10 chữ số
+        String phoneRegex = "^0\\d{9}$";
+
+        // --- VALIDATION LOGIC ---
+
+        // Kiểm tra trống dữ liệu cơ bản
+        if (fullName == null || fullName.trim().isEmpty() || email == null || password == null || phone == null) {
+            error(req, resp, "Vui lòng nhập đầy đủ thông tin!");
             return;
         }
 
-        // Kiểm tra email tồn tại
+        // Kiểm tra định dạng Gmail
+        if (!email.matches(emailRegex)) {
+            error(req, resp, "Email không hợp lệ (ví dụ: example@gmail.com)!");
+            return;
+        }
+
+        // Kiểm tra định dạng Số điện thoại
+        if (!phone.matches(phoneRegex)) {
+            error(req, resp, "Số điện thoại phải bắt đầu bằng 0 và có 10 chữ số!");
+            return;
+        }
+
+        // Kiểm tra mật khẩu xác nhận
+        if (!password.equals(confirmPass)) {
+            error(req, resp, "Mật khẩu xác nhận không khớp!");
+            return;
+        }
+
+        // --- DATABASE CHECK ---
+
+        // Kiểm tra trùng Email trong DB
         if (userDAO.checkEmailExists(email)) {
-            req.setAttribute("message", "Email này đã được sử dụng!");
-            req.getRequestDispatcher("WEB-INF/public/register.jsp").forward(req, resp);
+            error(req, resp, "Email này đã được sử dụng!");
             return;
         }
 
-        // Tạo đối tượng User
+        // Kiểm tra trùng Số điện thoại trong DB
+        if (userDAO.checkPhoneExists(phone)) {
+            error(req, resp, "Số điện thoại này đã được sử dụng!");
+            return;
+        }
+
+        // --- LƯU DỮ LIỆU ---
+
         User newUser = new User();
         newUser.setFullname(fullName);
         newUser.setEmail(email);
-        newUser.setPassword(password);
+        newUser.setPassword(password); // Nên mã hóa password nếu có thể
         newUser.setPhone(phone);
-        newUser.setRole(0); // Khách hàng
-        newUser.setActive(true);
+        newUser.setRole(0);      // Mặc định là Khách hàng
+        newUser.setActive(true); // Mặc định kích hoạt
 
         int result = userDAO.create(newUser);
 
         if (result > 0) {
-            // Chuyển hướng về Login nếu thành công
+            // Đăng ký thành công, chuyển hướng về trang login kèm thông báo
             resp.sendRedirect(req.getContextPath() + "/login?message=success");
         } else {
-            req.setAttribute("message", "Có lỗi xảy ra khi lưu dữ liệu!");
-            req.getRequestDispatcher("WEB-INF/public/register.jsp").forward(req, resp);
+            error(req, resp, "Đã có lỗi xảy ra trong quá trình lưu dữ liệu. Thử lại sau!");
         }
+    }
+
+    // Hàm hỗ trợ đẩy thông báo lỗi về trang register
+    private void error(HttpServletRequest req, HttpServletResponse resp, String msg) throws ServletException, IOException {
+        req.setAttribute("message", msg);
+        req.getRequestDispatcher("WEB-INF/public/register.jsp").forward(req, resp);
     }
 }

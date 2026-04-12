@@ -258,4 +258,19 @@ public class UserDAOImpl implements UserDAO {
         }
         return false;
     }
+    @Override
+    public boolean checkPhoneExists(String phone) {
+        String sql = "SELECT count(*) FROM users WHERE phone = ?";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, phone);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
+    }
 }
