@@ -1,4 +1,3 @@
-
 <%@ page contentType="text/html; charset=UTF-8"
 		 pageEncoding="UTF-8"
 		 isELIgnored="false" %>
@@ -21,7 +20,6 @@
 			background: linear-gradient(135deg,#e6d3c3,#f6efe7);
 		}
 
-		/* CARD */
 		.container{
 			width:900px;
 			height:90%;
@@ -33,7 +31,6 @@
 			box-shadow:0 20px 50px rgba(0,0,0,0.15);
 		}
 
-		/* LEFT */
 		.left{
 			width:45%;
 			position:relative;
@@ -46,7 +43,6 @@
 			position:absolute;
 		}
 
-		/* overlay đẹp hơn */
 		.left::before{
 			content:'';
 			position:absolute;
@@ -74,7 +70,6 @@
 			opacity:0.9;
 		}
 
-		/* RIGHT */
 		.right{
 			width:55%;
 			padding:60px;
@@ -85,7 +80,6 @@
 			margin-bottom:30px;
 		}
 
-		/* INPUT */
 		.input-box{
 			margin-bottom:20px;
 		}
@@ -106,7 +100,6 @@
 			box-shadow:0 0 0 2px #d7b899;
 		}
 
-		/* LOGIN BUTTON */
 		.login-btn{
 			width:100%;
 			padding:14px;
@@ -125,7 +118,6 @@
 			box-shadow:0 8px 20px rgba(0,0,0,0.2);
 		}
 
-		/* DIVIDER */
 		.divider{
 			display:flex;
 			align-items:center;
@@ -145,7 +137,6 @@
 			font-size:13px;
 		}
 
-		/* GOOGLE BUTTON */
 		.google-btn{
 			width:100%;
 			padding:12px;
@@ -172,7 +163,6 @@
 			height:20px;
 		}
 
-		/* LINK */
 		a{
 			color:#6f4e37;
 			text-decoration:none;
@@ -183,19 +173,18 @@
 			text-decoration:underline;
 		}
 
-		/* ERROR */
-		.error{
-			color:red;
-			font-size:13px;
-			margin-bottom:10px;
-		}
-
-		/* FOOTER */
 		.footer{
 			margin-top:15px;
 			font-size:13px;
 			text-align:center;
 			color:#555;
+		}
+
+		.nav-helper {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 15px;
 		}
 	</style>
 </head>
@@ -204,7 +193,6 @@
 
 <div class="container">
 
-	<!-- LEFT -->
 	<div class="left">
 		<img id="slide" src="<c:url value='/assets/image/slide1.jpg'/>" class="slide-img">
 		<div class="welcome">
@@ -213,12 +201,10 @@
 		</div>
 	</div>
 
-	<!-- RIGHT -->
 	<div class="right">
 		<h1>Đăng nhập</h1>
 		<p class="subtitle">Vui lòng đăng nhập để vào hệ thống</p>
 
-		<!-- LOGIN FORM -->
 		<form action="<c:url value='/logining'/>" method="post">
 			<div class="input-box">
 				<input type="text" name="emailIp" placeholder="Email" required>
@@ -232,33 +218,37 @@
 				<p style="color:red; font-size:13px;">${message}</p>
 			</c:if>
 
-			<div style="text-align:right; margin-bottom:10px;">
-				<a href="<c:url value='/forgotpassword'/>">Quên mật khẩu?</a>
+			<div class="nav-helper">
+				<div style="font-size: 13px; color: #777;">
+					Chưa có tài khoản? <a href="<c:url value='/register'/>" style="font-weight:bold;">Đăng ký</a>
+				</div>
+				<div>
+					<a href="<c:url value='/forgotpassword'/>">Quên mật khẩu?</a>
+				</div>
 			</div>
 
 			<button class="login-btn" type="submit">Đăng nhập</button>
 		</form>
 
-		<!-- DIVIDER -->
 		<div class="divider">
 			<hr><span>Hoặc</span><hr>
 		</div>
 
-		<!-- GOOGLE LOGIN -->
 		<jsp:include page="login-google.jsp" />
 
-		<!-- FOOTER -->
 		<div class="footer">
 			Hệ thống PolyCafe
 			<p>
-				anhhldts02418@gmail.com | 123 (Admin)<br>
-				thangtv@poly.com | 123 (User)
+				truongmk@gmail.com | 123 (Admin)<br>
+				ngoctm@gmail.com | 123 (nhân viên)<br>
+				thangtv@poly.com | 123 (khách hàng)
 			</p>
 		</div>
 	</div>
 </div>
 
 <script>
+	/* GIỮ NGUYÊN SCRIPT CŨ */
 	const ctx = "${pageContext.request.contextPath}";
 
 	let images = [

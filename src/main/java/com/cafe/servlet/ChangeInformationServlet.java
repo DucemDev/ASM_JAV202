@@ -38,6 +38,7 @@ public class ChangeInformationServlet extends HttpServlet {
             String email = req.getParameter("email");
             String phone = req.getParameter("phone");
 
+
             // ===== VALIDATE =====
 
             if (fullname == null || fullname.trim().isEmpty()) {
@@ -68,6 +69,7 @@ public class ChangeInformationServlet extends HttpServlet {
             // regex phone VN
             if (!phone.matches("^0\\d{9}$")) {
                 session.setAttribute("message", "Số điện thoại không hợp lệ!");
+
                 resp.sendRedirect(req.getContextPath() + "/change-information");
                 return;
             }
@@ -80,10 +82,13 @@ public class ChangeInformationServlet extends HttpServlet {
 
             try {
                 userDAO.updateChangeInformation(user);
-                session.setAttribute("message", "Cập nhật thông tin thành công!");
+
+                session.setAttribute("messageInfo", "Đổi thông tin thành công!");
+                System.out.print("changed");
             } catch (Exception e) {
-                session.setAttribute("message", "Cập nhật thất bại!");
-                e.printStackTrace();
+                session.setAttribute("messageInfo", "Đổi thông tin thất bại!");
+                System.out.print("fail change");
+
             }
 
             // cập nhật lại session

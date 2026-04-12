@@ -8,6 +8,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.HttpServlet;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
+
 import java.io.IOException;
 
 @WebServlet({"/login", "/logining", "/verify-otp"})
@@ -62,11 +63,30 @@ public class LoginServlet extends HttpServlet {
                 return;
             }
 
-            String password = req.getParameter("passwordIp");
             String username = req.getParameter("emailIp");
+            String password = req.getParameter("passwordIp");
 
+            // Kiểm tra rỗng
             if (username == null || username.trim().isEmpty() || password == null || password.trim().isEmpty()) {
                 req.setAttribute("message", "Vui lòng nhập đầy đủ thông tin!");
+                req.getRequestDispatcher("/WEB-INF/public/login.jsp").forward(req, resp);
+                return;
+            }
+
+            // Kiểm tra định dạng Email (Ưu tiên logic của master)
+            if (!username.contains("@gmail.com")) {
+                req.setAttribute("message", "Email không đúng cú pháp!");
+                req.getRequestDispatcher("/WEB-INF/public/login.jsp").forward(req, resp);
+                return;
+            }
+
+            // Kiểm tra ký tự đặc biệt trong Password (Ưu tiên logic của master)
+            if (password.contains("#") || password.contains("$") || password.contains("%") || password.contains("^")
+                    || password.contains("*") || password.contains("?") || password.contains("{") || password.contains("}")
+                    || password.contains("[") || password.contains("]") || password.contains("`") || password.contains("~")
+                    || password.contains("|") || password.contains(",") || password.contains(";") || password.contains("!")
+                    || password.contains("@") || password.contains("=")) {
+                req.setAttribute("message", "Password không được chứa các ký hiệu đặc biệt!");
                 req.getRequestDispatcher("/WEB-INF/public/login.jsp").forward(req, resp);
                 return;
             }
@@ -76,6 +96,8 @@ public class LoginServlet extends HttpServlet {
             if (user != null) {
                 req.getSession().setAttribute("user", user);
                 req.getSession().removeAttribute("failLogin");
+
+                // Điều hướng theo Role
                 redirectByRole(user, req, resp);
             } else {
                 failLogin++;
@@ -87,12 +109,12 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void redirectByRole(User user, HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        if (user.getRole() == 2) {
-            resp.sendRedirect(req.getContextPath() + "/admin");
+        if (user.getRole() == 0) {
+            resp.sendRedirect(req.getContextPath() + "/customer");
         } else if (user.getRole() == 1) {
-            resp.sendRedirect(req.getContextPath() + "/manager/staff");
-        } else {
-            resp.sendRedirect(req.getContextPath() + "/home");
+            resp.sendRedirect(req.getContextPath() + "/admin");
+        } else if(user.getRole() == 2) {
+            resp.sendRedirect(req.getContextPath() + "/staff");
         }
     }
 }

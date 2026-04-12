@@ -38,6 +38,7 @@ public class UserDAOImpl implements UserDAO {
         }
         return null;
     }
+
     @Override
     public List<User> findByKeyword(String keyword) {
         String sql = "SELECT * FROM users WHERE email LIKE ?";
@@ -240,5 +241,21 @@ public class UserDAOImpl implements UserDAO {
         }
 
         return list;
+    }
+    // Thắng thêm hàm này vào trong UserDAOImpl nhé
+    @Override
+    public boolean checkEmailExists(String email) {
+        String sql = "SELECT count(*) FROM users WHERE email = ?";
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+            ps.setString(1, email);
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return false;
     }
 }

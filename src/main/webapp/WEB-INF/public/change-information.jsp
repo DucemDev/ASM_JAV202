@@ -62,12 +62,14 @@
                         Chỉnh sửa thông tin cá nhân
                     </h1>
 
+
                     <!-- MESSAGE -->
 
-                    <c:if test="${sessionScope.message != null}"> <div class="mb-4 p-3 rounded-lg bg-green-100 text-green-700">
+                    <c:if test="${sessionScope.message != null}"> <div class="mb-4 p-3 rounded-lg bg-red-100 text-red-700">
                             ${sessionScope.message} </div>
                         <c:remove var="message" scope="session"/>
                     </c:if>
+
 
                     <form method="post" action="<c:url value='/change-information/save'/>" class="space-y-5">
 

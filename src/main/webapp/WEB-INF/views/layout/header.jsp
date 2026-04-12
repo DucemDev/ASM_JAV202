@@ -18,7 +18,7 @@
             </c:when>
 
             <c:otherwise>
-                USER DASHBOARD
+                Đặt hàng
             </c:otherwise>
         </c:choose>
 

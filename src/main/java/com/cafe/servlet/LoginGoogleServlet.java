@@ -37,7 +37,7 @@ public class LoginGoogleServlet extends HttpServlet {
 
             resp.sendRedirect(req.getContextPath() + "/verify-otp");
         } else {
-            req.setAttribute("message", "Email Google chưa có trong hệ thống!");
+            req.setAttribute("message", "Bạn chưa có tài khoản, vui lòng đăng ký tài khoản!");
             req.getRequestDispatcher("/WEB-INF/public/login.jsp").forward(req, resp);
         }
     }

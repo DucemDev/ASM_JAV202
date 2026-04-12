@@ -17,6 +17,7 @@ public interface UserDAO {
     void updateChangeInformation(User user);
     public int updateStatus(Integer id, boolean active);
     public int updateUserInfo(User entity);
+    boolean checkEmailExists(String email);
 
 
 }
