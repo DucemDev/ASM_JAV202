@@ -193,7 +193,19 @@ viewBox="0 0 24 24">
 
 </a>
 
+  <!-- BÀN -->
+    <a href="${pageContext.request.contextPath}/manager/tables"
+    class="group bg-white border border-gray-200 p-5 rounded-xl text-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition">
 
+    <svg class="w-6 h-6 mx-auto text-gray-500 group-hover:text-cafe-brown transition mb-2"
+    fill="none" stroke="currentColor" stroke-width="2"
+    viewBox="0 0 24 24">
+    <path d="M3 10h18M5 10v10M19 10v10"/>
+    </svg>
+
+    <div class="text-sm text-gray-700">Quản lý bàn</div>
+
+    </a>
 
 <!-- ĐỒ UỐNG -->
 <a href="${pageContext.request.contextPath}/manager/drinks"
