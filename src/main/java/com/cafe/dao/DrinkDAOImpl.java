@@ -4,6 +4,8 @@ package com.cafe.dao;
 import com.cafe.entity.Drink;
 import com.cafe.util.DBConnect;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
@@ -33,6 +35,95 @@ public class DrinkDAOImpl implements DrinkDAO {
             e.printStackTrace();
         }
         return list;
+    }
+    @Override
+    public List<Drink> findPage(int page, int pageSize) {
+        int offset = Math.max(0, (page - 1) * pageSize);
+        String sql = "SELECT * FROM drinks WHERE active = 1 ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        return findBySql(sql, offset, pageSize);
+    }
+
+    @Override
+    public int countActive() {
+        String sql = "SELECT COUNT(*) FROM drinks WHERE active = 1";
+        try {
+            ResultSet rs = DBConnect.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    @Override
+    public List<Drink> findPageAll(int page, int pageSize) {
+        int offset = Math.max(0, (page - 1) * pageSize);
+        String sql = "SELECT * FROM drinks ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        return findBySql(sql, offset, pageSize);
+    }
+
+    @Override
+    public int countAllDrinks() {
+        String sql = "SELECT COUNT(*) FROM drinks";
+        try {
+            ResultSet rs = DBConnect.executeQuery(sql);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
+    @Override
+    public List<Drink> findFilteredPage(int page, int pageSize, String keyword, Integer categoryId, Boolean active) {
+        int offset = Math.max(0, (page - 1) * pageSize);
+        StringBuilder sql = new StringBuilder("SELECT * FROM drinks WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        appendFilter(sql, params, keyword, categoryId, active);
+
+        sql.append(" ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        params.add(offset);
+        params.add(pageSize);
+
+        return findBySql(sql.toString(), params.toArray());
+    }
+
+    @Override
+    public int countFiltered(String keyword, Integer categoryId, Boolean active) {
+        StringBuilder sql = new StringBuilder("SELECT COUNT(*) FROM drinks WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        appendFilter(sql, params, keyword, categoryId, active);
+
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
+    @Override
+    public List<Drink> findFiltered(String keyword, Integer categoryId, Boolean active) {
+        StringBuilder sql = new StringBuilder("SELECT * FROM drinks WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        appendFilter(sql, params, keyword, categoryId, active);
+        sql.append(" ORDER BY id");
+
+        return findBySql(sql.toString(), params.toArray());
     }
     @Override
     public Drink findById(int id) {
@@ -133,5 +224,22 @@ public class DrinkDAOImpl implements DrinkDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    private void appendFilter(StringBuilder sql, List<Object> params, String keyword, Integer categoryId, Boolean active) {
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND name LIKE ?");
+            params.add("%" + keyword.trim() + "%");
+        }
+
+        if (categoryId != null && categoryId > 0) {
+            sql.append(" AND category_id = ?");
+            params.add(categoryId);
+        }
+
+        if (active != null) {
+            sql.append(" AND active = ?");
+            params.add(active);
+        }
     }
 }

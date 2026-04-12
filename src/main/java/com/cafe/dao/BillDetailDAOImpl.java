@@ -110,7 +110,9 @@ public class BillDetailDAOImpl implements BillDetailDAO {
 
     @Override
     public BillDetail findById(Integer id) {
-        return null;
+        String sql = "SELECT * FROM bill_details WHERE id = ?";
+        List<BillDetail> list = findBySql(sql, id);
+        return list.isEmpty() ? null : list.get(0);
     }
 
     @Override

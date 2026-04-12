@@ -9,6 +9,9 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @AllArgsConstructor
 public class User {
+	public static final int ROLE_CUSTOMER = 0;
+	public static final int ROLE_STAFF = 1;
+	public static final int ROLE_ADMIN = 2;
 
 	private int id;
 	private String fullname;

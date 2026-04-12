@@ -18,12 +18,16 @@ public class CategoryServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
 
         int id = ParamUtil.getInt(req, "id");
+        String keyword = req.getParameter("keyword");
+        String active = req.getParameter("active");
 
         if (id > 0) {
             req.setAttribute("category", dao.findById(id));
         }
 
-        req.setAttribute("list", dao.findAll());
+        req.setAttribute("keyword", keyword);
+        req.setAttribute("active", active);
+        req.setAttribute("list", dao.search(keyword, active));
         req.getRequestDispatcher("/WEB-INF/admin/CategoryJsp.jsp").forward(req, resp);
     }
 

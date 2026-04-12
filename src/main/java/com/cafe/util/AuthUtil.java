@@ -25,7 +25,11 @@ public class AuthUtil {
     // Kiểm tra quyền
     public static boolean isManager(HttpServletRequest request) {
         User u = getUser(request);
-        return u != null && u.getRole() == 2;
+        return u != null && u.getRole() == User.ROLE_ADMIN;
+    }
+    public static boolean isStaff(HttpServletRequest request) {
+        User u = getUser(request);
+        return u != null && (u.getRole() == User.ROLE_STAFF || u.getRole() == User.ROLE_ADMIN);
     }
     //Xóa thông tin đăng nhập
     public static void clear(HttpServletRequest request) {

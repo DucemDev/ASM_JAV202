@@ -16,14 +16,29 @@ import java.util.List;
 @MultipartConfig
 @WebServlet({"/manager/drinks", "/manager/drinks/add", "/manager/drinks/edit", "/manager/drinks/delete"})
 public class DrinkServlet extends HttpServlet {
+    private static final int PAGE_SIZE = 10;
 
     private DrinkDAOImpl DAO = new DrinkDAOImpl();
     private CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, jakarta.servlet.ServletException {
+        int page = parsePage(req.getParameter("page"));
+        String keyword = req.getParameter("keyword");
+        Integer categoryId = parseInteger(req.getParameter("categoryId"));
+        Boolean active = parseBooleanFilter(req.getParameter("active"));
+        int totalDrinks = DAO.countFiltered(keyword, categoryId, active);
+        int totalPages = Math.max(1, (int) Math.ceil((double) totalDrinks / PAGE_SIZE));
+        if (page > totalPages) {
+            page = totalPages;
+        }
 
-        List<Drink> list = DAO.findAll();
+        List<Drink> list = DAO.findFilteredPage(page, PAGE_SIZE, keyword, categoryId, active);
         req.setAttribute("drinks", list);
+        req.setAttribute("currentPage", page);
+        req.setAttribute("totalPages", totalPages);
+        req.setAttribute("keyword", keyword);
+        req.setAttribute("filterCategoryId", categoryId);
+        req.setAttribute("filterActive", req.getParameter("active"));
         List<Category> categories = categoryDAO.findAll();
         req.setAttribute("categories", categories);
         req.getRequestDispatcher("/WEB-INF/admin/drink-management.jsp").forward(req, resp);
@@ -50,6 +65,7 @@ public class DrinkServlet extends HttpServlet {
 
         String name = req.getParameter("name");
         String priceStr = req.getParameter("price");
+        int page = parsePage(req.getParameter("page"));
 
         List<Category> categories = categoryDAO.findAll();
         req.setAttribute("categories", categories);
@@ -61,8 +77,7 @@ public class DrinkServlet extends HttpServlet {
         }
 
         if (req.getAttribute("errorName") != null || req.getAttribute("errorPrice") != null) {
-            List<Drink> list = DAO.findAll();
-            req.setAttribute("drinks", list);
+            loadPageData(req, page);
 
             req.setAttribute("oldName", name);
             req.setAttribute("oldPrice", priceStr);
@@ -76,8 +91,7 @@ public class DrinkServlet extends HttpServlet {
         if (DAO.isNameExists(name)) {
             req.setAttribute("errorName", "Tên đồ uống đã tồn tại!");
 
-            List<Drink> list = DAO.findAll();
-            req.setAttribute("drinks", list);
+            loadPageData(req, page);
 
             req.setAttribute("oldName", name);
             req.setAttribute("oldPrice", priceStr);
@@ -91,7 +105,7 @@ public class DrinkServlet extends HttpServlet {
         Drink d = getData(req);
         DAO.create(d);
 
-        resp.sendRedirect(req.getContextPath() + "/manager/drinks");
+        resp.sendRedirect(req.getContextPath() + "/manager/drinks?page=" + parsePage(req.getParameter("page")));
     }
 
     private void update(HttpServletRequest req, HttpServletResponse resp)
@@ -99,6 +113,7 @@ public class DrinkServlet extends HttpServlet {
 
         int id = ParamUtil.getInt(req, "id");
         String name = req.getParameter("name");
+        int page = parsePage(req.getParameter("page"));
         List<Category> categories = categoryDAO.findAll();
         req.setAttribute("categories", categories);
         if (name == null || name.trim().isEmpty()) {
@@ -110,8 +125,7 @@ public class DrinkServlet extends HttpServlet {
         }
 
         if (req.getAttribute("errorName") != null || req.getAttribute("errorPrice") != null) {
-            List<Drink> list = DAO.findAll();
-            req.setAttribute("drinks", list);
+            loadPageData(req, page);
 
             req.setAttribute("oldName", name);
             req.setAttribute("oldPrice", req.getParameter("price"));
@@ -127,7 +141,7 @@ public class DrinkServlet extends HttpServlet {
 
         DAO.update(d);
 
-        resp.sendRedirect(req.getContextPath() + "/manager/drinks");
+        resp.sendRedirect(req.getContextPath() + "/manager/drinks?page=" + parsePage(req.getParameter("page")));
     }
 
     private void delete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
@@ -135,7 +149,7 @@ public class DrinkServlet extends HttpServlet {
 
         DAO.delete(id);
 
-        resp.sendRedirect(req.getContextPath() + "/manager/drinks");
+        resp.sendRedirect(req.getContextPath() + "/manager/drinks?page=" + parsePage(req.getParameter("page")));
     }
 
     private Drink getData(HttpServletRequest req) {
@@ -172,5 +186,49 @@ public class DrinkServlet extends HttpServlet {
         d.setActive(true);
 
         return d;
+    }
+
+    private int parsePage(String pageParam) {
+        try {
+            int page = Integer.parseInt(pageParam);
+            return Math.max(page, 1);
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+
+    private void loadPageData(HttpServletRequest req, int page) {
+        String keyword = req.getParameter("keyword");
+        Integer categoryId = parseInteger(req.getParameter("categoryId"));
+        Boolean active = parseBooleanFilter(req.getParameter("active"));
+        int totalDrinks = DAO.countFiltered(keyword, categoryId, active);
+        int totalPages = Math.max(1, (int) Math.ceil((double) totalDrinks / PAGE_SIZE));
+        int currentPage = Math.min(Math.max(page, 1), totalPages);
+
+        req.setAttribute("drinks", DAO.findFilteredPage(currentPage, PAGE_SIZE, keyword, categoryId, active));
+        req.setAttribute("currentPage", currentPage);
+        req.setAttribute("totalPages", totalPages);
+        req.setAttribute("keyword", keyword);
+        req.setAttribute("filterCategoryId", categoryId);
+        req.setAttribute("filterActive", req.getParameter("active"));
+    }
+
+    private Integer parseInteger(String value) {
+        try {
+            int parsed = Integer.parseInt(value);
+            return parsed > 0 ? parsed : null;
+        } catch (Exception e) {
+            return null;
+        }
+    }
+
+    private Boolean parseBooleanFilter(String value) {
+        if ("true".equalsIgnoreCase(value)) {
+            return true;
+        }
+        if ("false".equalsIgnoreCase(value)) {
+            return false;
+        }
+        return null;
     }
 }

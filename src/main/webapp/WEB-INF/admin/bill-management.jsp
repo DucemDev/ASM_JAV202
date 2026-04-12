@@ -57,17 +57,18 @@
                       class="mb-4 flex gap-3 flex-wrap">
 
                     <input type="text" name="keyword"
+                           value="${keyword}"
                            placeholder="Search bill ID..."
                            class="border rounded-lg px-4 py-2 w-64">
 
                     <select name="status" class="border rounded-lg px-4 py-2">
                         <option value="">All Status</option>
-                        <option value="finish">Finish</option>
-                        <option value="cancel">Cancel</option>
+                        <option value="finish" ${status == 'finish' ? 'selected' : ''}>Finish</option>
+                        <option value="cancel" ${status == 'cancel' ? 'selected' : ''}>Cancel</option>
                     </select>
 
-                    <input type="date" name="fromDate" class="border rounded-lg px-4 py-2">
-                    <input type="date" name="toDate" class="border rounded-lg px-4 py-2">
+                    <input type="date" name="fromDate" value="${fromDate}" class="border rounded-lg px-4 py-2">
+                    <input type="date" name="toDate" value="${toDate}" class="border rounded-lg px-4 py-2">
 
                     <button class="bg-gray-700 text-white px-5 py-2 rounded-lg">
                         Filter

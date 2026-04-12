@@ -3,6 +3,7 @@ package com.cafe.servlet;
 import com.cafe.dao.*;
 import com.cafe.entity.Bill;
 import com.cafe.entity.BillDetail;
+import com.cafe.entity.Category;
 import com.cafe.entity.Drink;
 import com.cafe.entity.User;
 
@@ -22,6 +23,7 @@ public class OrderCustomerServlet extends HttpServlet {
 
     private BillDAO billDAO = new BillDAOImpl();
     private DrinkDAO drinkDAO = new DrinkDAOImpl();
+    private CategoryDAO categoryDAO = new CategoryDAOImpl();
 
     private static final int ONLINE_TABLE_ID = 6;
 
@@ -31,6 +33,8 @@ public class OrderCustomerServlet extends HttpServlet {
 
         HttpSession session = req.getSession();
         User user = (User) session.getAttribute("user");
+        String keyword = req.getParameter("keyword");
+        Integer categoryId = parseInteger(req.getParameter("categoryId"));
 
         // Nếu chưa login
         if (user == null) {
@@ -60,7 +64,8 @@ public class OrderCustomerServlet extends HttpServlet {
             }
         }
 
-        List<Drink> drinks = drinkDAO.findAll();
+        List<Drink> drinks = drinkDAO.findFiltered(keyword, categoryId, true);
+        List<Category> categories = categoryDAO.findAll();
 
         BillDetailDAO dao = new BillDetailDAOImpl();
         List<BillDetail> billDetails = dao.findByBillId(bill.getId());
@@ -72,8 +77,11 @@ public class OrderCustomerServlet extends HttpServlet {
 
         req.setAttribute("bill", bill);
         req.setAttribute("drinks", drinks);
+        req.setAttribute("categories", categories);
         req.setAttribute("billDetails", billDetails);
         req.setAttribute("total", total);
+        req.setAttribute("keyword", keyword);
+        req.setAttribute("filterCategoryId", categoryId);
 
         req.getRequestDispatcher("/WEB-INF/public/order-customer.jsp")
                 .forward(req, resp);
@@ -170,5 +178,14 @@ public class OrderCustomerServlet extends HttpServlet {
         dao.addDrinkToBill(bill.getId(), drinkId);
 
         resp.setStatus(HttpServletResponse.SC_OK);
+    }
+
+    private Integer parseInteger(String value) {
+        try {
+            int parsed = Integer.parseInt(value);
+            return parsed > 0 ? parsed : null;
+        } catch (Exception e) {
+            return null;
+        }
     }
 }

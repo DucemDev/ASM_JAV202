@@ -14,4 +14,5 @@ public interface CategoryDAO {
     public int countDrinkInCategory(int categoryId);
     public boolean existsByName(String name);
     public boolean existsByNameExceptId(String name, int id);
+    public List<Category> search(String keyword, String active);
 }

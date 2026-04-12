@@ -18,6 +18,7 @@ import java.util.List;
         "/manager/staff/update-status"
 })
 public class StaffSevlet extends HttpServlet {
+    private static final int PAGE_SIZE = 10;
 
     private UserDAOImpl userDAO = new UserDAOImpl();
 
@@ -87,15 +88,19 @@ public class StaffSevlet extends HttpServlet {
     // LIST
     private void listStaff(HttpServletRequest req) {
         String keyword = req.getParameter("keyword");
-        List<User> staffList;
-
-        if (keyword != null && !keyword.trim().isEmpty()) {
-            staffList = userDAO.findByKeyword(keyword);
-        } else {
-            staffList = userDAO.findAll();
+        int page = parsePage(req.getParameter("page"));
+        int totalUsers = userDAO.countUsers(keyword);
+        int totalPages = Math.max(1, (int) Math.ceil((double) totalUsers / PAGE_SIZE));
+        if (page > totalPages) {
+            page = totalPages;
         }
 
+        List<User> staffList = userDAO.findPage(page, PAGE_SIZE, keyword);
+
         req.setAttribute("staffList", staffList);
+        req.setAttribute("currentPage", page);
+        req.setAttribute("totalPages", totalPages);
+        req.setAttribute("keyword", keyword);
     }
 
     // CREATE
@@ -193,7 +198,16 @@ public class StaffSevlet extends HttpServlet {
         u.setFullname(req.getParameter("fullName"));
         u.setPhone(req.getParameter("phone"));
         u.setActive("1".equals(req.getParameter("active")));
-        u.setRole(0);
+        u.setRole(User.ROLE_STAFF);
         return u;
+    }
+
+    private int parsePage(String pageParam) {
+        try {
+            int page = Integer.parseInt(pageParam);
+            return Math.max(page, 1);
+        } catch (Exception e) {
+            return 1;
+        }
     }
 }

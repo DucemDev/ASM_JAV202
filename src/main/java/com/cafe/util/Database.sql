@@ -67,7 +67,7 @@ CREATE TABLE users
     password  VARCHAR(255) NOT NULL,
     full_name NVARCHAR(60),
     phone     VARCHAR(10),
-    role      INT          NOT NULL DEFAULT 0, /* 0=customer,1=staff,2=admin*/
+    role      INT          NOT NULL DEFAULT 0, /* 0=customer,1=staff,2=admin */
     active    BIT                   DEFAULT 1
 )
 

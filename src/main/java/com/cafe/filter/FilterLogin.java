@@ -1,7 +1,11 @@
 package com.cafe.filter;
 
 import com.cafe.entity.User;
-import jakarta.servlet.*;
+import jakarta.servlet.Filter;
+import jakarta.servlet.FilterChain;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.ServletRequest;
+import jakarta.servlet.ServletResponse;
 import jakarta.servlet.annotation.WebFilter;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
@@ -10,6 +14,19 @@ import java.io.IOException;
 
 @WebFilter("/*")
 public class FilterLogin implements Filter {
+    private static final String[] PUBLIC_PATHS = {
+            "/login",
+            "/logining",
+            "/register",
+            "/forgotpassword",
+            "/verify-forgot-password",
+            "/changing-password",
+            "/verifyotp",
+            "/verify-otp",
+            "/login-google",
+            "/assets"
+    };
+
     @Override
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
@@ -19,21 +36,7 @@ public class FilterLogin implements Filter {
 
         String uri = req.getRequestURI();
 
-        if (uri.contains("/login") ||
-                uri.contains("/logining") ||
-                uri.contains("/register") ||
-                uri.contains("/registering") ||
-                uri.contains("/customer") ||
-                uri.contains("/forgotpassword")||
-                uri.contains("/verify-forgot-password")||
-                uri.contains("/changing-password")||
-                uri.contains("/verifyotp")||
-                uri.contains("/verify-otp") ||
-                uri.contains("/assets") ||
-                uri.contains(".css") ||
-                uri.contains(".js") ||
-                uri.contains(".png") ||
-                uri.contains(".jpg")) {
+        if (isPublicResource(uri)) {
 
             chain.doFilter(request, response);
             return;
@@ -48,11 +51,34 @@ public class FilterLogin implements Filter {
         }
 
         // ⭐ kiểm tra quyền admin
-        if (uri.contains("/admin") && user.getRole()!=2) {
+        if ((uri.contains("/admin") || uri.contains("/manager")) && user.getRole() != User.ROLE_ADMIN) {
+            resp.sendRedirect(req.getContextPath() + "/home");
+            return;
+        }
+
+        if ((uri.contains("/staff") || uri.contains("/seller") || uri.contains("/employee"))
+                && user.getRole() == User.ROLE_CUSTOMER) {
             resp.sendRedirect(req.getContextPath() + "/home");
             return;
         }
 
         chain.doFilter(request, response);
+    }
+
+    private boolean isPublicResource(String uri) {
+        for (String publicPath : PUBLIC_PATHS) {
+            if (uri.contains(publicPath)) {
+                return true;
+            }
+        }
+
+        return uri.endsWith(".css")
+                || uri.endsWith(".js")
+                || uri.endsWith(".png")
+                || uri.endsWith(".jpg")
+                || uri.endsWith(".jpeg")
+                || uri.endsWith(".gif")
+                || uri.endsWith(".svg")
+                || uri.endsWith(".ico");
     }
 }

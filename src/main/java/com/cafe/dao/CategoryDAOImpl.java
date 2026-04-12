@@ -4,6 +4,8 @@ package com.cafe.dao;
 import com.cafe.entity.Category;
 import com.cafe.util.DBConnect;
 
+import java.sql.Connection;
+import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.util.ArrayList;
 
@@ -140,5 +142,45 @@ public class CategoryDAOImpl implements CategoryDAO {
             e.printStackTrace();
         }
         return false;
+    }
+
+    @Override
+    public List<Category> search(String keyword, String active) {
+        List<Category> list = new ArrayList<>();
+        StringBuilder sql = new StringBuilder("SELECT * FROM categories WHERE 1=1");
+        List<Object> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql.append(" AND name LIKE ?");
+            params.add("%" + keyword.trim() + "%");
+        }
+
+        if ("true".equalsIgnoreCase(active) || "false".equalsIgnoreCase(active)) {
+            sql.append(" AND active = ?");
+            params.add(Boolean.parseBoolean(active));
+        }
+
+        sql.append(" ORDER BY id");
+
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql.toString())) {
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            while (rs.next()) {
+                list.add(new Category(
+                        rs.getInt("id"),
+                        rs.getString("name"),
+                        rs.getBoolean("active")
+                ));
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return list;
     }
 }

@@ -52,6 +52,27 @@
                     <div>
                         <h3 class="font-semibold mb-3">Menu</h3>
 
+                        <form method="get"
+                              action="${pageContext.request.contextPath}/customer/order"
+                              class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+                            <input type="text"
+                                   name="keyword"
+                                   value="${keyword}"
+                                   placeholder="Tim mon..."
+                                   class="border rounded-lg px-4 py-2">
+
+                            <select name="categoryId" class="border rounded-lg px-4 py-2">
+                                <option value="">Tat ca loai</option>
+                                <c:forEach items="${categories}" var="c">
+                                    <option value="${c.id}" ${filterCategoryId == c.id ? 'selected' : ''}>${c.name}</option>
+                                </c:forEach>
+                            </select>
+
+                            <button class="bg-gray-700 text-white px-5 py-2 rounded-lg hover:opacity-90">
+                                Tim kiem
+                            </button>
+                        </form>
+
                         <div class="grid grid-cols-2 gap-4">
                             <c:forEach var="d" items="${drinks}">
                                 <div class="border rounded-xl shadow hover:shadow-lg transition">

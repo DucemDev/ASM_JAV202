@@ -16,10 +16,12 @@ import java.util.List;
         "/seller/order/cancel"
 })
 public class OrderServlet extends HttpServlet {
+    private static final int PAGE_SIZE = 10;
 
     private BillDAO billDAO = new BillDAOImpl();
     private TableDAO tableDAO = new TableDAOImpl();
     private DrinkDAO drinkDAO = new DrinkDAOImpl();
+    private CategoryDAO categoryDAO = new CategoryDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -27,6 +29,8 @@ public class OrderServlet extends HttpServlet {
 
         try {
             String tableIdParam = req.getParameter("tableId");
+            String keyword = req.getParameter("keyword");
+            Integer categoryId = parseInteger(req.getParameter("categoryId"));
 
             if (tableIdParam == null || tableIdParam.isEmpty()) {
                 resp.sendRedirect(req.getContextPath() + "/seller/tables");
@@ -34,6 +38,7 @@ public class OrderServlet extends HttpServlet {
             }
 
             int tableId = Integer.parseInt(tableIdParam);
+            int page = parsePage(req.getParameter("page"));
             req.setAttribute("tableId", tableId);
 
             Bill bill = billDAO.findOpenByTableId(tableId);
@@ -55,7 +60,13 @@ public class OrderServlet extends HttpServlet {
                 bill = billDAO.findOpenByTableId(tableId);
             }
 
-            List<Drink> drinks = drinkDAO.findAll();
+            int totalDrinks = drinkDAO.countFiltered(keyword, categoryId, true);
+            int totalPages = Math.max(1, (int) Math.ceil((double) totalDrinks / PAGE_SIZE));
+            if (page > totalPages) {
+                page = totalPages;
+            }
+            List<Drink> drinks = drinkDAO.findFilteredPage(page, PAGE_SIZE, keyword, categoryId, true);
+            List<Category> categories = categoryDAO.findAll();
 
             BillDetailDAO billDetailDAO = new BillDetailDAOImpl();
             List<BillDetail> billDetails = billDetailDAO.findByBillId(bill.getId());
@@ -67,8 +78,13 @@ public class OrderServlet extends HttpServlet {
 
             req.setAttribute("bill", bill);
             req.setAttribute("drinks", drinks);
+            req.setAttribute("categories", categories);
             req.setAttribute("billDetails", billDetails);
             req.setAttribute("total", total);
+            req.setAttribute("currentPage", page);
+            req.setAttribute("totalPages", totalPages);
+            req.setAttribute("keyword", keyword);
+            req.setAttribute("filterCategoryId", categoryId);
 
             req.getRequestDispatcher("/WEB-INF/public/seller/order.jsp")
                     .forward(req, resp);
@@ -171,6 +187,24 @@ public class OrderServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
             resp.setStatus(HttpServletResponse.SC_INTERNAL_SERVER_ERROR);
+        }
+    }
+
+    private int parsePage(String pageParam) {
+        try {
+            int page = Integer.parseInt(pageParam);
+            return Math.max(page, 1);
+        } catch (Exception e) {
+            return 1;
+        }
+    }
+
+    private Integer parseInteger(String value) {
+        try {
+            int parsed = Integer.parseInt(value);
+            return parsed > 0 ? parsed : null;
+        } catch (Exception e) {
+            return null;
         }
     }
 }

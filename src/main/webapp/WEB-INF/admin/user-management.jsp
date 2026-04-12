@@ -126,6 +126,7 @@
                 <!-- SEARCH -->
                 <form method="get" action="${pageContext.request.contextPath}/manager/staff" class="mb-4 flex gap-3">
                     <input type="text" name="keyword"
+                           value="${keyword}"
                            placeholder="Search by email..."
                            class="border rounded-lg px-4 py-2 w-72">
 
@@ -218,6 +219,17 @@
                     </table>
 
                 </div>
+
+                <c:if test="${totalPages > 1}">
+                    <div class="flex justify-center gap-2 mt-6">
+                        <c:forEach begin="1" end="${totalPages}" var="pageNumber">
+                            <a href="${pageContext.request.contextPath}/manager/staff?page=${pageNumber}&keyword=${keyword}"
+                               class="px-3 py-2 rounded-lg border ${pageNumber == currentPage ? 'bg-cafe-brown text-white border-cafe-brown' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}">
+                                ${pageNumber}
+                            </a>
+                        </c:forEach>
+                    </div>
+                </c:if>
 
             </div>
 

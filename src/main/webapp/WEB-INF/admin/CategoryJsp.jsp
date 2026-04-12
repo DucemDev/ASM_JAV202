@@ -109,6 +109,33 @@
 
                 </form>
 
+                <form method="get"
+                      action="${pageContext.request.contextPath}/manager/categories"
+                      class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mb-8">
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1">Tim theo ten loai</label>
+                        <input type="text" name="keyword" value="${keyword}"
+                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cafe-brown"/>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm text-gray-600 mb-1">Loc trang thai</label>
+                        <select name="active"
+                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cafe-brown">
+                            <option value="">Tat ca</option>
+                            <option value="true" ${active == 'true' ? 'selected' : ''}>Hoat dong</option>
+                            <option value="false" ${active == 'false' ? 'selected' : ''}>Ngung</option>
+                        </select>
+                    </div>
+
+                    <div>
+                        <button type="submit"
+                                class="w-full bg-gray-700 text-white py-2 rounded-lg hover:opacity-90 transition">
+                            Tim kiem
+                        </button>
+                    </div>
+                </form>
+
                 <!-- TABLE -->
                 <div class="overflow-x-auto">
 

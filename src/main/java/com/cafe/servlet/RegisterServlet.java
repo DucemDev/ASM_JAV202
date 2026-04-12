@@ -18,7 +18,7 @@ public class RegisterServlet extends HttpServlet {
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws ServletException, IOException {
-        req.getRequestDispatcher("WEB-INF/public/register.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/public/register.jsp").forward(req, resp);
     }
 
     @Override
@@ -99,6 +99,6 @@ public class RegisterServlet extends HttpServlet {
     // Hàm hỗ trợ đẩy thông báo lỗi về trang register
     private void error(HttpServletRequest req, HttpServletResponse resp, String msg) throws ServletException, IOException {
         req.setAttribute("message", msg);
-        req.getRequestDispatcher("WEB-INF/public/register.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/public/register.jsp").forward(req, resp);
     }
 }

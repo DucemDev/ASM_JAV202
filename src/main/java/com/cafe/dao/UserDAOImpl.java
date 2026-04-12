@@ -207,6 +207,50 @@ public class UserDAOImpl implements UserDAO {
         return findBySql(sql);
     }
 
+    public List<User> findPage(int page, int pageSize, String keyword) {
+        int offset = Math.max(0, (page - 1) * pageSize);
+        String sql = "SELECT * FROM users";
+        List<Object> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql += " WHERE email LIKE ?";
+            params.add("%" + keyword.trim() + "%");
+        }
+
+        sql += " ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
+        params.add(offset);
+        params.add(pageSize);
+
+        return findBySql(sql, params.toArray());
+    }
+
+    public int countUsers(String keyword) {
+        String sql = "SELECT COUNT(*) FROM users";
+        List<Object> params = new ArrayList<>();
+
+        if (keyword != null && !keyword.trim().isEmpty()) {
+            sql += " WHERE email LIKE ?";
+            params.add("%" + keyword.trim() + "%");
+        }
+
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            for (int i = 0; i < params.size(); i++) {
+                ps.setObject(i + 1, params.get(i));
+            }
+
+            ResultSet rs = ps.executeQuery();
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return 0;
+    }
+
     // ===== CORE QUERY =====
     @Override
     public List<User> findBySql(String sql, Object... values) {

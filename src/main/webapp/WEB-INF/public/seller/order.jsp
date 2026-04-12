@@ -68,6 +68,28 @@ tailwind.config = {
 <div>
     <h3 class="font-semibold mb-3">Menu</h3>
 
+    <form method="get"
+          action="${pageContext.request.contextPath}/seller/order"
+          class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+        <input type="hidden" name="tableId" value="${tableId}">
+        <input type="text"
+               name="keyword"
+               value="${keyword}"
+               placeholder="Tim mon..."
+               class="border rounded-lg px-4 py-2">
+
+        <select name="categoryId" class="border rounded-lg px-4 py-2">
+            <option value="">Tat ca loai</option>
+            <c:forEach items="${categories}" var="c">
+                <option value="${c.id}" ${filterCategoryId == c.id ? 'selected' : ''}>${c.name}</option>
+            </c:forEach>
+        </select>
+
+        <button class="bg-gray-700 text-white px-5 py-2 rounded-lg hover:opacity-90">
+            Tim kiem
+        </button>
+    </form>
+
     <div class="grid grid-cols-2 gap-4">
 
         <c:forEach var="d" items="${drinks}">
@@ -91,6 +113,17 @@ tailwind.config = {
         </c:forEach>
 
     </div>
+
+    <c:if test="${totalPages > 1}">
+        <div class="flex justify-center gap-2 mt-6">
+            <c:forEach begin="1" end="${totalPages}" var="pageNumber">
+                <a href="${pageContext.request.contextPath}/seller/order?tableId=${tableId}&page=${pageNumber}&keyword=${keyword}&categoryId=${filterCategoryId}"
+                   class="px-3 py-2 rounded-lg border ${pageNumber == currentPage ? 'bg-cafe-brown text-white border-cafe-brown' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}">
+                    ${pageNumber}
+                </a>
+            </c:forEach>
+        </div>
+    </c:if>
 </div>
 
 <!-- BILL -->

@@ -109,12 +109,14 @@ public class LoginServlet extends HttpServlet {
     }
 
     private void redirectByRole(User user, HttpServletRequest req, HttpServletResponse resp) throws IOException {
-        if (user.getRole() == 0) {
+        if (user.getRole() == User.ROLE_CUSTOMER) {
             resp.sendRedirect(req.getContextPath() + "/customer");
-        } else if (user.getRole() == 1) {
-            resp.sendRedirect(req.getContextPath() + "/admin");
-        } else if(user.getRole() == 2) {
+        } else if (user.getRole() == User.ROLE_STAFF) {
             resp.sendRedirect(req.getContextPath() + "/staff");
+        } else if(user.getRole() == User.ROLE_ADMIN) {
+            resp.sendRedirect(req.getContextPath() + "/admin");
+        } else {
+            resp.sendRedirect(req.getContextPath() + "/home");
         }
     }
 }
