@@ -57,7 +57,19 @@ class="flex-1 flex flex-col bg-cafe-bg ml-64 transition-all duration-300">
         Thống kê
     </h1>
 </div>
+    <form method="get" class="mb-6 flex gap-3">
+        <input type="date" name="fromDate"
+               value="${param.fromDate}"
+               class="border px-3 py-1 rounded">
 
+        <input type="date" name="toDate"
+               value="${param.toDate}"
+               class="border px-3 py-1 rounded">
+
+        <button class="bg-cafe-brown text-white px-4 py-1 rounded">
+            Lọc
+        </button>
+    </form>
 <!-- MAIN GRID -->
 <div class="max-w-[1300px] mx-auto">
 <div class="grid grid-cols-3 gap-6">
@@ -78,9 +90,9 @@ viewBox="0 0 24 24">
 </svg>
 </div>
 
-<div class="text-2xl font-semibold text-gray-800 mt-4">
-0 ₫
-</div>
+    <div class="text-2xl font-semibold text-gray-800 mt-4">
+        ${totalRevenue} ₫
+    </div>
 
 </div>
 
@@ -97,9 +109,9 @@ viewBox="0 0 24 24">
 </svg>
 </div>
 
-<div class="text-2xl font-semibold text-gray-800 mt-4">
-0 ₫
-</div>
+    <div class="text-2xl font-semibold text-gray-800 mt-4">
+        ${todayRevenue} ₫
+    </div>
 
 </div>
 
@@ -116,9 +128,9 @@ viewBox="0 0 24 24">
 </svg>
 </div>
 
-<div class="text-2xl font-semibold text-gray-800 mt-4">
-0
-</div>
+    <div class="text-2xl font-semibold text-gray-800 mt-4">
+        ${billCount}
+    </div>
 
 </div>
 
@@ -135,9 +147,9 @@ viewBox="0 0 24 24">
 </svg>
 </div>
 
-<div class="text-2xl font-semibold text-gray-800 mt-4">
-0
-</div>
+    <div class="text-2xl font-semibold text-gray-800 mt-4">
+        ${usingTables}
+    </div>
 
 </div>
 
@@ -238,21 +250,29 @@ viewBox="0 0 24 24">
 </div>
 
 <script>
-new Chart(document.getElementById('pieChart'), {
-    type: 'doughnut',
-    data: {
-        labels: ['Cafe', 'Trà', 'Bánh'],
-        datasets: [{
-            data: [40, 30, 30],
-            backgroundColor: ['#8b5e3c','#d6bfa9','#f1e4d7'],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        plugins: { legend: { position: 'bottom' } },
-        cutout: '70%'
-    }
-});
+    const labels = [<c:forEach var="c" items="${chartData}">
+        '${c.name}',
+        </c:forEach>];
+
+    const data = [<c:forEach var="c" items="${chartData}">
+        ${c.value},
+        </c:forEach>];
+
+    new Chart(document.getElementById('pieChart'), {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: ['#8b5e3c','#d6bfa9','#f1e4d7','#c4a484'],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            plugins: { legend: { position: 'bottom' } },
+            cutout: '70%'
+        }
+    });
 </script>
 
 </body>
