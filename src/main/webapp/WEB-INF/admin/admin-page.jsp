@@ -157,19 +157,24 @@ viewBox="0 0 24 24">
     <!-- REVENUE CHART -->
     <div class="mt-10 flex justify-center">
 
-        <div class="max-w-3xl w-full bg-white border rounded-xl shadow p-6">
+        <div class="max-w-4xl w-full bg-white rounded-2xl shadow-md p-6">
 
             <!-- HEADER -->
-            <div class="flex justify-between items-center mb-4">
-                <h2 class="text-lg font-semibold text-gray-800">
-                    Doanh thu
-                </h2>
+            <div class="flex justify-between items-center mb-6">
+                <div>
+                    <h2 class="text-lg font-semibold text-gray-800">
+                        Doanh thu
+                    </h2>
+                    <p class="text-sm text-gray-500">
+                        Thống kê theo ngày
+                    </p>
+                </div>
 
                 <!-- FILTER -->
-                <form method="get">
+                <form method="get" action="${pageContext.request.contextPath}/admin">
                     <select name="days"
                             onchange="this.form.submit()"
-                            class="border px-3 py-1 rounded">
+                            class="border px-3 py-2 rounded-lg text-sm shadow-sm">
 
                         <option value="7" ${days == 7 ? 'selected' : ''}>7 ngày</option>
                         <option value="30" ${days == 30 ? 'selected' : ''}>30 ngày</option>
@@ -180,13 +185,15 @@ viewBox="0 0 24 24">
             </div>
 
             <!-- CHART -->
-            <canvas id="revenueChart" height="120"></canvas>
+            <div class="h-[300px]">
+                <canvas id="revenueChart"></canvas>
+            </div>
 
         </div>
 
     </div>
     <script>
-        const revenueData = ${revenueData != null ? revenueData : "[]"};
+        const revenueData = ${revenueData != null ? revenueData : "[]"} || [];
 
         const revenueLabels = revenueData.map(e => e.x);
         const revenueValues = revenueData.map(e => e.y);
@@ -198,12 +205,43 @@ viewBox="0 0 24 24">
                 datasets: [{
                     label: 'Doanh thu',
                     data: revenueValues,
-                    backgroundColor: '#8b5e3c'
+                    backgroundColor: '#8b5e3c',
+                    borderRadius: 8,
+                    barThickness: 40
                 }]
             },
             options: {
+                responsive: true,
+                maintainAspectRatio: false,
+
                 plugins: {
-                    legend: { display: false }
+                    legend: { display: false },
+
+                    tooltip: {
+                        callbacks: {
+                            label: function(context) {
+                                return context.raw.toLocaleString('vi-VN') + ' ₫';
+                            }
+                        }
+                    }
+                },
+
+                scales: {
+                    x: {
+                        grid: { display: false }
+                    },
+                    y: {
+                        ticks: {
+                            callback: function(value) {
+                                return value.toLocaleString('vi-VN') + ' ₫';
+                            }
+                        }
+                    }
+                },
+
+                animation: {
+                    duration: 1000,
+                    easing: 'easeOutQuart'
                 }
             }
         });
