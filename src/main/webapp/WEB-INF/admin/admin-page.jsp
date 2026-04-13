@@ -146,7 +146,7 @@ viewBox="0 0 24 24">
 <!-- RIGHT -->
 <div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
 <h2 class="text-sm text-gray-500 mb-4">
-Tỷ lệ doanh thu
+5 Đồ uống bán chạy nhất
 </h2>
 <canvas id="pieChart"></canvas>
 </div>
@@ -154,6 +154,60 @@ Tỷ lệ doanh thu
 </div>
 </div>
 
+    <!-- REVENUE CHART -->
+    <div class="mt-10 flex justify-center">
+
+        <div class="max-w-3xl w-full bg-white border rounded-xl shadow p-6">
+
+            <!-- HEADER -->
+            <div class="flex justify-between items-center mb-4">
+                <h2 class="text-lg font-semibold text-gray-800">
+                    Doanh thu
+                </h2>
+
+                <!-- FILTER -->
+                <form method="get">
+                    <select name="days"
+                            onchange="this.form.submit()"
+                            class="border px-3 py-1 rounded">
+
+                        <option value="7" ${days == 7 ? 'selected' : ''}>7 ngày</option>
+                        <option value="30" ${days == 30 ? 'selected' : ''}>30 ngày</option>
+                        <option value="90" ${days == 90 ? 'selected' : ''}>90 ngày</option>
+
+                    </select>
+                </form>
+            </div>
+
+            <!-- CHART -->
+            <canvas id="revenueChart" height="120"></canvas>
+
+        </div>
+
+    </div>
+    <script>
+        const revenueData = ${revenueData != null ? revenueData : "[]"};
+
+        const revenueLabels = revenueData.map(e => e.x);
+        const revenueValues = revenueData.map(e => e.y);
+
+        new Chart(document.getElementById('revenueChart'), {
+            type: 'bar',
+            data: {
+                labels: revenueLabels,
+                datasets: [{
+                    label: 'Doanh thu',
+                    data: revenueValues,
+                    backgroundColor: '#8b5e3c'
+                }]
+            },
+            options: {
+                plugins: {
+                    legend: { display: false }
+                }
+            }
+        });
+    </script>
 <!-- QUICK ACTION (GIỮ NGUYÊN NÚT CỦA BẠN) -->
 <div class="mt-10">
 
@@ -238,21 +292,34 @@ viewBox="0 0 24 24">
 </div>
 
 <script>
-new Chart(document.getElementById('pieChart'), {
-    type: 'doughnut',
-    data: {
-        labels: ['Cafe', 'Trà', 'Bánh'],
-        datasets: [{
-            data: [40, 30, 30],
-            backgroundColor: ['#8b5e3c','#d6bfa9','#f1e4d7'],
-            borderWidth: 0
-        }]
-    },
-    options: {
-        plugins: { legend: { position: 'bottom' } },
-        cutout: '70%'
-    }
-});
+    const labels = ${labels != null ? labels : "['No data']"};
+    const data = ${data != null ? data : "[1]"};
+
+    new Chart(document.getElementById('pieChart'), {
+        type: 'doughnut',
+        data: {
+            labels: labels,
+            datasets: [{
+                data: data,
+                backgroundColor: [
+                    '#8b5e3c',
+                    '#a67c52',
+                    '#c19a6b',
+                    '#d6bfa9',
+                    '#f1e4d7'
+                ],
+                borderWidth: 0
+            }]
+        },
+        options: {
+            plugins: {
+                legend: {
+                    position: 'bottom'
+                }
+            },
+            cutout: '70%'
+        }
+    });
 </script>
 
 </body>

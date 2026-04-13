@@ -88,39 +88,47 @@ public class StaffSevlet extends HttpServlet {
     // LIST
     private void listStaff(HttpServletRequest req) {
         String keyword = req.getParameter("keyword");
+        String status = req.getParameter("status");
+
         int page = parsePage(req.getParameter("page"));
-        int totalUsers = userDAO.countUsers(keyword);
+
+        int totalUsers = userDAO.countUsers(keyword, status);
         int totalPages = Math.max(1, (int) Math.ceil((double) totalUsers / PAGE_SIZE));
+
         if (page > totalPages) {
             page = totalPages;
         }
 
-        List<User> staffList = userDAO.findPage(page, PAGE_SIZE, keyword);
+        List<User> staffList = userDAO.findPage(page, PAGE_SIZE, keyword, status);
 
         req.setAttribute("staffList", staffList);
         req.setAttribute("currentPage", page);
         req.setAttribute("totalPages", totalPages);
         req.setAttribute("keyword", keyword);
+        req.setAttribute("status", status);
     }
-
     // CREATE
     private void create(HttpServletRequest req, HttpServletResponse resp)
             throws IOException, ServletException {
 
         User u = getFormData(req);
 
-        if (u.getEmail() == null || u.getEmail().isBlank()
-                || u.getFullname() == null || u.getFullname().isBlank()
-                || u.getPhone() == null || u.getPhone().isBlank()
-                || u.getPassword() == null || u.getPassword().isBlank()) {
-
-            req.setAttribute("error", "Vui lòng nhập đầy đủ thông tin!");
-            req.setAttribute("user", u); // giữ lại dữ liệu đã nhập
+        // VALIDATE FORMAT
+        if (!u.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+            req.setAttribute("error", "Email không hợp lệ!");
+            req.setAttribute("user", u);
             listStaff(req);
             req.setAttribute("formMode", "add");
+            req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp").forward(req, resp);
+            return;
+        }
 
-            req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp")
-                    .forward(req, resp);
+        if (!u.getPhone().matches("^(0[3|5|7|8|9])[0-9]{8}$")) {
+            req.setAttribute("error", "Số điện thoại không hợp lệ!");
+            req.setAttribute("user", u);
+            listStaff(req);
+            req.setAttribute("formMode", "add");
+            req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp").forward(req, resp);
             return;
         }
 
@@ -170,11 +178,24 @@ public class StaffSevlet extends HttpServlet {
 
     // DELETE
     private void delete(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+            throws IOException, ServletException {
 
         int id = ParamUtil.getInt(req, "userId");
-        userDAO.updateStatus(id, false);
 
+        // 👉 Lấy user đang login
+        HttpSession session = req.getSession();
+        User currentUser = (User) session.getAttribute("user");
+
+        // 🚨 CHẶN TỰ XÓA
+        if (currentUser != null && currentUser.getId() == id) {
+            req.setAttribute("error", "Bạn không thể tự xóa chính mình!");
+            listStaff(req);
+            req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp")
+                    .forward(req, resp);
+            return;
+        }
+
+        userDAO.updateStatus(id, false);
         resp.sendRedirect(req.getContextPath() + "/manager/staff");
     }
 
@@ -193,12 +214,23 @@ public class StaffSevlet extends HttpServlet {
     // FORM DATA
     private User getFormData(HttpServletRequest req) {
         User u = new User();
+
         u.setEmail(req.getParameter("email"));
         u.setPassword(req.getParameter("password"));
         u.setFullname(req.getParameter("fullName"));
         u.setPhone(req.getParameter("phone"));
+
+        // STATUS
         u.setActive("1".equals(req.getParameter("active")));
-        u.setRole(User.ROLE_STAFF);
+
+        // ROLE (NEW)
+        try {
+            int role = Integer.parseInt(req.getParameter("role"));
+            u.setRole(role);
+        } catch (Exception e) {
+            u.setRole(User.ROLE_STAFF); // fallback
+        }
+
         return u;
     }
 

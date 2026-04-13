@@ -32,17 +32,19 @@
     <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
 
     <!-- RIGHT SIDE -->
-    <div id="mainContent" class="flex-1 flex flex-col ml-64 transition-all duration-300">
+    <div id="mainContent" class="flex-1 flex flex-col ml-64">
 
         <!-- HEADER -->
         <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+
         <!-- FORM ADD / EDIT -->
         <c:if test="${formMode != null}">
-            <div class="bg-white p-6 rounded-xl shadow-md mb-6">
+            <div class="bg-white p-6 rounded-xl shadow-md m-6">
 
                 <h2 class="text-xl font-bold mb-4">
                         ${formMode == 'add' ? 'Add User' : 'Edit User'}
                 </h2>
+
                 <c:if test="${error != null}">
                     <div class="bg-red-100 text-red-600 px-4 py-2 rounded mb-4">
                             ${error}
@@ -91,6 +93,15 @@
                             </select>
                         </div>
 
+                        <!-- ROLE (NEW) -->
+                        <div>
+                            <label>Role</label>
+                            <select name="role" class="w-full border px-3 py-2 rounded">
+                                <option value="1" ${user.role == 1 ? 'selected' : ''}>Staff</option>
+                                <option value="2" ${user.role == 2 ? 'selected' : ''}>Admin</option>
+                            </select>
+                        </div>
+
                     </div>
 
                     <div class="mt-4">
@@ -108,6 +119,7 @@
 
             </div>
         </c:if>
+
         <!-- CONTENT -->
         <div class="p-8">
 
@@ -118,30 +130,38 @@
                     <h1 class="text-2xl font-bold text-gray-800">User Management</h1>
 
                     <a href="${pageContext.request.contextPath}/manager/staff/add"
-                       class="bg-cafe-brown text-white px-5 py-2 rounded-lg hover:opacity-90 transition">
+                       class="bg-cafe-brown text-white px-5 py-2 rounded-lg">
                         + Add User
                     </a>
                 </div>
 
                 <!-- SEARCH -->
-                <form method="get" action="${pageContext.request.contextPath}/manager/staff" class="mb-4 flex gap-3">
+                <form method="get"
+                      action="${pageContext.request.contextPath}/manager/staff"
+                      class="mb-4 flex gap-3">
+
                     <input type="text" name="keyword"
                            value="${keyword}"
-                           placeholder="Search by email..."
+                           placeholder="Search name or email..."
                            class="border rounded-lg px-4 py-2 w-72">
 
-                    <button class="bg-gray-700 text-white px-5 py-2 rounded-lg hover:opacity-90">
+                    <select name="status" class="border rounded-lg px-3 py-2">
+                        <option value="">All</option>
+                        <option value="1" ${status == '1' ? 'selected' : ''}>Active</option>
+                        <option value="0" ${status == '0' ? 'selected' : ''}>Locked</option>
+                    </select>
+
+                    <button class="bg-gray-700 text-white px-5 py-2 rounded-lg">
                         Search
                     </button>
                 </form>
 
                 <!-- TABLE -->
-                <p>Size: ${staffList.size()}</p>
                 <div class="bg-white rounded-xl shadow-md overflow-hidden">
 
                     <table class="w-full text-sm text-center">
 
-                        <thead class="bg-[#f1e4d7] text-gray-700">
+                        <thead class="bg-[#f1e4d7]">
                         <tr>
                             <th class="p-3">ID</th>
                             <th>Full Name</th>
@@ -154,8 +174,6 @@
                         </thead>
 
                         <tbody>
-
-
                         <c:forEach var="u" items="${staffList}">
 
                             <tr class="border-t hover:bg-gray-50">
@@ -165,10 +183,11 @@
                                 <td>${u.email}</td>
                                 <td>${u.phone}</td>
 
+                                <!-- ROLE -->
                                 <td>
                                     <c:choose>
                                         <c:when test="${u.role == 2}">
-                                            <span class="text-green-600 font-semibold">Admin</span>
+                                            <span class="text-purple-600 font-semibold">Admin</span>
                                         </c:when>
                                         <c:otherwise>
                                             <span class="text-gray-600">Staff</span>
@@ -176,9 +195,10 @@
                                     </c:choose>
                                 </td>
 
+                                <!-- STATUS -->
                                 <td>
                                     <c:choose>
-                                        <c:when test="${u.active == true}">
+                                        <c:when test="${u.active}">
                                             <span class="text-green-600 font-semibold">Active</span>
                                         </c:when>
                                         <c:otherwise>
@@ -187,52 +207,51 @@
                                     </c:choose>
                                 </td>
 
-                               <td class="space-x-2">
+                                <td class="space-x-2">
 
-                                   <!-- EDIT -->
-                                   <a href="${pageContext.request.contextPath}/manager/staff/edit?userId=${u.id}"
-                                      class="bg-blue-500 text-white px-3 py-1 rounded hover:opacity-80">
-                                       Edit
-                                   </a>
+                                    <a href="${pageContext.request.contextPath}/manager/staff/edit?userId=${u.id}"
+                                       class="bg-blue-500 text-white px-3 py-1 rounded">
+                                        Edit
+                                    </a>
 
-                                   <!-- DELETE -->
-                                   <a href="${pageContext.request.contextPath}/manager/staff/delete?userId=${u.id}"
-                                      onclick="return confirm('Bạn có chắc muốn xóa user này không?')"
-                                      class="bg-red-500 text-white px-3 py-1 rounded hover:opacity-80">
-                                       Delete
-                                   </a>
+                                    <a href="${pageContext.request.contextPath}/manager/staff/delete?userId=${u.id}"
+                                       onclick="return confirm('Bạn có chắc muốn xóa?')"
+                                       class="bg-red-500 text-white px-3 py-1 rounded">
+                                        Delete
+                                    </a>
 
-                                   <!-- TOGGLE STATUS -->
-                                   <a href="${pageContext.request.contextPath}/manager/staff/update-status?userId=${u.id}&status=${u.active ? 0 : 1}"
-                                      class="bg-yellow-500 text-white px-3 py-1 rounded hover:opacity-80">
-                                       khóa/mở
-                                   </a>
+                                    <a href="${pageContext.request.contextPath}/manager/staff/update-status?userId=${u.id}&status=${u.active ? 0 : 1}"
+                                       class="bg-yellow-500 text-white px-3 py-1 rounded">
+                                        Toggle
+                                    </a>
 
-                               </td>
+                                </td>
 
                             </tr>
 
                         </c:forEach>
-
                         </tbody>
 
                     </table>
 
                 </div>
 
+                <!-- PAGINATION -->
                 <c:if test="${totalPages > 1}">
                     <div class="flex justify-center gap-2 mt-6">
+
                         <c:forEach begin="1" end="${totalPages}" var="pageNumber">
-                            <a href="${pageContext.request.contextPath}/manager/staff?page=${pageNumber}&keyword=${keyword}"
-                               class="px-3 py-2 rounded-lg border ${pageNumber == currentPage ? 'bg-cafe-brown text-white border-cafe-brown' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}">
-                                ${pageNumber}
+                            <a href="${pageContext.request.contextPath}/manager/staff?page=${pageNumber}&keyword=${keyword}&status=${status}"
+                               class="px-3 py-2 border rounded
+                               ${pageNumber == currentPage ? 'bg-cafe-brown text-white' : 'bg-white'}">
+                                    ${pageNumber}
                             </a>
                         </c:forEach>
+
                     </div>
                 </c:if>
 
             </div>
-
         </div>
 
     </div>

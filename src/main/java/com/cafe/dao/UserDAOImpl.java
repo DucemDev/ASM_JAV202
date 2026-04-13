@@ -207,14 +207,23 @@ public class UserDAOImpl implements UserDAO {
         return findBySql(sql);
     }
 
-    public List<User> findPage(int page, int pageSize, String keyword) {
+    public List<User> findPage(int page, int pageSize, String keyword, String status) {
         int offset = Math.max(0, (page - 1) * pageSize);
-        String sql = "SELECT * FROM users";
+
+        String sql = "SELECT * FROM users WHERE 1=1 ";
         List<Object> params = new ArrayList<>();
 
+        // SEARCH KEYWORD (email + name)
         if (keyword != null && !keyword.trim().isEmpty()) {
-            sql += " WHERE email LIKE ?";
+            sql += " AND (email LIKE ? OR full_name LIKE ?) ";
             params.add("%" + keyword.trim() + "%");
+            params.add("%" + keyword.trim() + "%");
+        }
+
+        // FILTER STATUS
+        if (status != null && !status.isEmpty()) {
+            sql += " AND active = ? ";
+            params.add("1".equals(status));
         }
 
         sql += " ORDER BY id OFFSET ? ROWS FETCH NEXT ? ROWS ONLY";
@@ -224,13 +233,19 @@ public class UserDAOImpl implements UserDAO {
         return findBySql(sql, params.toArray());
     }
 
-    public int countUsers(String keyword) {
-        String sql = "SELECT COUNT(*) FROM users";
+    public int countUsers(String keyword, String status) {
+        String sql = "SELECT COUNT(*) FROM users WHERE 1=1 ";
         List<Object> params = new ArrayList<>();
 
         if (keyword != null && !keyword.trim().isEmpty()) {
-            sql += " WHERE email LIKE ?";
+            sql += " AND (email LIKE ? OR full_name LIKE ?) ";
             params.add("%" + keyword.trim() + "%");
+            params.add("%" + keyword.trim() + "%");
+        }
+
+        if (status != null && !status.isEmpty()) {
+            sql += " AND active = ? ";
+            params.add("1".equals(status));
         }
 
         try (Connection conn = DBConnect.getConnection();
@@ -244,6 +259,7 @@ public class UserDAOImpl implements UserDAO {
             if (rs.next()) {
                 return rs.getInt(1);
             }
+
         } catch (Exception e) {
             e.printStackTrace();
         }
