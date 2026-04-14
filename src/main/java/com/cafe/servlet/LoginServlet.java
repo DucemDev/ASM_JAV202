@@ -97,7 +97,7 @@ public class LoginServlet extends HttpServlet {
                 req.getSession().setAttribute("user", user);
                 req.getSession().removeAttribute("failLogin");
 
-                // Điều hướng theo Role
+
                 redirectByRole(user, req, resp);
             } else {
                 failLogin++;
