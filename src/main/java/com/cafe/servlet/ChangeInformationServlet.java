@@ -66,6 +66,12 @@ public class ChangeInformationServlet extends HttpServlet {
                 return;
             }
 
+            if (!email.contains("@gmail.com")) {
+                session.setAttribute("message", "Email không đúng định dạng");
+                resp.sendRedirect(req.getContextPath() + "/change-information");
+                return;
+            }
+
             // regex phone VN
             if (!phone.matches("^0\\d{9}$")) {
                 session.setAttribute("message", "Số điện thoại không hợp lệ!");

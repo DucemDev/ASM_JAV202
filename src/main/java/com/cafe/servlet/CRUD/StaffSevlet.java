@@ -107,14 +107,34 @@ public class StaffSevlet extends HttpServlet {
         req.setAttribute("keyword", keyword);
         req.setAttribute("status", status);
     }
+
     // CREATE
     private void create(HttpServletRequest req, HttpServletResponse resp)
             throws IOException, ServletException {
 
         User u = getFormData(req);
 
+        if (u.getEmail().isEmpty() || u.getPassword().isEmpty() || u.getPhone().isEmpty()) {
+            req.setAttribute("error", "Vui lòng nhập đầy đủ thông tin");
+            req.setAttribute("user", u);
+            listStaff(req);
+            req.setAttribute("formMode", "add");
+            req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp").forward(req, resp);
+            return;
+        }
+
         // VALIDATE FORMAT
-        if (!u.getEmail().matches("^[A-Za-z0-9+_.-]+@(.+)$")) {
+        if (!u.getEmail().matches("^[A-Za-z0-9+_.-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{2,}$")) {
+            req.setAttribute("error", "Email không hợp lệ!");
+            req.setAttribute("user", u);
+            listStaff(req);
+            req.setAttribute("formMode", "edit");
+            req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp").forward(req, resp);
+            return;
+        }
+
+
+        if (!u.getEmail().contains("@gmail.com")) {
             req.setAttribute("error", "Email không hợp lệ!");
             req.setAttribute("user", u);
             listStaff(req);
@@ -146,8 +166,8 @@ public class StaffSevlet extends HttpServlet {
 
     // UPDATE
     private void update(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException, ServletException{
-
+            throws IOException, ServletException {
+        System.out.println("UPDATE CALLED");
         int id = ParamUtil.getInt(req, "userId");
         User old = userDAO.findById(id);
 
@@ -158,6 +178,7 @@ public class StaffSevlet extends HttpServlet {
             u.setPassword(old.getPassword());
         }
 
+
         if (u.getEmail() == null || u.getEmail().isBlank()
                 || u.getFullname() == null || u.getFullname().isBlank()
                 || u.getPhone() == null || u.getPhone().isBlank()) {
@@ -166,12 +187,39 @@ public class StaffSevlet extends HttpServlet {
             req.setAttribute("user", u);
             listStaff(req);
             req.setAttribute("formMode", "edit");
+            req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp").forward(req, resp);
+            return;
+        }
 
+        if (!u.getEmail().contains("@gmail.com")) {
+            req.setAttribute("error", "Email không hợp lệ!");
+            req.setAttribute("user", u);
+            listStaff(req);
+            req.setAttribute("formMode", "edit");
             req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp").forward(req, resp);
             return;
         }
 
 
+
+        if (!u.getPhone().matches("^(0[3|5|7|8|9])[0-9]{8}$")) {
+            req.setAttribute("error", "Số điện thoại không hợp lệ!");
+            req.setAttribute("user", u);
+            listStaff(req);
+            req.setAttribute("formMode", "edit");
+            req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp").forward(req, resp);
+            return;
+        }
+
+// ✅ CHECK EMAIL TRÙNG (trừ chính nó)
+        User exist = userDAO.findByEmail(u.getEmail());
+        if (exist != null && exist.getId() != id) {
+            req.setAttribute("error", "Email đã tồn tại!");
+            listStaff(req);
+            req.setAttribute("formMode", "edit");
+            req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp").forward(req, resp);
+            return;
+        }
         userDAO.update(u);
         resp.sendRedirect(req.getContextPath() + "/manager/staff");
     }
