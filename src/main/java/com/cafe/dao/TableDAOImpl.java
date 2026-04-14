@@ -14,7 +14,8 @@ public class TableDAOImpl implements TableDAO {
         List<Table> list = new ArrayList<>();
 
         // 🔥 CHỈ LOAD bàn active
-        String sql = "SELECT * FROM tables WHERE active = 1 ORDER BY id";
+        String sql = "SELECT * FROM tables ORDER BY id";
+
 
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql);
@@ -58,6 +59,7 @@ public class TableDAOImpl implements TableDAO {
     public void updateStatus(int id, String status) {
         String sql = "UPDATE tables SET status=? WHERE id=?";
 
+
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
@@ -71,16 +73,20 @@ public class TableDAOImpl implements TableDAO {
         }
     }
 
+
     @Override
     public void hide(int id) {
-        // 🔥 soft delete
-        String sql = "UPDATE tables SET active = 0 WHERE id = ?";
+        String sql = "UPDATE tables SET active = 0, status = 'hidden' WHERE id = ? AND status = 'empty'";
 
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setInt(1, id);
-            ps.executeUpdate();
+            int rows = ps.executeUpdate();
+
+            if (rows == 0) {
+                System.out.println("Không thể ẩn bàn vì bàn không ở trạng thái empty.");
+            }
 
         } catch (Exception e) {
             e.printStackTrace();
@@ -89,7 +95,7 @@ public class TableDAOImpl implements TableDAO {
 
     @Override
     public void show(int id) {
-        String sql = "UPDATE tables SET active = 1 WHERE id = ?";
+        String sql = "UPDATE tables SET active = 1, status = 'empty' WHERE id = ?";
 
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {
@@ -110,10 +116,11 @@ public class TableDAOImpl implements TableDAO {
              PreparedStatement ps = conn.prepareStatement(sql)) {
 
             ps.setString(1, name);
-            ResultSet rs = ps.executeQuery();
 
-            if (rs.next()) {
-                return rs.getInt(1) > 0;
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(1) > 0;
+                }
             }
 
         } catch (Exception e) {
@@ -123,6 +130,28 @@ public class TableDAOImpl implements TableDAO {
         return false;
     }
 
+@Override
+public boolean existsByNameExceptId(String name, int id) {
+    String sql = "SELECT COUNT(*) FROM tables WHERE name = ? AND id <> ? AND active = 1";
+
+    try (Connection conn = DBConnect.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, name);
+        ps.setInt(2, id);
+
+        try (ResultSet rs = ps.executeQuery()) {
+            if (rs.next()) {
+                return rs.getInt(1) > 0;
+            }
+        }
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+
+    return false;
+}
 
     @Override
     public List<Table> search(String status, String keyword) {
@@ -169,5 +198,51 @@ public class TableDAOImpl implements TableDAO {
         }
 
         return list;
+    }
+
+
+@Override
+public void update(Table t) {
+    String sql = "UPDATE tables SET name = ?, status = ? WHERE id = ?";
+
+    try (Connection conn = DBConnect.getConnection();
+         PreparedStatement ps = conn.prepareStatement(sql)) {
+
+        ps.setString(1, t.getName());
+        ps.setString(2, t.getStatus());
+        ps.setInt(3, t.getId());
+
+        ps.executeUpdate();
+
+    } catch (Exception e) {
+        e.printStackTrace();
+    }
+}
+
+
+    @Override
+    public Table findById(int id) {
+        String sql = "SELECT * FROM tables WHERE id = ?";
+
+        try (Connection conn = DBConnect.getConnection();
+             PreparedStatement ps = conn.prepareStatement(sql)) {
+
+            ps.setInt(1, id);
+
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    Table t = new Table();
+                    t.setId(rs.getInt("id"));
+                    t.setName(rs.getString("name"));
+                    t.setStatus(rs.getString("status"));
+                    t.setActive(rs.getBoolean("active"));
+                    return t;
+                }
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 }

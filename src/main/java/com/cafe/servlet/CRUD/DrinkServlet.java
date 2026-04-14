@@ -65,7 +65,10 @@ public class DrinkServlet extends HttpServlet {
 
         String name = req.getParameter("name");
         String priceStr = req.getParameter("price");
+
         int page = parsePage(req.getParameter("page"));
+        boolean active = Boolean.parseBoolean(req.getParameter("active"));
+
 
         List<Category> categories = categoryDAO.findAll();
         req.setAttribute("categories", categories);
@@ -113,7 +116,11 @@ public class DrinkServlet extends HttpServlet {
 
         int id = ParamUtil.getInt(req, "id");
         String name = req.getParameter("name");
+
         int page = parsePage(req.getParameter("page"));
+
+        boolean active = Boolean.parseBoolean(req.getParameter("active"));
+
         List<Category> categories = categoryDAO.findAll();
         req.setAttribute("categories", categories);
         if (name == null || name.trim().isEmpty()) {
