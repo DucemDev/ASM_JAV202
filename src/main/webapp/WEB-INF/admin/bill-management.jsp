@@ -63,6 +63,8 @@
 
                     <select name="status" class="border rounded-lg px-4 py-2">
                         <option value="">All Status</option>
+                        <option value="waiting" ${status == 'waiting' ? 'selected' : ''}>Waiting</option>
+                        <option value="pending_verify" ${status == 'pending_verify' ? 'selected' : ''}>Pending Verify</option>
                         <option value="finish" ${status == 'finish' ? 'selected' : ''}>Finish</option>
                         <option value="cancel" ${status == 'cancel' ? 'selected' : ''}>Cancel</option>
                     </select>
@@ -76,7 +78,7 @@
                 </form>
 
                 <!-- TABLE -->
-                <p>Total bills: ${billList.size()}</p>
+                <p class="mb-3">Total bills: ${billList.size()}</p>
 
                 <div class="bg-white rounded-xl shadow-md overflow-hidden">
 
@@ -86,6 +88,8 @@
                         <tr>
                             <th class="p-3">Bill ID</th>
                             <th>Table</th>
+                            <th>Type</th>
+                            <th>Created By</th>
                             <th>Total</th>
                             <th>Status</th>
                             <th>Created At</th>
@@ -94,37 +98,80 @@
                         </thead>
 
                         <tbody>
-
                         <c:forEach var="b" items="${billList}">
                             <tr class="border-t hover:bg-gray-50">
 
                                 <td class="p-3">#${b.id}</td>
-                                <td>Table ${b.tableId}</td>
+
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${b.type == 'online' || b.tableId <= 0}">
+                                            Online (không bàn)
+                                        </c:when>
+                                        <c:otherwise>
+                                            Table ${b.tableId}
+                                        </c:otherwise>
+                                    </c:choose>
+                                </td>
+
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${b.type == 'online'}">Online</c:when>
+                                        <c:when test="${b.type == 'pos'}">POS</c:when>
+                                        <c:otherwise>${b.type}</c:otherwise>
+                                    </c:choose>
+                                </td>
+
+                                <td>
+                                    <c:choose>
+                                        <c:when test="${not empty b.userFullName}">
+                                            ${b.userFullName}
+                                        </c:when>
+                                        <c:otherwise>Unknown</c:otherwise>
+                                    </c:choose>
+                                </td>
+
                                 <td>${b.total} đ</td>
 
                                 <td>
                                     <c:choose>
+                                        <c:when test="${b.status == 'waiting'}">
+                                            <span class="text-blue-600 font-semibold">Waiting</span>
+                                        </c:when>
+                                        <c:when test="${b.status == 'pending_verify'}">
+                                            <span class="text-amber-600 font-semibold">Pending Verify</span>
+                                        </c:when>
                                         <c:when test="${b.status == 'finish'}">
                                             <span class="text-green-600 font-semibold">Completed</span>
                                         </c:when>
-                                        <c:otherwise>
+                                        <c:when test="${b.status == 'cancel'}">
                                             <span class="text-red-500 font-semibold">Cancelled</span>
+                                        </c:when>
+                                        <c:otherwise>
+                                            <span class="text-gray-600 font-semibold">${b.status}</span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
 
                                 <td>${b.createdAt}</td>
 
-                                <!-- VIEW MODAL -->
                                 <td>
-                                    <button onclick="openModal()"
-                                            class="bg-blue-500 text-white px-3 py-1 rounded hover:opacity-80">
+                                    <a href="${pageContext.request.contextPath}/manager/bill-detail?id=${b.id}"
+                                       class="bg-blue-500 text-white px-3 py-1 rounded hover:opacity-80 inline-block">
                                         View
-                                    </button>
+                                    </a>
                                 </td>
 
                             </tr>
                         </c:forEach>
+
+                        <c:if test="${empty billList}">
+                            <tr>
+                                <td colspan="8" class="p-6 text-gray-500">
+                                    Không có hóa đơn phù hợp.
+                                </td>
+                            </tr>
+                        </c:if>
 
                         </tbody>
 
@@ -138,116 +185,6 @@
     </div>
 
 </div>
-
-<!-- ================= MODAL ================= -->
-<div id="billModal"
-     class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50">
-
-    <div class="bg-white w-[600px] rounded-xl shadow-lg p-6 relative animate-scale">
-
-        <!-- CLOSE -->
-        <button onclick="closeModal()"
-                class="absolute top-3 right-3 text-gray-500 hover:text-black text-xl">
-            ✕
-        </button>
-
-        <!-- TITLE -->
-        <h2 class="text-xl font-bold mb-4">Bill Detail</h2>
-
-        <!-- INFO -->
-        <div class="grid grid-cols-2 gap-4 mb-4">
-            <div>
-                <p class="text-gray-500">Table</p>
-                <p class="font-semibold">Table 5</p>
-            </div>
-
-            <div>
-                <p class="text-gray-500">Status</p>
-                <span class="bg-green-100 text-green-700 px-2 py-1 rounded text-sm">
-                    Completed
-                </span>
-            </div>
-
-            <div>
-                <p class="text-gray-500">Created</p>
-                <p>2026-04-08</p>
-            </div>
-
-            <div>
-                <p class="text-gray-500">Total</p>
-                <p class="text-green-600 font-bold">120000 đ</p>
-            </div>
-        </div>
-
-        <!-- ITEMS -->
-        <table class="w-full text-sm text-center border">
-            <thead class="bg-gray-100">
-            <tr>
-                <th class="p-2">Drink</th>
-                <th>Price</th>
-                <th>Qty</th>
-                <th>Total</th>
-            </tr>
-            </thead>
-
-            <tbody>
-            <tr class="border-t">
-                <td class="p-2">Coffee</td>
-                <td>30000</td>
-                <td>2</td>
-                <td>60000</td>
-            </tr>
-            <tr class="border-t">
-                <td class="p-2">Milk Tea</td>
-                <td>30000</td>
-                <td>2</td>
-                <td>60000</td>
-            </tr>
-            </tbody>
-        </table>
-
-    </div>
-</div>
-
-<!-- ================= SCRIPT ================= -->
-<script>
-    function openModal() {
-        const modal = document.getElementById("billModal");
-        modal.classList.remove("hidden");
-        modal.classList.add("flex");
-    }
-
-    function closeModal() {
-        const modal = document.getElementById("billModal");
-        modal.classList.add("hidden");
-        modal.classList.remove("flex");
-    }
-
-    // click nền để đóng
-    window.onclick = function(e) {
-        const modal = document.getElementById("billModal");
-        if (e.target === modal) {
-            closeModal();
-        }
-    }
-</script>
-
-<style>
-    .animate-scale {
-        animation: scaleIn 0.2s ease;
-    }
-
-    @keyframes scaleIn {
-        from {
-            transform: scale(0.9);
-            opacity: 0;
-        }
-        to {
-            transform: scale(1);
-            opacity: 1;
-        }
-    }
-</style>
 
 </body>
 </html>

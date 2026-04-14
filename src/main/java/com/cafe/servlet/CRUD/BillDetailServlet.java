@@ -1,8 +1,14 @@
 package com.cafe.servlet.CRUD;
+
+import com.cafe.dao.BillDAO;
+import com.cafe.dao.BillDAOImpl;
 import com.cafe.dao.BillDetailDAO;
 import com.cafe.dao.BillDetailDAOImpl;
+import com.cafe.dao.DrinkDAO;
+import com.cafe.dao.DrinkDAOImpl;
+import com.cafe.entity.Bill;
 import com.cafe.entity.BillDetail;
-
+import com.cafe.entity.Drink;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
@@ -13,22 +19,44 @@ import java.util.List;
 @WebServlet("/manager/bill-detail")
 public class BillDetailServlet extends HttpServlet {
 
-    private BillDetailDAO billDetailDAO = new BillDetailDAOImpl();
+    private final BillDetailDAO billDetailDAO = new BillDetailDAOImpl();
+    private final BillDAO billDAO = new BillDAOImpl();
+    private final DrinkDAO drinkDAO = new DrinkDAOImpl();
 
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        int billId = Integer.parseInt(req.getParameter("id"));
+        String idParam = req.getParameter("id");
+        int billId;
+        try {
+            billId = Integer.parseInt(idParam);
+        } catch (Exception e) {
+            resp.sendRedirect(req.getContextPath() + "/manager/bill");
+            return;
+        }
 
-        // ✅ đúng method của mày
+        List<Bill> bills = billDAO.findBySql("""
+            SELECT b.*, u.full_name AS user_fullname
+            FROM bills b
+            LEFT JOIN users u ON b.user_id = u.id
+            WHERE b.id = ?
+            """, billId);
+
+        Bill bill = bills.isEmpty() ? null : bills.get(0);
+        if (bill == null) {
+            resp.sendRedirect(req.getContextPath() + "/manager/bill");
+            return;
+        }
+
         List<BillDetail> list = billDetailDAO.findByBillId(billId);
+        List<Drink> drinks = drinkDAO.findAll();
 
-        req.setAttribute("detailList", list);
-        req.setAttribute("billId", billId);
+        req.setAttribute("bill", bill);
+        req.setAttribute("billItems", list);
+        req.setAttribute("drinks", drinks);
 
         req.getRequestDispatcher("/WEB-INF/admin/bill-detail.jsp")
                 .forward(req, resp);
     }
 }
-

@@ -27,30 +27,35 @@ public class BillServlet extends HttpServlet {
         String fromDate = req.getParameter("fromDate");
         String toDate = req.getParameter("toDate");
 
-        StringBuilder sql = new StringBuilder("SELECT * FROM bills WHERE 1=1");
+        StringBuilder sql = new StringBuilder("""
+SELECT b.*, u.full_name AS user_fullname
+FROM bills b
+LEFT JOIN users u ON b.user_id = u.id
+WHERE 1=1
+""");
         java.util.List<Object> params = new java.util.ArrayList<>();
 
         if (keyword != null && !keyword.trim().isEmpty()) {
-            sql.append(" AND CAST(id AS VARCHAR(20)) LIKE ?");
+            sql.append(" AND CAST(b.id AS VARCHAR(20)) LIKE ?");
             params.add("%" + keyword.trim() + "%");
         }
 
         if (status != null && !status.trim().isEmpty()) {
-            sql.append(" AND status = ?");
+            sql.append(" AND b.status = ?");
             params.add(status.trim());
         }
 
         if (fromDate != null && !fromDate.trim().isEmpty()) {
-            sql.append(" AND CAST(created_at AS DATE) >= ?");
+            sql.append(" AND CAST(b.created_at AS DATE) >= ?");
             params.add(fromDate.trim());
         }
 
         if (toDate != null && !toDate.trim().isEmpty()) {
-            sql.append(" AND CAST(created_at AS DATE) <= ?");
+            sql.append(" AND CAST(b.created_at AS DATE) <= ?");
             params.add(toDate.trim());
         }
 
-        sql.append(" ORDER BY id DESC");
+        sql.append(" ORDER BY b.id DESC");
         List<Bill> list = billDAO.findBySql(sql.toString(), params.toArray());
 
         req.setAttribute("billList", list);

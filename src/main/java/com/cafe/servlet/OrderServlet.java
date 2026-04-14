@@ -45,11 +45,20 @@ public class OrderServlet extends HttpServlet {
 
             // 🔥 tạo bill nếu chưa có
             if (bill == null) {
+                HttpSession session = req.getSession(false);
+                User currentUser = (session != null) ? (User) session.getAttribute("user") : null;
+
+                if (currentUser == null) {
+                    resp.sendRedirect(req.getContextPath() + "/login");
+                    return;
+                }
+
                 Bill newBill = new Bill();
                 newBill.setTableId(tableId);
-                newBill.setUserId(1);
+                newBill.setUserId(currentUser.getId());
                 newBill.setCode("B" + (System.currentTimeMillis() % 100000));
                 newBill.setStatus("waiting");
+                newBill.setType("pos");
 
                 int rs = billDAO.create(newBill);
 

@@ -229,12 +229,23 @@ public class BillDAOImpl implements BillDAO {
                 b.setStatus(rs.getString("status"));
                 b.setTotal(rs.getInt("total"));
                 b.setType(rs.getString("type"));
+
+                java.sql.Date createdDate = rs.getDate("created_at");
+                b.setCreatedAt(createdDate != null ? createdDate.toLocalDate() : null);
+
+                try {
+                    b.setUserFullName(rs.getString("user_fullname"));
+                } catch (Exception ignore) {
+                    b.setUserFullName(null);
+                }
+
                 list.add(b);
             }
 
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
+    } catch (Exception e) {
+        System.out.println("SQL lỗi tại BillDAOImpl.findBySql: " + sql);
+        e.printStackTrace();
+    }
 
         return list;
     }
@@ -250,6 +261,7 @@ public class BillDAOImpl implements BillDAO {
     public Bill findOpenByTableId(int tableId) {
 
         String sql = "SELECT * FROM bills WHERE table_id=? AND status='waiting'";
+        
 
         try (Connection conn = DBConnect.getConnection();
              PreparedStatement ps = conn.prepareStatement(sql)) {

@@ -18,4 +18,5 @@ public class Bill {
     private String status;
     private int tableId;
     private String type;
+    private String userFullName ;// tên nhân viên tạo bill
 }
