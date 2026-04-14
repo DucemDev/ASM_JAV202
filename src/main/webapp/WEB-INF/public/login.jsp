@@ -241,7 +241,7 @@
 			<p>
 				truongmk@gmail.com | 123 (Admin)<br>
 				ngoctm@gmail.com | 123 (nhân viên)<br>
-				thangtv@poly.com | 123 (khách hàng)
+				thangtv@gmail.com | 123 (khách hàng)
 			</p>
 		</div>
 	</div>

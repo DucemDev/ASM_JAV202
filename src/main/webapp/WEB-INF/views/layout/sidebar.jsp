@@ -41,7 +41,7 @@
             <c:set var="sellUrl" value="/customer"/>
         </c:if>
 
-        <a href="${pageContext.request.contextPath}${sellUrl}"
+        <a href="${pageContext.request.contextPath}${homeUrl}"
            class="group flex items-center gap-3 p-3 rounded-xl hover:bg-cafe-bg transition">
 
             <svg class="w-5 h-5 text-gray-500 group-hover:text-gray-800 transition"
@@ -73,6 +73,22 @@
             <span class="menu-text text-gray-700">Đặt hàng</span>
 
         </a>
+
+        <!-- BILL HISTORY (CUSTOMER + STAFF) -->
+        <c:if test="${sessionScope.user != null && (sessionScope.user.role == 0 || sessionScope.user.role == 1)}">
+            <a href="${pageContext.request.contextPath}/personal-bill"
+               class="group flex items-center gap-3 p-3 rounded-xl hover:bg-cafe-bg transition">
+
+                <svg class="w-5 h-5 text-gray-500 group-hover:text-gray-800 transition"
+                     fill="none" stroke="currentColor" stroke-width="2"
+                     viewBox="0 0 24 24">
+                    <path d="M6 2h12v20l-6-3-6 3z"/>
+                </svg>
+
+                <span class="menu-text text-gray-700">Lịch sử hóa đơn</span>
+
+            </a>
+        </c:if>
 
         <!-- PROFILE -->
 
