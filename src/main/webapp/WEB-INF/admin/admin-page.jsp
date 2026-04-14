@@ -57,7 +57,19 @@ class="flex-1 flex flex-col bg-cafe-bg ml-64 transition-all duration-300">
         Thống kê
     </h1>
 </div>
+    <form method="get" class="mb-6 flex gap-3">
+        <input type="date" name="fromDate"
+               value="${param.fromDate}"
+               class="border px-3 py-1 rounded">
 
+        <input type="date" name="toDate"
+               value="${param.toDate}"
+               class="border px-3 py-1 rounded">
+
+        <button class="bg-cafe-brown text-white px-4 py-1 rounded">
+            Lọc
+        </button>
+    </form>
 <!-- MAIN GRID -->
 <div class="max-w-[1300px] mx-auto">
 <div class="grid grid-cols-3 gap-6">
@@ -78,9 +90,9 @@ viewBox="0 0 24 24">
 </svg>
 </div>
 
-<div class="text-2xl font-semibold text-gray-800 mt-4">
-0 ₫
-</div>
+    <div class="text-2xl font-semibold text-gray-800 mt-4">
+        ${totalRevenue} ₫
+    </div>
 
 </div>
 
@@ -97,9 +109,9 @@ viewBox="0 0 24 24">
 </svg>
 </div>
 
-<div class="text-2xl font-semibold text-gray-800 mt-4">
-0 ₫
-</div>
+    <div class="text-2xl font-semibold text-gray-800 mt-4">
+        ${todayRevenue} ₫
+    </div>
 
 </div>
 
@@ -116,9 +128,9 @@ viewBox="0 0 24 24">
 </svg>
 </div>
 
-<div class="text-2xl font-semibold text-gray-800 mt-4">
-0
-</div>
+    <div class="text-2xl font-semibold text-gray-800 mt-4">
+        ${billCount}
+    </div>
 
 </div>
 
@@ -135,9 +147,9 @@ viewBox="0 0 24 24">
 </svg>
 </div>
 
-<div class="text-2xl font-semibold text-gray-800 mt-4">
-0
-</div>
+    <div class="text-2xl font-semibold text-gray-800 mt-4">
+        ${usingTables}
+    </div>
 
 </div>
 
@@ -340,7 +352,6 @@ viewBox="0 0 24 24">
 </div>
 
 </div>
-
 <script>
     const labels = ${labels != null ? labels : "['No data']"};
     const data = ${data != null ? data : "[1]"};
