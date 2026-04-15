@@ -32,47 +32,31 @@
 
     <!-- MENU -->
 
-    <nav class="flex flex-col px-4 py-4 space-y-2 flex-1 overflow-y-auto">
+        <!-- MENU -->
 
-        <!-- HOME -->
-        <c:set var="homeUrl" value="/home"/>
+        <nav class="flex flex-col px-4 py-4 space-y-2 flex-1 overflow-y-auto">
 
-        <c:if test="${sessionScope.user != null && (sessionScope.user.role == 0)}">
-            <c:set var="sellUrl" value="/customer"/>
-        </c:if>
+            <!-- HOME -->
+            <c:set var="homeUrl" value="/home"/>
+            <c:if test="${sessionScope.user != null && sessionScope.user.role == 0}">
+                <c:set var="homeUrl" value="/customer"/>
+            </c:if>
 
-        <a href="${pageContext.request.contextPath}${homeUrl}"
-           class="group flex items-center gap-3 p-3 rounded-xl hover:bg-cafe-bg transition">
+            <a href="${pageContext.request.contextPath}${homeUrl}"
+               class="group flex items-center gap-3 p-3 rounded-xl hover:bg-cafe-bg transition">
 
-            <svg class="w-5 h-5 text-gray-500 group-hover:text-gray-800 transition"
-                 fill="none" stroke="currentColor" stroke-width="2"
-                 viewBox="0 0 24 24">
-                <path d="M3 9.75L12 4l9 5.75v9.25A2 2 0 0 1 19 21H5a2 2 0 0 1-2-2z"/>
-            </svg>
+                <svg class="w-5 h-5 text-gray-500 group-hover:text-gray-800 transition"
+                     fill="none" stroke="currentColor" stroke-width="2"
+                     viewBox="0 0 24 24">
+                    <path d="M3 9.75L12 4l9 5.75v9.25A2 2 0 0 1 19 21H5a2 2 0 0 1-2-2z"/>
+                </svg>
 
-            <span class="menu-text text-gray-700">Trang chủ</span>
+                <span class="menu-text text-gray-700">Trang chủ</span>
 
-        </a>
+            </a>
 
-        <!-- SELL (STAFF + ADMIN) -->
-        <c:set var="sellUrl" value="/seller/tables"/>
-
-        <c:if test="${sessionScope.user != null && (sessionScope.user.role == 0)}">
-            <c:set var="sellUrl" value="/customer/order"/>
-        </c:if>
-
-        <a href="${pageContext.request.contextPath}${sellUrl}"
-           class="group flex items-center gap-3 p-3 rounded-xl hover:bg-cafe-bg transition">
-
-            <svg class="w-5 h-5 text-gray-500 group-hover:text-gray-800 transition"
-                 fill="none" stroke="currentColor" stroke-width="2"
-                 viewBox="0 0 24 24">
-                <path d="M3 3h18v4H3zM5 7v13h14V7"/>
-            </svg>
-
-            <span class="menu-text text-gray-700">Đặt hàng</span>
-
-        </a>
+            <!-- SELL (STAFF + ADMIN) -->
+            <c:set var="sellUrl" value="/seller/tables"/>
 
         <!-- BILL HISTORY (CUSTOMER + STAFF) -->
         <c:if test="${sessionScope.user != null && (sessionScope.user.role == 0 || sessionScope.user.role == 1)}">
