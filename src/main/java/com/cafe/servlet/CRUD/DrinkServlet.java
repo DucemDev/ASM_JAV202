@@ -16,7 +16,7 @@ import java.io.IOException;
 import java.util.List;
 
 @MultipartConfig
-@WebServlet({"/manager/drinks", "/manager/drinks/add", "/manager/drinks/edit", "/manager/drinks/delete"})
+@WebServlet({"/manager/drinks", "/manager/drinks/add", "/manager/drinks/edit"})
 public class DrinkServlet extends HttpServlet {
 
     private static final int PAGE_SIZE = 10;
@@ -64,8 +64,6 @@ public class DrinkServlet extends HttpServlet {
             create(req, resp);
         } else if (uri.contains("edit")) {
             update(req, resp);
-        } else if (uri.contains("delete")) {
-            delete(req, resp);
         }
     }
 
@@ -152,7 +150,8 @@ public class DrinkServlet extends HttpServlet {
     // ========================= UPDATE =========================
     private void update(HttpServletRequest req, HttpServletResponse resp)
             throws IOException, ServletException {
-
+        String activeStr = req.getParameter("active");
+        boolean active = Boolean.parseBoolean(activeStr);
         int id = ParamUtil.getInt(req, "id");
         String name = req.getParameter("name");
         String priceStr = req.getParameter("price");
@@ -209,22 +208,13 @@ public class DrinkServlet extends HttpServlet {
         Drink d = getData(req);
         d.setId(id);
         d.setPrice(price);
-
+        d.setActive(active); // 🔥 thêm dòng này
         DAO.update(d);
 
         resp.sendRedirect(req.getContextPath() + "/manager/drinks?page=" + page);
     }
 
     // ========================= DELETE =========================
-    private void delete(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
-
-        int id = ParamUtil.getInt(req, "id");
-
-        DAO.delete(id);
-
-        resp.sendRedirect(req.getContextPath() + "/manager/drinks?page=" + parsePage(req.getParameter("page")));
-    }
 
     // ========================= GET DATA =========================
     private Drink getData(HttpServletRequest req) {
@@ -256,7 +246,9 @@ public class DrinkServlet extends HttpServlet {
         d.setName(ParamUtil.getString(req, "name"));
         d.setCategoryId(ParamUtil.getInt(req, "categoryId"));
         d.setDescription("demo");
-        d.setActive(true);
+        String activeStr = req.getParameter("active");
+        boolean active = Boolean.parseBoolean(activeStr);
+        d.setActive(active);
 
         return d;
     }

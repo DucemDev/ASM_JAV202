@@ -55,6 +55,7 @@
                         + Them do uong
                     </button>
 
+                    <!-- FILTER -->
                     <form method="get"
                           action="${pageContext.request.contextPath}/manager/drinks"
                           class="mb-6 grid grid-cols-1 md:grid-cols-4 gap-3">
@@ -82,6 +83,7 @@
                         </button>
                     </form>
 
+                    <!-- TABLE -->
                     <div class="overflow-x-auto">
 
                         <table class="w-full border border-gray-200 rounded-xl overflow-hidden">
@@ -114,23 +116,7 @@
                                     <td class="text-gray-600">
                                             ${String.format("%,d", d.price)} ₫
                                     </td>
-                                    <script>
-                                        const priceInput = document.getElementById("price");
 
-                                        if (priceInput) {
-                                            priceInput.addEventListener("input", function () {
-
-                                                let value = this.value.replace(/\D/g, ""); // bỏ chữ
-
-                                                if (value === "") {
-                                                    this.value = "";
-                                                    return;
-                                                }
-
-                                                this.value = Number(value).toLocaleString("vi-VN");
-                                            });
-                                        }
-                                    </script>
                                     <td>
                                         <c:choose>
                                             <c:when test="${d.active}">
@@ -148,31 +134,16 @@
 
                                     <td class="space-x-2">
 
+                                        <!-- EDIT -->
                                         <button
                                                 class="px-3 py-1 text-sm bg-blue-500 text-white rounded-lg hover:opacity-90"
                                                 data-id="${d.id}"
                                                 data-name="${d.name}"
                                                 data-price="${d.price}"
+                                                data-active="${d.active}"
                                                 onclick="editDrink(this)">
                                             Sua
                                         </button>
-
-                                        <form action="${pageContext.request.contextPath}/manager/drinks/delete"
-                                              method="post"
-                                              class="inline">
-
-                                            <input type="hidden" name="id" value="${d.id}">
-                                            <input type="hidden" name="page" value="${currentPage}">
-                                            <input type="hidden" name="keyword" value="${keyword}">
-                                            <input type="hidden" name="categoryId" value="${filterCategoryId}">
-                                            <input type="hidden" name="active" value="${filterActive}">
-
-                                            <button onclick="return confirm('Ban co chac muon xoa?')"
-                                                    class="px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:opacity-90">
-                                                Xoa
-                                            </button>
-
-                                        </form>
 
                                     </td>
 
@@ -185,12 +156,13 @@
 
                     </div>
 
+                    <!-- PAGINATION (GIỮ NGUYÊN) -->
                     <c:if test="${totalPages > 1}">
                         <div class="flex justify-center gap-2 mt-6">
                             <c:forEach begin="1" end="${totalPages}" var="pageNumber">
                                 <a href="${pageContext.request.contextPath}/manager/drinks?page=${pageNumber}&keyword=${keyword}&categoryId=${filterCategoryId}&active=${filterActive}"
                                    class="px-3 py-2 rounded-lg border ${pageNumber == currentPage ? 'bg-cafe-brown text-white border-cafe-brown' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}">
-                                    ${pageNumber}
+                                        ${pageNumber}
                                 </a>
                             </c:forEach>
                         </div>
@@ -206,6 +178,7 @@
 
 </div>
 
+<!-- MODAL -->
 <div class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50" id="modal">
 
     <div class="bg-white rounded-xl p-6 w-[400px] shadow-lg">
@@ -216,30 +189,19 @@
 
             <input type="hidden" name="id" id="id">
             <input type="hidden" name="page" id="page" value="${currentPage}">
-            <input type="hidden" name="keyword" id="keyword" value="${keyword}">
-            <input type="hidden" name="active" id="active" value="${filterActive}">
-<%--            <input type="hidden" name="categoryId" id="categoryIdHidden" value="${filterCategoryId}">--%>
 
             <div>
                 <label class="text-sm text-gray-600">Ten</label>
                 <input name="name" id="name"
                        value="${oldName}"
-                       class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2
-                      focus:ring-2 focus:ring-cafe-brown outline-none
-                      ${not empty errorName ? 'border-red-500' : ''}">
-                <c:if test="${not empty errorName}">
-                    <p class="text-red-500 text-sm">${errorName}</p>
-                </c:if>
+                       class="w-full mt-1 border px-3 py-2 rounded">
             </div>
 
             <div>
                 <label class="text-sm text-gray-600">Loai</label>
-                <select name="categoryId"
-                        class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2">
+                <select name="categoryId" class="w-full mt-1 border px-3 py-2 rounded">
                     <c:forEach items="${categories}" var="c">
-                        <option value="${c.id}" ${c.id == oldCategory ? 'selected' : ''}>
-                                ${c.name}
-                        </option>
+                        <option value="${c.id}">${c.name}</option>
                     </c:forEach>
                 </select>
             </div>
@@ -248,24 +210,28 @@
                 <label class="text-sm text-gray-600">Gia</label>
                 <input name="price" id="price"
                        value="${oldPrice}"
-                       class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2
-                      focus:ring-2 focus:ring-cafe-brown outline-none
-                      ${not empty errorPrice ? 'border-red-500' : ''}">
-                <c:if test="${not empty errorPrice}">
-                    <p class="text-red-500 text-sm">${errorPrice}</p>
-                </c:if>
+                       class="w-full mt-1 border px-3 py-2 rounded">
+            </div>
+
+            <!-- 🔥 TRẠNG THÁI -->
+            <div>
+                <label class="text-sm text-gray-600">Trang thai</label>
+                <select name="active" id="activeSelect"
+                        class="w-full mt-1 border px-3 py-2 rounded">
+                    <option value="true">Hoat dong</option>
+                    <option value="false">Ngung hoat dong</option>
+                </select>
             </div>
 
             <div>
                 <label class="text-sm text-gray-600">Anh</label>
-                <input type="file" name="image"
-                       class="w-full mt-1 text-sm">
+                <input type="file" name="image">
             </div>
 
             <div class="flex gap-2 pt-2">
 
                 <button type="submit"
-                        class="w-1/2 bg-cafe-brown text-white py-2 rounded-lg hover:opacity-90">
+                        class="w-1/2 bg-cafe-brown text-white py-2 rounded-lg">
                     Luu
                 </button>
 
@@ -291,9 +257,9 @@
             "${pageContext.request.contextPath}/manager/drinks/add";
 
         document.getElementById("id").value = "";
-        document.getElementById("page").value = "${currentPage}";
         document.getElementById("name").value = "";
         document.getElementById("price").value = "";
+        document.getElementById("activeSelect").value = "true";
     }
 
     function editDrink(btn) {
@@ -304,22 +270,13 @@
             "${pageContext.request.contextPath}/manager/drinks/edit";
 
         document.getElementById("id").value = btn.dataset.id;
-        document.getElementById("page").value = "${currentPage}";
         document.getElementById("name").value = btn.dataset.name;
         document.getElementById("price").value = btn.dataset.price;
+        document.getElementById("activeSelect").value = btn.dataset.active;
     }
 
     function closeModal() {
         document.getElementById("modal").classList.add("hidden");
-    }
-</script>
-
-<script>
-    window.onload = function () {
-        const open = "${openModal}";
-        if (open === "true") {
-            openModal();
-        }
     }
 </script>
 
