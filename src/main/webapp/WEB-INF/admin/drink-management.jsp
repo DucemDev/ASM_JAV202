@@ -111,8 +111,26 @@
 
                                     <td class="font-medium">${d.name}</td>
 
-                                    <td class="text-gray-600">${d.price} d</td>
+                                    <td class="text-gray-600">
+                                            ${String.format("%,d", d.price)} ₫
+                                    </td>
+                                    <script>
+                                        const priceInput = document.getElementById("price");
 
+                                        if (priceInput) {
+                                            priceInput.addEventListener("input", function () {
+
+                                                let value = this.value.replace(/\D/g, ""); // bỏ chữ
+
+                                                if (value === "") {
+                                                    this.value = "";
+                                                    return;
+                                                }
+
+                                                this.value = Number(value).toLocaleString("vi-VN");
+                                            });
+                                        }
+                                    </script>
                                     <td>
                                         <c:choose>
                                             <c:when test="${d.active}">
@@ -200,7 +218,7 @@
             <input type="hidden" name="page" id="page" value="${currentPage}">
             <input type="hidden" name="keyword" id="keyword" value="${keyword}">
             <input type="hidden" name="active" id="active" value="${filterActive}">
-            <input type="hidden" name="categoryId" id="categoryIdHidden" value="${filterCategoryId}">
+<%--            <input type="hidden" name="categoryId" id="categoryIdHidden" value="${filterCategoryId}">--%>
 
             <div>
                 <label class="text-sm text-gray-600">Ten</label>

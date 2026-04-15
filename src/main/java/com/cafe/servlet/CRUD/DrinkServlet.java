@@ -5,6 +5,7 @@ import com.cafe.dao.DrinkDAOImpl;
 import com.cafe.entity.Category;
 import com.cafe.entity.Drink;
 import com.cafe.util.ParamUtil;
+
 import jakarta.servlet.ServletException;
 import jakarta.servlet.annotation.MultipartConfig;
 import jakarta.servlet.annotation.WebServlet;
@@ -13,39 +14,47 @@ import jakarta.servlet.http.*;
 import java.io.File;
 import java.io.IOException;
 import java.util.List;
+
 @MultipartConfig
 @WebServlet({"/manager/drinks", "/manager/drinks/add", "/manager/drinks/edit", "/manager/drinks/delete"})
 public class DrinkServlet extends HttpServlet {
+
     private static final int PAGE_SIZE = 10;
 
     private DrinkDAOImpl DAO = new DrinkDAOImpl();
     private CategoryDAOImpl categoryDAO = new CategoryDAOImpl();
+
+    // ========================= GET =========================
     @Override
-    protected void doGet(HttpServletRequest req, HttpServletResponse resp) throws IOException, jakarta.servlet.ServletException {
+    protected void doGet(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException, ServletException {
+
         int page = parsePage(req.getParameter("page"));
         String keyword = req.getParameter("keyword");
         Integer categoryId = parseInteger(req.getParameter("categoryId"));
         Boolean active = parseBooleanFilter(req.getParameter("active"));
+
         int totalDrinks = DAO.countFiltered(keyword, categoryId, active);
         int totalPages = Math.max(1, (int) Math.ceil((double) totalDrinks / PAGE_SIZE));
-        if (page > totalPages) {
-            page = totalPages;
-        }
+
+        if (page > totalPages) page = totalPages;
 
         List<Drink> list = DAO.findFilteredPage(page, PAGE_SIZE, keyword, categoryId, active);
+
         req.setAttribute("drinks", list);
         req.setAttribute("currentPage", page);
         req.setAttribute("totalPages", totalPages);
         req.setAttribute("keyword", keyword);
         req.setAttribute("filterCategoryId", categoryId);
         req.setAttribute("filterActive", req.getParameter("active"));
-        List<Category> categories = categoryDAO.findAll();
-        req.setAttribute("categories", categories);
+
+        req.setAttribute("categories", categoryDAO.findAll());
+
         req.getRequestDispatcher("/WEB-INF/admin/drink-management.jsp").forward(req, resp);
     }
 
+    // ========================= POST =========================
     @Override
-
     protected void doPost(HttpServletRequest req, HttpServletResponse resp)
             throws IOException, ServletException {
 
@@ -60,98 +69,156 @@ public class DrinkServlet extends HttpServlet {
         }
     }
 
+    // ========================= CREATE =========================
     private void create(HttpServletRequest req, HttpServletResponse resp)
             throws IOException, ServletException {
 
         String name = req.getParameter("name");
         String priceStr = req.getParameter("price");
+        int categoryId = ParamUtil.getInt(req, "categoryId");
 
         int page = parsePage(req.getParameter("page"));
-        boolean active = Boolean.parseBoolean(req.getParameter("active"));
 
+        // load categories
+        req.setAttribute("categories", categoryDAO.findAll());
 
-        List<Category> categories = categoryDAO.findAll();
-        req.setAttribute("categories", categories);
+        Integer price = null;
+
+        // ===== VALIDATE =====
         if (name == null || name.trim().isEmpty()) {
             req.setAttribute("errorName", "Tên không được để trống!");
         }
+
         if (priceStr == null || priceStr.trim().isEmpty()) {
             req.setAttribute("errorPrice", "Giá không được để trống!");
+        } else {
+            try {
+                price = Integer.parseInt(priceStr);
+
+                if (price <= 0) {
+                    req.setAttribute("errorPrice", "Giá phải lớn hơn 0!");
+                }
+
+            } catch (Exception e) {
+                req.setAttribute("errorPrice", "Giá phải là số hợp lệ!");
+            }
         }
 
-        if (req.getAttribute("errorName") != null || req.getAttribute("errorPrice") != null) {
+        if (categoryId <= 0) {
+            req.setAttribute("errorCategory", "Vui lòng chọn loại!");
+        }
+
+        // ===== CHECK ERROR =====
+        if (req.getAttribute("errorName") != null ||
+                req.getAttribute("errorPrice") != null ||
+                req.getAttribute("errorCategory") != null) {
+
             loadPageData(req, page);
 
             req.setAttribute("oldName", name);
             req.setAttribute("oldPrice", priceStr);
+            req.setAttribute("oldCategory", categoryId);
             req.setAttribute("openModal", true);
 
-            req.getRequestDispatcher("/WEB-INF/admin/drink-management.jsp")
-                    .forward(req, resp);
+            req.getRequestDispatcher("/WEB-INF/admin/drink-management.jsp").forward(req, resp);
             return;
         }
 
+        // ===== CHECK TRÙNG =====
         if (DAO.isNameExists(name)) {
+
             req.setAttribute("errorName", "Tên đồ uống đã tồn tại!");
 
             loadPageData(req, page);
 
             req.setAttribute("oldName", name);
             req.setAttribute("oldPrice", priceStr);
+            req.setAttribute("oldCategory", categoryId);
             req.setAttribute("openModal", true);
-            req.setAttribute("oldCategory", ParamUtil.getInt(req, "categoryId"));
-            req.getRequestDispatcher("/WEB-INF/admin/drink-management.jsp")
-                    .forward(req, resp);
+
+            req.getRequestDispatcher("/WEB-INF/admin/drink-management.jsp").forward(req, resp);
             return;
         }
 
+        // ===== CREATE =====
         Drink d = getData(req);
+        d.setPrice(price); // dùng giá đã validate
+
         DAO.create(d);
 
-        resp.sendRedirect(req.getContextPath() + "/manager/drinks?page=" + parsePage(req.getParameter("page")));
+        resp.sendRedirect(req.getContextPath() + "/manager/drinks?page=" + page);
     }
 
+    // ========================= UPDATE =========================
     private void update(HttpServletRequest req, HttpServletResponse resp)
             throws IOException, ServletException {
 
         int id = ParamUtil.getInt(req, "id");
         String name = req.getParameter("name");
+        String priceStr = req.getParameter("price");
+        int categoryId = ParamUtil.getInt(req, "categoryId");
 
         int page = parsePage(req.getParameter("page"));
 
-        boolean active = Boolean.parseBoolean(req.getParameter("active"));
+        req.setAttribute("categories", categoryDAO.findAll());
 
-        List<Category> categories = categoryDAO.findAll();
-        req.setAttribute("categories", categories);
+        Integer price = null;
+
+        // ===== VALIDATE =====
         if (name == null || name.trim().isEmpty()) {
             req.setAttribute("errorName", "Tên không được để trống!");
         }
 
-        if (req.getParameter("price") == null || req.getParameter("price").trim().isEmpty()) {
+        if (priceStr == null || priceStr.trim().isEmpty()) {
             req.setAttribute("errorPrice", "Giá không được để trống!");
+        } else {
+            try {
+                priceStr = priceStr.replace(",", ""); // bỏ dấu ,
+                price = Integer.parseInt(priceStr);
+
+                if (price <= 0) {
+                    req.setAttribute("errorPrice", "Giá phải lớn hơn 0!");
+                }
+
+            } catch (Exception e) {
+                req.setAttribute("errorPrice", "Giá phải là số hợp lệ!");
+            }
         }
 
-        if (req.getAttribute("errorName") != null || req.getAttribute("errorPrice") != null) {
+        if (categoryId <= 0) {
+            req.setAttribute("errorCategory", "Vui lòng chọn loại!");
+        }
+
+        // ===== CHECK ERROR =====
+        if (req.getAttribute("errorName") != null ||
+                req.getAttribute("errorPrice") != null ||
+                req.getAttribute("errorCategory") != null) {
+
             loadPageData(req, page);
 
             req.setAttribute("oldName", name);
-            req.setAttribute("oldPrice", req.getParameter("price"));
+            req.setAttribute("oldPrice", priceStr);
+            req.setAttribute("oldCategory", categoryId);
             req.setAttribute("openModal", true);
-            req.setAttribute("oldCategory", ParamUtil.getInt(req, "categoryId"));
-            req.getRequestDispatcher("/WEB-INF/admin/drink-management.jsp")
-                    .forward(req, resp);
+
+            req.getRequestDispatcher("/WEB-INF/admin/drink-management.jsp").forward(req, resp);
             return;
         }
 
+        // ===== UPDATE =====
         Drink d = getData(req);
         d.setId(id);
+        d.setPrice(price);
 
         DAO.update(d);
 
-        resp.sendRedirect(req.getContextPath() + "/manager/drinks?page=" + parsePage(req.getParameter("page")));
+        resp.sendRedirect(req.getContextPath() + "/manager/drinks?page=" + page);
     }
 
-    private void delete(HttpServletRequest req, HttpServletResponse resp) throws IOException {
+    // ========================= DELETE =========================
+    private void delete(HttpServletRequest req, HttpServletResponse resp)
+            throws IOException {
+
         int id = ParamUtil.getInt(req, "id");
 
         DAO.delete(id);
@@ -159,6 +226,7 @@ public class DrinkServlet extends HttpServlet {
         resp.sendRedirect(req.getContextPath() + "/manager/drinks?page=" + parsePage(req.getParameter("page")));
     }
 
+    // ========================= GET DATA =========================
     private Drink getData(HttpServletRequest req) {
 
         Drink d = new Drink();
@@ -184,10 +252,8 @@ public class DrinkServlet extends HttpServlet {
         } catch (Exception e) {
             e.printStackTrace();
         }
+
         d.setName(ParamUtil.getString(req, "name"));
-        d.setPrice(ParamUtil.getInt(req, "price"));
-
-
         d.setCategoryId(ParamUtil.getInt(req, "categoryId"));
         d.setDescription("demo");
         d.setActive(true);
@@ -195,6 +261,7 @@ public class DrinkServlet extends HttpServlet {
         return d;
     }
 
+    // ========================= HELPER =========================
     private int parsePage(String pageParam) {
         try {
             int page = Integer.parseInt(pageParam);
@@ -205,11 +272,14 @@ public class DrinkServlet extends HttpServlet {
     }
 
     private void loadPageData(HttpServletRequest req, int page) {
+
         String keyword = req.getParameter("keyword");
         Integer categoryId = parseInteger(req.getParameter("categoryId"));
         Boolean active = parseBooleanFilter(req.getParameter("active"));
+
         int totalDrinks = DAO.countFiltered(keyword, categoryId, active);
         int totalPages = Math.max(1, (int) Math.ceil((double) totalDrinks / PAGE_SIZE));
+
         int currentPage = Math.min(Math.max(page, 1), totalPages);
 
         req.setAttribute("drinks", DAO.findFilteredPage(currentPage, PAGE_SIZE, keyword, categoryId, active));
@@ -230,12 +300,8 @@ public class DrinkServlet extends HttpServlet {
     }
 
     private Boolean parseBooleanFilter(String value) {
-        if ("true".equalsIgnoreCase(value)) {
-            return true;
-        }
-        if ("false".equalsIgnoreCase(value)) {
-            return false;
-        }
+        if ("true".equalsIgnoreCase(value)) return true;
+        if ("false".equalsIgnoreCase(value)) return false;
         return null;
     }
 }
