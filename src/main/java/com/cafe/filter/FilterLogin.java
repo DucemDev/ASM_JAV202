@@ -1,29 +1,20 @@
 package com.cafe.filter;
 
 import com.cafe.entity.User;
-import jakarta.servlet.Filter;
-import jakarta.servlet.FilterChain;
-import jakarta.servlet.ServletException;
-import jakarta.servlet.ServletRequest;
-import jakarta.servlet.ServletResponse;
+import jakarta.servlet.*;
 import jakarta.servlet.annotation.WebFilter;
-import jakarta.servlet.http.HttpServletRequest;
-import jakarta.servlet.http.HttpServletResponse;
+import jakarta.servlet.http.*;
 
 import java.io.IOException;
 
 @WebFilter("/*")
 public class FilterLogin implements Filter {
+
     private static final String[] PUBLIC_PATHS = {
             "/login",
-            "/logining",
             "/register",
             "/forgotpassword",
-            "/verify-forgot-password",
-            "/changing-password",
-            "/verifyotp",
-            "/verify-otp",
-            "/login-google",
+            "/verify",
             "/assets"
     };
 
@@ -36,40 +27,66 @@ public class FilterLogin implements Filter {
 
         String uri = req.getRequestURI();
 
-        if (isPublicResource(uri)) {
-
+        // ================= PUBLIC =================
+        if (isPublic(uri)) {
             chain.doFilter(request, response);
             return;
         }
 
         User user = (User) req.getSession().getAttribute("user");
 
+        // ================= CHƯA LOGIN =================
         if (user == null) {
-
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
         }
 
-        // ⭐ kiểm tra quyền admin
-        if ((uri.contains("/admin") || uri.contains("/manager")) && user.getRole() != User.ROLE_ADMIN) {
-            resp.sendRedirect(req.getContextPath() + "/home");
+        int role = user.getRole();
+
+        // ================= ADMIN =================
+        if (role == User.ROLE_ADMIN) {
+            // admin được vào tất cả
+            chain.doFilter(request, response);
             return;
         }
 
-        if ((uri.contains("/staff") || uri.contains("/seller") || uri.contains("/employee"))
-                && user.getRole() == User.ROLE_CUSTOMER) {
-            resp.sendRedirect(req.getContextPath() + "/home");
+        // ================= STAFF =================
+        if (role == User.ROLE_STAFF) {
+
+            // ❌ không cho vào admin
+            if (uri.contains("/admin") || uri.contains("/manager")) {
+                resp.sendRedirect(req.getContextPath() + "/seller/tables");
+                return;
+            }
+
+            // ✔ còn lại cho qua (home, profile, bill...)
+            chain.doFilter(request, response);
+            return;
+        }
+
+        // ================= CUSTOMER =================
+        if (role == User.ROLE_CUSTOMER) {
+
+            // ❌ không cho vào admin + staff
+            if (uri.contains("/admin") ||
+                    uri.contains("/manager") ||
+                    uri.contains("/seller") ||
+                    uri.contains("/staff")) {
+
+                resp.sendRedirect(req.getContextPath() + "/home");
+                return;
+            }
+
+            chain.doFilter(request, response);
             return;
         }
 
         chain.doFilter(request, response);
     }
 
-    private boolean isPublicResource(String uri) {
-        for (String publicPath : PUBLIC_PATHS) {
-            if (uri.contains(publicPath)) {
-                return true;
-            }
+    private boolean isPublic(String uri) {
+        for (String path : PUBLIC_PATHS) {
+            if (uri.contains(path)) return true;
         }
 
         return uri.endsWith(".css")
