@@ -61,6 +61,10 @@ public class CategoryServlet extends HttpServlet {
         String name = req.getParameter("name");
         boolean active = Boolean.parseBoolean(req.getParameter("active"));
 
+        if (!name.matches("^[a-zA-Z]+$")) {
+            req.getSession().setAttribute("error", "Tên loại không đúng cú pháp!");
+            return false;
+        }
         if (dao.existsByName(name)) {
             req.getSession().setAttribute("error", "Tên loại đã tồn tại!");
             return false;
