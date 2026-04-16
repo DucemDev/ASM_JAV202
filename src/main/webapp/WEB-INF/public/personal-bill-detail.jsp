@@ -2,9 +2,11 @@
 <%@ page isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<html>
+<!DOCTYPE html>
+<html lang="vi">
 <head>
-    <title>Chi tiết hóa đơn cá nhân</title>
+    <meta charset="UTF-8">
+    <title>Chi tiết hóa đơn cá nhân - PolyCafe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -18,7 +20,7 @@
                     }
                 }
             }
-        }
+        };
     </script>
 </head>
 <body class="bg-cafe-bg">
@@ -35,7 +37,7 @@
                 <div class="flex justify-between items-center mb-6">
                     <h1 class="text-2xl font-bold text-gray-800">Hóa đơn #${bill.id}</h1>
                     <a href="${pageContext.request.contextPath}/personal-bill"
-                       class="bg-gray-600 text-white px-4 py-2 rounded-lg">Back</a>
+                       class="bg-gray-600 text-white px-4 py-2 rounded-lg hover:opacity-90">Quay lại</a>
                 </div>
 
                 <div class="bg-white rounded-xl shadow-md p-6 mb-6 grid grid-cols-2 gap-6">
@@ -56,7 +58,7 @@
                                 <c:when test="${bill.type == 'online' || bill.tableId <= 0}">
                                     Online (không bàn)
                                 </c:when>
-                                <c:otherwise>Table ${bill.tableId}</c:otherwise>
+                                <c:otherwise>Bàn ${bill.tableId}</c:otherwise>
                             </c:choose>
                         </p>
                     </div>
@@ -86,7 +88,7 @@
 
                             <tr class="border-t hover:bg-gray-50">
                                 <td class="p-3">
-                                    <c:set var="drinkName" value="Unknown"/>
+                                    <c:set var="drinkName" value="Không xác định"/>
                                     <c:forEach var="d" items="${drinks}">
                                         <c:if test="${d.id == item.drinkId}">
                                             <c:set var="drinkName" value="${d.name}"/>

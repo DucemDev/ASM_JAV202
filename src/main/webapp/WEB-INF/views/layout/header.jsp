@@ -1,81 +1,43 @@
-<%@ page contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"%>
-<%@ page isELIgnored="false" %>
-<%@ taglib uri="jakarta.tags.core" prefix="c" %>
+<div class="flex-between p-4 border-b bg-[var(--surface)] shadow-sm">
 
-<div class="py-4 bg-gradient-to-r from-[#f1e4d7] to-white border-b border-gray-300 flex items-center justify-between px-8 shadow-md">
-
-
-    <!-- TITLE -->
-    <div class="text-xl font-bold text-gray-800 tracking-wide">
+    <div class="font-semibold">
 
         <c:choose>
             <c:when test="${sessionScope.user != null && sessionScope.user.role == 2}">
-                ADMIN DASHBOARD
+                BẢNG ĐIỀU KHIỂN QUẢN TRỊ
             </c:when>
 
             <c:when test="${sessionScope.user != null && sessionScope.user.role == 1}">
-                STAFF DASHBOARD
+                BẢNG ĐIỀU KHIỂN NHÂN VIÊN
             </c:when>
 
             <c:otherwise>
-                Đặt hàng
+                Trang người dùng
             </c:otherwise>
         </c:choose>
 
     </div>
 
-    <!-- USER INFO -->
-    <div class="flex items-center gap-4">
+    <div class="flex items-center gap-3">
 
-        <!-- AVATAR -->
-        <div class="w-11 h-11 rounded-full bg-[#e6d3c3] flex items-center justify-center shadow-sm">
-            <svg class="w-5 h-5 text-[#8b5e3c]"
-                 fill="none" stroke="currentColor" stroke-width="2"
-                 viewBox="0 0 24 24">
-                <path d="M12 15a4 4 0 100-8 4 4 0 000 8z"/>
-                <path d="M4 21v-1a7 7 0 0114 0v1"/>
-            </svg>
+        <div class="w-10 h-10 rounded-full bg-[var(--primary-100)] flex-center">
+            👤
         </div>
 
-        <!-- INFO -->
-        <div class="text-right">
-
-            <!-- NAME -->
-            <div class="font-semibold text-gray-800">
-                <c:choose>
-                    <c:when test="${sessionScope.user != null}">
-                        ${sessionScope.user.fullname}
-                    </c:when>
-                    <c:otherwise>
-                        Guest
-                    </c:otherwise>
-                </c:choose>
+        <div>
+            <div class="font-semibold text-sm">
+                <c:out value="${sessionScope.user.fullname}" default="Khách"/>
             </div>
 
-            <!-- ROLE -->
             <div class="text-xs text-gray-500">
                 <c:choose>
-                    <c:when test="${sessionScope.user != null && sessionScope.user.role == 2}">
-                        Admin
-                    </c:when>
-
-                    <c:when test="${sessionScope.user != null && sessionScope.user.role == 1}">
-                        Staff
-                    </c:when>
-
-                    <c:when test="${sessionScope.user != null && sessionScope.user.role == 0}">
-                        Customer
-                    </c:when>
-
-                    <c:otherwise>
-                        Guest
-                    </c:otherwise>
+                    <c:when test="${sessionScope.user.role == 2}">Admin</c:when>
+                    <c:when test="${sessionScope.user.role == 1}">Nhân viên</c:when>
+                    <c:otherwise>Khách</c:otherwise>
                 </c:choose>
             </div>
-
         </div>
 
     </div>
-
 
 </div>

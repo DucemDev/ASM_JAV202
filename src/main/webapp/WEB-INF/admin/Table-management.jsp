@@ -7,7 +7,7 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Quản lý bàn</title>
+    <title>Quản lý bàn - PolyCafe</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
         tailwind.config = {
@@ -21,7 +21,7 @@
                     }
                 }
             }
-        }
+        };
     </script>
 </head>
 
@@ -37,11 +37,9 @@
         <div class="p-8">
             <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
 
-                <!-- HEADER -->
                 <div class="flex justify-between items-center mb-6">
                     <div>
                         <h1 class="text-2xl font-semibold text-gray-800">Quản lý bàn</h1>
-
                     </div>
 
                     <a href="${pageContext.request.contextPath}/manager/tables"
@@ -50,7 +48,6 @@
                     </a>
                 </div>
 
-                <!-- MESSAGE -->
                 <c:if test="${not empty sessionScope.message}">
                     <div class="mb-4 p-3 rounded-lg bg-green-50 text-green-700 border border-green-200">
                         ${sessionScope.message}
@@ -67,7 +64,6 @@
 
                 <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
 
-                    <!-- FORM (GIỮ NGUYÊN) -->
                     <div class="lg:col-span-1">
                         <div class="border border-gray-200 rounded-xl p-5 bg-[#fcfaf7]">
                             <h2 class="text-lg font-semibold text-gray-800 mb-4">
@@ -94,7 +90,6 @@
                                            class="w-full border border-gray-300 rounded-lg px-3 py-2">
                                 </div>
 
-
                                 <div class="flex gap-3">
                                     <button type="submit"
                                             class="px-4 py-2 rounded-lg bg-cafe-brown text-white">
@@ -110,10 +105,8 @@
                         </div>
                     </div>
 
-                    <!-- TABLE -->
                     <div class="lg:col-span-2">
 
-                        <!-- TAB -->
                         <div class="flex gap-3 mb-4">
                             <a href="?tab=empty"
                                class="px-4 py-2 rounded-lg ${empty param.tab || param.tab=='empty' ? 'bg-green-500 text-white' : 'bg-green-100'}">
@@ -131,7 +124,6 @@
                             </a>
                         </div>
 
-                        <!-- SINGLE TABLE -->
                         <div class="bg-white border rounded-xl">
                             <table class="min-w-full">
 
@@ -146,7 +138,6 @@
 
                                 <tbody>
 
-                                <!-- EMPTY -->
                                 <c:if test="${empty param.tab || param.tab=='empty'}">
                                     <c:forEach var="t" items="${list}">
                                         <c:if test="${t.active && t.status=='empty'}">
@@ -157,7 +148,6 @@
                                                     <span class="bg-green-100 px-2 py-1 text-xs rounded">Trống</span>
                                                 </td>
                                                 <td class="px-4 py-3">
-                                                    <!-- GIỮ NGUYÊN -->
                                                     <a href="${pageContext.request.contextPath}/manager/tables?id=${t.id}"
                                                        class="px-3 py-1.5 bg-blue-50 text-blue-700 rounded">Sửa</a>
 
@@ -172,7 +162,6 @@
                                     </c:forEach>
                                 </c:if>
 
-                                <!-- OCCUPIED -->
                                 <c:if test="${param.tab=='occupied'}">
                                     <c:forEach var="t" items="${list}">
                                         <c:if test="${t.active && (t.status=='occupied' || t.status=='using')}">
@@ -188,7 +177,6 @@
                                     </c:forEach>
                                 </c:if>
 
-                                <!-- HIDDEN -->
                                 <c:if test="${param.tab=='hidden'}">
                                     <c:forEach var="t" items="${list}">
                                         <c:if test="${!t.active || t.status=='hidden'}">
@@ -199,7 +187,6 @@
                                                     <span class="bg-gray-200 px-2 py-1 text-xs rounded">Ẩn</span>
                                                 </td>
                                                 <td class="px-4 py-3">
-                                                    <!-- GIỮ NGUYÊN -->
                                                     <form action="${pageContext.request.contextPath}/manager/tables/show"
                                                           method="post" class="inline">
                                                         <input type="hidden" name="id" value="${t.id}">

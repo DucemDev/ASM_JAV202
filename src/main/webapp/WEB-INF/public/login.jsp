@@ -1,276 +1,71 @@
 <%@ page contentType="text/html; charset=UTF-8"
-		 pageEncoding="UTF-8"
-		 isELIgnored="false" %>
+         pageEncoding="UTF-8"
+         isELIgnored="false" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
-	<meta charset="UTF-8">
-	<title>PolyCafe Login</title>
+    <meta charset="UTF-8">
+    <title>Đăng nhập - PolyCafe</title>
 
-	<style>
-		body{
-			margin:0;
-			font-family:'Segoe UI', sans-serif;
-			height:100vh;
-			display:flex;
-			justify-content:center;
-			align-items:center;
-			background: linear-gradient(135deg,#e6d3c3,#f6efe7);
-		}
-
-		.container{
-			width:900px;
-			height:90%;
-			background:rgba(255,255,255,0.95);
-			backdrop-filter: blur(10px);
-			border-radius:20px;
-			display:flex;
-			overflow:hidden;
-			box-shadow:0 20px 50px rgba(0,0,0,0.15);
-		}
-
-		.left{
-			width:45%;
-			position:relative;
-		}
-
-		.slide-img{
-			width:100%;
-			height:100%;
-			object-fit:cover;
-			position:absolute;
-		}
-
-		.left::before{
-			content:'';
-			position:absolute;
-			inset:0;
-			background:linear-gradient(to top, rgba(0,0,0,0.6), transparent);
-			z-index:1;
-		}
-
-		.welcome{
-			position:absolute;
-			bottom:30px;
-			left:25px;
-			color:white;
-			z-index:2;
-		}
-
-		.welcome h2{
-			margin:0;
-			font-size:24px;
-		}
-
-		.welcome p{
-			margin-top:5px;
-			font-size:14px;
-			opacity:0.9;
-		}
-
-		.right{
-			width:55%;
-			padding:60px;
-		}
-
-		.subtitle{
-			color:#777;
-			margin-bottom:30px;
-		}
-
-		.input-box{
-			margin-bottom:20px;
-		}
-
-		.input-box input{
-			width:100%;
-			padding:14px;
-			border:none;
-			border-radius:12px;
-			background:#f5f5f5;
-			font-size:14px;
-			transition:0.2s;
-		}
-
-		.input-box input:focus{
-			outline:none;
-			background:#eee;
-			box-shadow:0 0 0 2px #d7b899;
-		}
-
-		.login-btn{
-			width:100%;
-			padding:14px;
-			border:none;
-			border-radius:12px;
-			background:linear-gradient(135deg,#8b5e3c,#6f4e37);
-			color:white;
-			font-size:16px;
-			cursor:pointer;
-			transition:0.3s;
-			box-shadow:0 5px 15px rgba(0,0,0,0.15);
-		}
-
-		.login-btn:hover{
-			transform:translateY(-2px);
-			box-shadow:0 8px 20px rgba(0,0,0,0.2);
-		}
-
-		.divider{
-			display:flex;
-			align-items:center;
-			margin:25px 0;
-		}
-
-		.divider hr{
-			flex:1;
-			height:1px;
-			background:#ddd;
-			border:none;
-		}
-
-		.divider span{
-			margin:0 10px;
-			color:#777;
-			font-size:13px;
-		}
-
-		.google-btn{
-			width:100%;
-			padding:12px;
-			border-radius:12px;
-			border:1px solid #ddd;
-			background:white;
-			font-size:15px;
-			cursor:pointer;
-			display:flex;
-			align-items:center;
-			justify-content:center;
-			gap:10px;
-			transition:0.2s;
-			box-shadow:0 3px 10px rgba(0,0,0,0.05);
-		}
-
-		.google-btn:hover{
-			background:#f9f9f9;
-			transform:translateY(-1px);
-		}
-
-		.google-btn img{
-			width:20px;
-			height:20px;
-		}
-
-		a{
-			color:#6f4e37;
-			text-decoration:none;
-			font-size:13px;
-		}
-
-		a:hover{
-			text-decoration:underline;
-		}
-
-		.footer{
-			margin-top:15px;
-			font-size:13px;
-			text-align:center;
-			color:#555;
-		}
-
-		.nav-helper {
-			display: flex;
-			justify-content: space-between;
-			align-items: center;
-			margin-bottom: 15px;
-		}
-	</style>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="<c:url value='/assets/css/style.css'/>">
 </head>
 
-<body>
+<body class="min-h-screen bg-[var(--bg)]">
 
-<div class="container">
+<div class="grid md:grid-cols-[60%_40%] min-h-screen">
 
-	<div class="left">
-		<img id="slide" src="<c:url value='/assets/image/slide1.jpg'/>" class="slide-img">
-		<div class="welcome">
-			<h2>Chào mừng đến PolyCafe</h2>
-			<p>Ngon hơn với PolyCafe ☕</p>
-		</div>
-	</div>
+    <!-- LEFT IMAGE -->
+    <div class="hidden md:block">
+        <img src="<c:url value='/assets/image/slide1.jpg'/>"
+             class="w-full h-full object-cover">
+    </div>
 
-	<div class="right">
-		<h1>Đăng nhập</h1>
-		<p class="subtitle">Vui lòng đăng nhập để vào hệ thống</p>
+    <!-- RIGHT FORM -->
+    <div class="flex items-center justify-center p-6">
 
-		<form action="<c:url value='/logining'/>" method="post">
-			<div class="input-box">
-				<input type="text" name="emailIp" placeholder="Email" required>
-			</div>
+        <div class="w-full max-w-md bg-[var(--surface)] p-8 rounded-2xl shadow-lg">
 
-			<div class="input-box">
-				<input type="password" name="passwordIp" placeholder="Password" required>
-			</div>
+            <h1 class="text-2xl font-semibold mb-2">Đăng nhập</h1>
+            <p class="text-gray-500 mb-6">Vui lòng đăng nhập</p>
 
-			<c:if test="${not empty message}">
-				<p style="color:red; font-size:13px;">${message}</p>
-			</c:if>
+            <form action="<c:url value='/logining'/>" method="post" class="space-y-4">
 
-			<div class="nav-helper">
-				<div style="font-size: 13px; color: #777;">
-					Chưa có tài khoản? <a href="<c:url value='/register'/>" style="font-weight:bold;">Đăng ký</a>
-				</div>
-				<div>
-					<a href="<c:url value='/forgotpassword'/>">Quên mật khẩu?</a>
-				</div>
-			</div>
+                <input type="text"
+                       name="emailIp"
+                       placeholder="Email"
+                       class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-[var(--primary)]">
 
-			<button class="login-btn" type="submit">Đăng nhập</button>
-		</form>
+                <input type="password"
+                       name="passwordIp"
+                       placeholder="Mật khẩu"
+                       class="w-full border border-gray-300 rounded-lg px-4 py-3 focus:outline-none focus:border-[var(--primary)]">
 
-		<div class="divider">
-			<hr><span>Hoặc</span><hr>
-		</div>
+                <div class="flex justify-between text-sm">
+                    <a href="<c:url value='/register'/>">Đăng ký</a>
+                    <a href="<c:url value='/forgotpassword'/>">Quên mật khẩu?</a>
+                </div>
 
-		<jsp:include page="login-google.jsp" />
+                <button class="w-full bg-[var(--primary)] text-white py-3 rounded-lg hover:opacity-90 transition">
+                    Đăng nhập
+                </button>
 
-		<div class="footer">
-			Hệ thống PolyCafe
-			<p>
-				truongmk@gmail.com | 123 (Admin)<br>
-				ngoctm@gmail.com | 123 (nhân viên)<br>
-				thangtv@gmail.com | 123 (khách hàng)
-			</p>
-		</div>
-	</div>
+            </form>
+
+            <div class="text-xs text-gray-500 mt-6">
+                truongmk@gmail.com | 123 (Admin)<br>
+                ngoctm@gmail.com | 123 (nhân viên)<br>
+                thangtv@gmail.com | 123 (khách hàng)
+            </div>
+
+        </div>
+
+    </div>
+
 </div>
 
-<script>
-	/* GIỮ NGUYÊN SCRIPT CŨ */
-	const ctx = "${pageContext.request.contextPath}";
-
-	let images = [
-		ctx + "/assets/image/slide1.jpg",
-		ctx + "/assets/image/slide2.jpg",
-		ctx + "/assets/image/slide3.jpg"
-	];
-
-	let index = 0;
-	const slideImg = document.getElementById("slide");
-
-	setInterval(() => {
-		index++;
-		if(index >= images.length) index = 0;
-
-		slideImg.style.opacity = "0.7";
-		setTimeout(() => {
-			slideImg.src = images[index];
-			slideImg.style.opacity = "1";
-		}, 200);
-	}, 4000);
-</script>
-
+<script src="<c:url value='/assets/js/script.js'/>"></script>
 </body>
 </html>

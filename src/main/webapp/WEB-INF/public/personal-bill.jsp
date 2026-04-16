@@ -2,9 +2,11 @@
 <%@ page isELIgnored="false" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
-<html>
+<!DOCTYPE html>
+<html lang="vi">
 <head>
-    <title>Lịch sử hóa đơn cá nhân</title>
+    <meta charset="UTF-8">
+    <title>Lịch sử hóa đơn cá nhân - PolyCafe</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
     <script>
@@ -19,33 +21,25 @@
                     }
                 }
             }
-        }
+        };
     </script>
 </head>
 
 <body class="bg-cafe-bg">
-
 <div class="flex">
 
-    <!-- SIDEBAR -->
     <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
 
-    <!-- MAIN -->
     <div id="mainContent" class="flex-1 flex flex-col ml-64 transition-all duration-300">
-
-        <!-- HEADER -->
         <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 
-        <!-- CONTENT -->
         <div class="p-8">
             <div class="max-w-[1400px] mx-auto">
 
-                <!-- TITLE -->
                 <div class="flex justify-between items-center mb-6">
                     <h1 class="text-2xl font-bold text-gray-800">Lịch sử hóa đơn của tôi</h1>
                 </div>
 
-                <!-- FILTER -->
                 <form method="get"
                       action="${pageContext.request.contextPath}/personal-bill"
                       class="mb-4 flex gap-3 flex-wrap">
@@ -57,28 +51,27 @@
 
                     <select name="status" class="border rounded-lg px-4 py-2">
                         <option value="">Tất cả trạng thái</option>
-                        <option value="waiting" ${status == 'waiting' ? 'selected' : ''}>Waiting</option>
-                        <option value="pending_verify" ${status == 'pending_verify' ? 'selected' : ''}>Pending Verify</option>
-                        <option value="finish" ${status == 'finish' ? 'selected' : ''}>Finish</option>
-                        <option value="cancel" ${status == 'cancel' ? 'selected' : ''}>Cancel</option>
+                        <option value="waiting" ${status == 'waiting' ? 'selected' : ''}>Chờ thanh toán</option>
+                        <option value="pending_verify" ${status == 'pending_verify' ? 'selected' : ''}>Chờ xác nhận</option>
+                        <option value="finish" ${status == 'finish' ? 'selected' : ''}>Hoàn tất</option>
+                        <option value="cancel" ${status == 'cancel' ? 'selected' : ''}>Đã hủy</option>
                     </select>
 
                     <input type="date" name="fromDate" value="${fromDate}" class="border rounded-lg px-4 py-2">
                     <input type="date" name="toDate" value="${toDate}" class="border rounded-lg px-4 py-2">
 
-                    <button class="bg-gray-700 text-white px-5 py-2 rounded-lg">
+                    <button class="bg-gray-700 text-white px-5 py-2 rounded-lg hover:opacity-90">
                         Lọc
                     </button>
                 </form>
 
-                <!-- TABLE -->
                 <p class="mb-3">Tổng hóa đơn: ${billList.size()}</p>
 
                 <div class="bg-white rounded-xl shadow-md overflow-hidden">
                     <table class="w-full text-sm text-center">
                         <thead class="bg-[#f1e4d7] text-gray-700">
                         <tr>
-                            <th class="p-3">Bill ID</th>
+                            <th class="p-3">Mã hóa đơn</th>
                             <th>Bàn</th>
                             <th>Loại</th>
                             <th>Tổng tiền</th>
@@ -99,7 +92,7 @@
                                             Online (không bàn)
                                         </c:when>
                                         <c:otherwise>
-                                            Table ${b.tableId}
+                                            Bàn ${b.tableId}
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
@@ -117,16 +110,16 @@
                                 <td>
                                     <c:choose>
                                         <c:when test="${b.status == 'waiting'}">
-                                            <span class="text-blue-600 font-semibold">Waiting</span>
+                                            <span class="text-blue-600 font-semibold">Chờ thanh toán</span>
                                         </c:when>
                                         <c:when test="${b.status == 'pending_verify'}">
-                                            <span class="text-amber-600 font-semibold">Pending Verify</span>
+                                            <span class="text-amber-600 font-semibold">Chờ xác nhận</span>
                                         </c:when>
                                         <c:when test="${b.status == 'finish'}">
-                                            <span class="text-green-600 font-semibold">Completed</span>
+                                            <span class="text-green-600 font-semibold">Hoàn tất</span>
                                         </c:when>
                                         <c:when test="${b.status == 'cancel'}">
-                                            <span class="text-red-500 font-semibold">Cancelled</span>
+                                            <span class="text-red-500 font-semibold">Đã hủy</span>
                                         </c:when>
                                         <c:otherwise>
                                             <span class="text-gray-600 font-semibold">${b.status}</span>

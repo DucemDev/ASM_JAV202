@@ -1,5 +1,66 @@
-@charset "UTF-8";
+/* =========================
+   FONT + FIX TIẾNG VIỆT
+========================= */
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap');
 
-a{
-	text-decoration: none !important;
+html, body {
+    font-family: 'Inter', system-ui, Arial, sans-serif;
+}
+
+/* =========================
+   DESIGN TOKENS (MÀU)
+========================= */
+:root {
+    /* PRIMARY (nâu cafe nhẹ hơn) */
+    --primary: #a47551;
+    --primary-600: #8b5e3c;
+    --primary-100: #f5e9dd;
+
+    /* BACKGROUND */
+    --bg: #f8f6f3;
+    --surface: #ffffff;
+
+    /* TEXT */
+    --text: #2c2c2c;
+
+    /* BORDER */
+    --border: #e6e6e6;
+}
+
+/* DARK MODE */
+[data-theme="dark"] {
+    --bg: #0f172a;
+    --surface: #1e293b;
+    --text: #e5e7eb;
+    --border: #334155;
+
+    --primary: #c08a63;
+    --primary-100: #2a2118;
+}
+
+/* =========================
+   BASE
+========================= */
+body {
+    background: var(--bg);
+    color: var(--text);
+}
+
+/* =========================
+   LINK (BỎ GẠCH CHÂN)
+========================= */
+a {
+    text-decoration: none;
+    color: inherit;
+}
+
+a:hover {
+    opacity: 0.8;
+}
+
+/* =========================
+   INPUT FIX NHẸ
+========================= */
+input, button {
+    font-family: inherit;
 }
