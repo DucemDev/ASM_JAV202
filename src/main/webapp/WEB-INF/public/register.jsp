@@ -4,107 +4,174 @@
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 
 <!DOCTYPE html>
-<html>
+<html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>PolyCafe Register</title>
-    <style>
-        /* GIỮ NGUYÊN PHẦN CSS CỦA THẮNG */
-        body{ margin:0; font-family:'Segoe UI', sans-serif; height:100vh; display:flex; justify-content:center; align-items:center; background: linear-gradient(135deg,#e6d3c3,#f6efe7); }
-        .container{ width:900px; height:90%; background:rgba(255,255,255,0.95); backdrop-filter: blur(10px); border-radius:20px; display:flex; overflow:hidden; box-shadow:0 20px 50px rgba(0,0,0,0.15); }
-        .left{ width:55%; padding:60px; }
-        .right{ width:45%; position:relative; }
-        .slide-img{ width:100%; height:100%; object-fit:cover; position:absolute; }
-        .right::before{ content:''; position:absolute; inset:0; background:linear-gradient(to top, rgba(0,0,0,0.6), transparent); z-index:1; }
-        .welcome{ position:absolute; bottom:30px; left:25px; color:white; z-index:2; }
-        .welcome h2{ margin:0; font-size:24px; }
-        .welcome p{ margin-top:5px; font-size:14px; opacity:0.9; }
-        .subtitle{ color:#777; margin-bottom:30px; }
-        .input-box{ margin-bottom:20px; }
-        .input-box input{ width:100%; padding:14px; border:none; border-radius:12px; background:#f5f5f5; font-size:14px; }
-        .input-box input:focus{ outline:none; background:#eee; box-shadow:0 0 0 2px #d7b899; }
-        .register-btn{ width:100%; padding:14px; border:none; border-radius:12px; background:linear-gradient(135deg,#8b5e3c,#6f4e37); color:white; font-size:16px; cursor:pointer; }
-        .register-btn:hover{ translateY(-2px); }
-        a{ color:#6f4e37; text-decoration:none; font-size:13px; }
-        .footer{ margin-top:15px; font-size:13px; text-align:center; }
-    </style>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+    <title>Đăng ký | PolyCafe</title>
+
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        cafe: {
+                            noir: '#4C3D19',
+                            kombu: '#354024',
+                            moss: '#889063',
+                            tan: '#CFB899',
+                            bone: '#E5D7C4'
+                        }
+                    }
+                }
+            }
+        }
+    </script>
 </head>
 
-<body>
+<body class="h-screen overflow-hidden bg-cafe-bone/70">
+<div class="relative h-full w-full">
+    <!-- Nền ngoài: ảnh tĩnh -->
+    <img src="<c:url value='/assets/image/background.jpg'/>"
+         alt="Nền cà phê"
+         class="absolute inset-0 w-full h-full object-cover">
+    <div class="absolute inset-0 bg-gradient-to-br from-cafe-kombu/70 via-cafe-noir/55 to-cafe-moss/45"></div>
 
-<div class="container">
-    <div class="left">
-        <h1>Đăng ký</h1>
-        <p class="subtitle">Tạo tài khoản mới cho PolyCafe</p>
+    <div class="relative z-10 h-full flex items-center justify-center px-4 py-4">
+        <div class="w-full max-w-5xl rounded-3xl border border-cafe-bone/40 bg-white/88 backdrop-blur-md shadow-2xl overflow-hidden">
+            <div class="grid grid-cols-1 lg:grid-cols-2">
 
-        <form action="<c:url value='/register'/>" method="post">
-            <div class="input-box">
-                <input type="text" name="fullname" placeholder="Họ và tên" required>
+                <!-- Khối đăng ký (trái) -->
+                <div class="p-6 md:p-8 bg-white/78 backdrop-blur-lg">
+                    <h1 class="text-2xl md:text-3xl font-extrabold text-white tracking-tight">
+                        Đăng ký tài khoản
+                    </h1>
+                    <p class="mt-1 text-sm font-medium text-white/85">
+                        Tạo tài khoản mới để sử dụng PolyCafe.
+                    </p>
+
+                    <form action="<c:url value='/register'/>" method="post" class="mt-5 space-y-3">
+                        <div>
+                            <label for="fullname" class="block text-sm font-semibold text-white mb-1">Họ và tên</label>
+                            <input id="fullname"
+                                   type="text"
+                                   name="fullname"
+                                   placeholder="Nhập họ và tên"
+                                   required
+                                   class="w-full rounded-xl bg-white/95 px-4 py-2.5 text-sm text-black font-normal placeholder:text-black/45 focus:outline-none focus:ring-2 focus:ring-cafe-moss shadow-sm border-0">
+                        </div>
+
+                        <div>
+                            <label for="email" class="block text-sm font-semibold text-white mb-1">Email</label>
+                            <input id="email"
+                                   type="email"
+                                   name="email"
+                                   placeholder="Ví dụ: abc@gmail.com"
+                                   pattern="[a-z0-9._%+-]+@gmail\.com$"
+                                   title="Vui lòng sử dụng địa chỉ @gmail.com"
+                                   required
+                                   class="w-full rounded-xl bg-white/95 px-4 py-2.5 text-sm text-black font-normal placeholder:text-black/45 focus:outline-none focus:ring-2 focus:ring-cafe-moss shadow-sm border-0">
+                        </div>
+
+                        <div>
+                            <label for="phone" class="block text-sm font-semibold text-white mb-1">Số điện thoại</label>
+                            <input id="phone"
+                                   type="tel"
+                                   name="phone"
+                                   placeholder="10 số, bắt đầu bằng 0"
+                                   pattern="^0\\d{9}$"
+                                   title="Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0"
+                                   required
+                                   class="w-full rounded-xl bg-white/95 px-4 py-2.5 text-sm text-black font-normal placeholder:text-black/45 focus:outline-none focus:ring-2 focus:ring-cafe-moss shadow-sm border-0">
+                        </div>
+
+                        <div>
+                            <label for="password" class="block text-sm font-semibold text-white mb-1">Mật khẩu</label>
+                            <input id="password"
+                                   type="password"
+                                   name="password"
+                                   placeholder="Nhập mật khẩu"
+                                   minlength="3"
+                                   required
+                                   class="w-full rounded-xl bg-white/95 px-4 py-2.5 text-sm text-black font-normal placeholder:text-black/45 focus:outline-none focus:ring-2 focus:ring-cafe-moss shadow-sm border-0">
+                        </div>
+
+                        <div>
+                            <label for="confirmPassword" class="block text-sm font-semibold text-white mb-1">Xác nhận mật khẩu</label>
+                            <input id="confirmPassword"
+                                   type="password"
+                                   name="confirmPassword"
+                                   placeholder="Nhập lại mật khẩu"
+                                   required
+                                   class="w-full rounded-xl bg-white/95 px-4 py-2.5 text-sm text-black font-normal placeholder:text-black/45 focus:outline-none focus:ring-2 focus:ring-cafe-moss shadow-sm border-0">
+                        </div>
+
+                        <c:if test="${not empty message}">
+                            <div class="rounded-xl bg-red-50/95 px-3 py-2 text-sm font-semibold text-red-700 border-0">
+                                ${message}
+                            </div>
+                        </c:if>
+
+                        <button type="submit"
+                                class="w-full rounded-xl bg-cafe-noir text-cafe-bone py-2.5 font-bold hover:bg-cafe-bone hover:text-cafe-noir transition shadow-lg shadow-cafe-noir/25">
+                            Đăng ký
+                        </button>
+                    </form>
+
+                    <div class="mt-4 text-sm text-white/85">
+                        <a href="<c:url value='/login'/>" class="font-bold text-white hover:text-cafe-bone transition">
+                            Đã có tài khoản? Đăng nhập ngay
+                        </a>
+                    </div>
+
+                </div>
+
+                <!-- Khối phải: slideshow -->
+                <div class="relative min-h-[560px]">
+                    <img id="welcomeSlide"
+                         src="<c:url value='/assets/image/slide1.jpg'/>"
+                         alt="Slideshow chào mừng"
+                         class="absolute inset-0 w-full h-full object-cover transition-opacity duration-500">
+                    <div class="absolute inset-0 bg-gradient-to-t from-cafe-noir/92 via-cafe-kombu/45 to-cafe-noir/35"></div>
+
+                    <div class="relative z-10 h-full p-6 md:p-8 text-cafe-bone flex flex-col justify-end">
+                        <div>
+                            <p class="text-xs uppercase tracking-[0.2em] text-cafe-tan font-semibold drop-shadow">PolyCafe</p>
+                            <h2 class="mt-3 text-3xl font-extrabold leading-tight text-white drop-shadow-[0_3px_10px_rgba(0,0,0,0.55)]">
+                                Gia nhập PolyCafe
+                            </h2>
+                            <p class="mt-3 text-sm md:text-base text-white/95 font-semibold drop-shadow-[0_2px_8px_rgba(0,0,0,0.45)]">
+                                Trải nghiệm cà phê tuyệt vời và mua sắm nhanh hơn mỗi ngày.
+                            </p>
+                        </div>
+                    </div>
+                </div>
+
             </div>
-
-            <div class="input-box">
-                <input type="email" name="email" placeholder="Email (ví dụ: abc@gmail.com)"
-                       pattern="[a-z0-9._%+-]+@gmail\.com$"
-                       title="Vui lòng sử dụng địa chỉ @gmail.com" required>
-            </div>
-
-            <div class="input-box">
-                <input type="tel" name="phone" placeholder="Số điện thoại (10 số, bắt đầu bằng 0)"
-                       pattern="^0\d{9}$"
-                       title="Số điện thoại phải có 10 chữ số và bắt đầu bằng số 0" required>
-            </div>
-
-            <div class="input-box">
-                <input type="password" name="password" placeholder="Mật khẩu" minlength="3" required>
-            </div>
-
-            <div class="input-box">
-                <input type="password" name="confirmPassword" placeholder="Xác nhận mật khẩu" required>
-            </div>
-
-            <c:if test="${not empty message}">
-                <p style="color:red; font-size:13px; margin-bottom: 15px;">${message}</p>
-            </c:if>
-
-            <button class="register-btn" type="submit">Đăng ký</button>
-        </form>
-
-        <div class="footer">
-            <a href="<c:url value='/login'/>">Đã có tài khoản? Đăng nhập ngay</a><br><br>
-            <a href="<c:url value='/customer'/>">Mua hàng ngay không cần đăng nhập?</a>
-        </div>
-    </div>
-
-    <div class="right">
-        <img id="slide" src="<c:url value='/assets/image/slide1.jpg'/>" class="slide-img">
-        <div class="welcome">
-            <h2>Gia nhập PolyCafe</h2>
-            <p>Trải nghiệm cà phê tuyệt vời ☕</p>
         </div>
     </div>
 </div>
 
 <script>
     const ctx = "${pageContext.request.contextPath}";
-    let images = [
+    const welcomeImages = [
         ctx + "/assets/image/slide1.jpg",
         ctx + "/assets/image/slide2.jpg",
         ctx + "/assets/image/slide3.jpg"
     ];
 
-    let index = 0;
-    const slideImg = document.getElementById("slide");
+    let welcomeIndex = 0;
+    const welcomeSlide = document.getElementById("welcomeSlide");
 
     setInterval(() => {
-        index++;
-        if(index >= images.length) index = 0;
-        slideImg.style.opacity = "0.7";
+        welcomeIndex = (welcomeIndex + 1) % welcomeImages.length;
+        welcomeSlide.style.opacity = "0.72";
         setTimeout(() => {
-            slideImg.src = images[index];
-            slideImg.style.opacity = "1";
-        }, 200);
-    }, 4000);
+            welcomeSlide.src = welcomeImages[welcomeIndex];
+            welcomeSlide.style.opacity = "1";
+        }, 220);
+    }, 4500);
 </script>
-
 </body>
 </html>
