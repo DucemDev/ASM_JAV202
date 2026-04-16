@@ -22,6 +22,7 @@ public class OnlineOrderServlet extends HttpServlet {
     @Override
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
+        billDAO.expireOldOrders();
 
         List<Bill> list = billDAO.findPendingOnlineOrders();
 

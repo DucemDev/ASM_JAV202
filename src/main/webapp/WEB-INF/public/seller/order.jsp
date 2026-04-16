@@ -100,7 +100,7 @@ tailwind.config = {
 
                 <div class="p-3">
                     <p class="font-medium">${d.name}</p>
-                    <p class="text-sm text-gray-500">${d.price} đ</p>
+                    <p class="text-sm text-gray-500"> ${String.format("%,d", d.price)} ₫</p>
 
                     <button
                         onclick="addDrink(${d.id}, ${tableId})"

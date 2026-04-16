@@ -321,8 +321,32 @@ public class BillDAOImpl implements BillDAO {
     @Override
     public List<Bill> findPendingOnlineOrders() {
 
-        String sql = "SELECT * FROM bills WHERE type='online' AND status='pending_verify' ORDER BY id DESC";
+        String sql = """
+        SELECT * FROM bills
+        WHERE type = 'online'
+        AND status = 'pending_verify'
+        AND created_at >= DATEADD(MINUTE, -30, GETDATE())
+        ORDER BY id DESC
+    """;
 
         return findBySql(sql);
+    }
+
+    @Override
+    public void expireOldOrders() {
+
+        String sql = """
+        UPDATE bills
+        SET status = 'expired'
+        WHERE type = 'online'
+        AND status = 'pending_verify'
+        AND created_at < DATEADD(MINUTE, -30, GETDATE())
+    """;
+
+        try {
+            DBConnect.executeUpdate(sql);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 }

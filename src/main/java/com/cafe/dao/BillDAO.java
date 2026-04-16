@@ -28,7 +28,7 @@ public interface BillDAO {
     public List<Bill> findBySql(String sql, Object... value);
 
     public Bill findById(int id);
-
+    public void expireOldOrders();
     public Bill findOpenByTableId(int tableId);
     Bill findOpenByUserId(int userId);
     List<Bill> findPendingOnlineOrders();

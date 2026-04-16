@@ -7,7 +7,7 @@ import jakarta.servlet.http.*;
 
 import java.io.IOException;
 
-@WebFilter("/*")
+
 public class FilterLogin implements Filter {
 
     private static final String[] PUBLIC_PATHS = {
