@@ -5,8 +5,10 @@
 <html lang="vi">
 <head>
     <meta charset="UTF-8">
-    <title>Đặt hàng online - PolyCafe</title>
+    <title>Đặt hàng online</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+
     <script>
         tailwind.config = {
             theme: {
@@ -19,11 +21,12 @@
                     }
                 }
             }
-        };
+        }
     </script>
 </head>
 
 <body class="bg-cafe-bg">
+
 <div class="flex">
     <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
 
@@ -31,49 +34,58 @@
         <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 
         <div class="p-8">
+
             <div class="bg-white rounded-2xl shadow-lg p-6 border max-w-[1400px] mx-auto">
+
                 <div class="flex justify-between items-center mb-6">
                     <h2 class="text-xl font-semibold">ĐẶT HÀNG ONLINE</h2>
                 </div>
 
                 <div class="mb-6 text-sm">
-                    <p>Mã hóa đơn: <b>${bill.code}</b></p>
-                    <p>Loại: <b>ĐƠN ONLINE</b></p>
+                    <p>Mã bill: <b>${bill.code}</b></p>
+                    <p>Loại: <b>ONLINE ORDER</b></p>
                 </div>
 
                 <div class="grid grid-cols-2 gap-6">
 
+                    <!-- MENU -->
                     <div>
                         <h3 class="font-semibold mb-3">Menu</h3>
 
-                        <form method="get" action="${pageContext.request.contextPath}/customer/order"
+                        <form method="get"
+                              action="${pageContext.request.contextPath}/customer/order"
                               class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
-                            <input type="text" name="keyword" value="${keyword}" placeholder="Tìm món..."
+                            <input type="text"
+                                   name="keyword"
+                                   value="${keyword}"
+                                   placeholder="Tim mon..."
                                    class="border rounded-lg px-4 py-2">
 
                             <select name="categoryId" class="border rounded-lg px-4 py-2">
-                                <option value="">Tất cả loại</option>
+                                <option value="">Tat ca loai</option>
                                 <c:forEach items="${categories}" var="c">
                                     <option value="${c.id}" ${filterCategoryId == c.id ? 'selected' : ''}>${c.name}</option>
                                 </c:forEach>
                             </select>
 
                             <button class="bg-gray-700 text-white px-5 py-2 rounded-lg hover:opacity-90">
-                                Tìm kiếm
+                                Tim kiem
                             </button>
                         </form>
 
                         <div class="grid grid-cols-2 gap-4">
                             <c:forEach var="d" items="${drinks}">
                                 <div class="border rounded-xl shadow hover:shadow-lg transition">
+
                                     <img src="${pageContext.request.contextPath}/${d.image}"
-                                         class="w-full h-36 object-cover" alt="${d.name}">
+                                         class="w-full h-36 object-cover"/>
 
                                     <div class="p-3">
                                         <p class="font-medium">${d.name}</p>
                                         <p class="text-sm text-gray-500">${d.price} đ</p>
 
-                                        <button onclick="addDrink(${d.id})"
+                                        <button
+                                                onclick="addDrink(${d.id})"
                                                 class="w-full bg-cafe-brown text-white py-1 mt-2 rounded hover:scale-105 transition">
                                             + Thêm
                                         </button>
@@ -83,7 +95,9 @@
                         </div>
                     </div>
 
+                    <!-- BILL -->
                     <div id="bill-area">
+
                         <h3 class="font-semibold mb-3">Giỏ hàng</h3>
 
                         <table class="w-full text-sm border rounded-xl overflow-hidden">
@@ -109,7 +123,9 @@
                                         <div class="flex items-center justify-center gap-2">
                                             <button onclick="updateQty(${bill.id}, ${item.drinkId}, ${item.quantity - 1})"
                                                     class="bg-gray-300 px-2 rounded">-</button>
+
                                             <span>${item.quantity}</span>
+
                                             <button onclick="updateQty(${bill.id}, ${item.drinkId}, ${item.quantity + 1})"
                                                     class="bg-gray-300 px-2 rounded">+</button>
                                         </div>
@@ -124,16 +140,21 @@
                             Tổng: ${total} đ
                         </div>
 
-                        <form method="post" action="${pageContext.request.contextPath}/customer/order/pay">
+                        <form method="post"
+                              action="${pageContext.request.contextPath}/customer/order/pay">
                             <input type="hidden" name="billId" value="${bill.id}"/>
-                            <button class="w-full bg-blue-500 text-white py-2 rounded mt-4 hover:opacity-90">
+
+                            <button class="w-full bg-blue-500 text-white py-2 rounded mt-4">
                                 Đặt hàng ngay
                             </button>
                         </form>
+
                     </div>
 
                 </div>
+
             </div>
+
         </div>
     </div>
 </div>
@@ -142,7 +163,9 @@
     function addDrink(drinkId) {
         fetch("${pageContext.request.contextPath}/customer/order", {
             method: "POST",
-            headers: {"Content-Type": "application/x-www-form-urlencoded"},
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
             body: "drinkId=" + drinkId
         }).then(() => location.reload());
     }
@@ -150,8 +173,11 @@
     function updateQty(billId, drinkId, quantity) {
         fetch("${pageContext.request.contextPath}/customer/order", {
             method: "POST",
-            headers: {"Content-Type": "application/x-www-form-urlencoded"},
-            body: "action=update"
+            headers: {
+                "Content-Type": "application/x-www-form-urlencoded"
+            },
+            body:
+                "action=update"
                 + "&billId=" + billId
                 + "&drinkId=" + drinkId
                 + "&quantity=" + quantity
