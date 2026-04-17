@@ -10,7 +10,7 @@ import java.util.concurrent.ConcurrentHashMap;
 
 public class RateLimitingFilter implements Filter {
 
-    // 🔥 Key = IP + URI
+
     private static final Map<String, RequestInfo> requestMap = new ConcurrentHashMap<>();
 
     private static final long TIME_WINDOW = 60 * 1000; // 1 phút
@@ -25,13 +25,13 @@ public class RateLimitingFilter implements Filter {
         String uri = req.getRequestURI();
         String ip = req.getRemoteAddr();
 
-        // 👉 chỉ áp dụng cho endpoint quan trọng
+
         if (!isProtectedEndpoint(uri)) {
             chain.doFilter(request, response);
             return;
         }
 
-        // 🔥 key theo IP + endpoint
+
         String key = ip + ":" + uri;
 
         long now = System.currentTimeMillis();
@@ -44,7 +44,7 @@ public class RateLimitingFilter implements Filter {
 
         synchronized (info) {
 
-            // reset window
+
             if (now - info.startTime > TIME_WINDOW) {
                 info.count = 0;
                 info.startTime = now;
@@ -53,7 +53,7 @@ public class RateLimitingFilter implements Filter {
             info.count++;
 
             if (info.count > maxRequest) {
-                // 👉 dùng sendError để trigger web.xml
+
                 resp.sendError(429);
                 return;
             }

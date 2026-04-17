@@ -27,7 +27,6 @@ public class FilterLogin implements Filter {
 
         String uri = req.getRequestURI();
 
-        // ================= PUBLIC =================
         if (isPublic(uri)) {
             chain.doFilter(request, response);
             return;
@@ -35,7 +34,7 @@ public class FilterLogin implements Filter {
 
         User user = (User) req.getSession().getAttribute("user");
 
-        // ================= CHƯA LOGIN =================
+
         if (user == null) {
             resp.sendRedirect(req.getContextPath() + "/login");
             return;
@@ -43,14 +42,14 @@ public class FilterLogin implements Filter {
 
         int role = user.getRole();
 
-        // ================= ADMIN =================
+
         if (role == User.ROLE_ADMIN) {
             // admin được vào tất cả
             chain.doFilter(request, response);
             return;
         }
 
-        // ================= STAFF =================
+
         if (role == User.ROLE_STAFF) {
 
             // ❌ không cho vào admin
@@ -59,12 +58,12 @@ public class FilterLogin implements Filter {
                 return;
             }
 
-            // ✔ còn lại cho qua (home, profile, bill...)
+
             chain.doFilter(request, response);
             return;
         }
 
-        // ================= CUSTOMER =================
+
         if (role == User.ROLE_CUSTOMER) {
 
             // ❌ không cho vào admin + staff

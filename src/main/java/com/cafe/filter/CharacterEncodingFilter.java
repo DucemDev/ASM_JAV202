@@ -16,13 +16,12 @@ public class CharacterEncodingFilter implements Filter {
     public void doFilter(ServletRequest request, ServletResponse response, FilterChain chain)
             throws IOException, ServletException {
 
-        // Set encoding cho request (form submit, parameter)
         request.setCharacterEncoding(ENCODING);
 
-        // Set encoding cho response (trả về browser)
+
         response.setCharacterEncoding(ENCODING);
 
-        // Set content-type chuẩn UTF-8
+
         if (response instanceof HttpServletResponse) {
             ((HttpServletResponse) response).setContentType("text/html; charset=UTF-8");
         }
