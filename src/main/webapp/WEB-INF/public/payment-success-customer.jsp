@@ -4,117 +4,127 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-    <meta charset="UTF-8">
-    <title>Đặt hàng thành công</title>
+<meta charset="UTF-8">
+<title>Đặt hàng thành công</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        cafe: {
-                            bg: '#f6efe7',
-                            brown: '#8b5e3c'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-cafe-bg">
+<body class="min-h-screen relative"
+      style="background:linear-gradient(135deg,#e6e8dc,#cfd5a5);">
 
-<div class="flex">
+<!-- BG -->
+<div class="absolute inset-0 z-0 opacity-30 pointer-events-none"
+     style="background-image:url('https://grainy-gradients.vercel.app/noise.svg');">
+</div>
 
-    <!-- SIDEBAR -->
-    <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
+<div class="flex relative z-10">
 
-    <div class="flex-1 flex flex-col ml-64">
+<!-- SIDEBAR -->
+<jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
 
+<!-- MAIN -->
+<div id="mainContent" class="flex-1 flex flex-col ml-64 transition-all duration-300">
 
-        <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 
-        <div class="p-8">
+<div class="p-8">
 
-            <div class="max-w-[600px] mx-auto">
+<div class="max-w-[600px] mx-auto">
 
-                <div class="bg-white rounded-2xl shadow-lg p-6 border">
+<div class="rounded-2xl shadow-2xl p-6 backdrop-blur-xl border"
+     style="background:rgba(255,255,255,0.35); border:1px solid rgba(255,255,255,0.35);">
 
-                    <!-- HEADER -->
-                    <div class="text-center border-b pb-4 mb-4">
-                        <h2 class="text-xl font-bold text-green-600">✅ Đặt hàng thành công</h2>
-                        <p class="text-xs text-gray-400">Cảm ơn bạn đã đặt hàng</p>
-                    </div>
+<!-- HEADER -->
+<div class="text-center border-b pb-4 mb-4">
+    <h2 class="text-xl font-bold text-green-600">
+        ✅ Đặt hàng thành công
+    </h2>
+    <p class="text-xs text-gray-500">
+        Cảm ơn bạn đã đặt hàng
+    </p>
+</div>
 
-                    <!-- INFO -->
-                    <div class="text-sm mb-4 space-y-1">
-                        <p>Mã đơn: <b>${bill.code}</b></p>
-                        <p>Loại: <b>ONLINE ORDER</b></p>
-                        <p>Thời gian:
-                            <b>
-                                <%= new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
-                                        .format(new java.util.Date()) %>
-                            </b>
-                        </p>
-                    </div>
+<!-- INFO -->
+<div class="text-sm mb-4 space-y-1 text-[#27301B]">
+    <p>Mã đơn: <b>${bill.code}</b></p>
+    <p>Loại: <b>Đơn online</b></p>
+    <p>Thời gian:
+        <b>
+            <%= new java.text.SimpleDateFormat("dd/MM/yyyy HH:mm:ss")
+                    .format(new java.util.Date()) %>
+        </b>
+    </p>
+</div>
 
-                    <!-- TABLE -->
-                    <table class="w-full text-sm border-t border-b mb-4">
-                        <thead>
-                        <tr class="text-left">
-                            <th>Món</th>
-                            <th>SL</th>
-                            <th class="text-right">Giá</th>
-                        </tr>
-                        </thead>
+<!-- TABLE -->
+<div class="rounded-xl overflow-hidden border"
+     style="background:rgba(255,255,255,0.4);">
 
-                        <tbody>
-                        <c:forEach var="item" items="${billDetails}">
-                            <tr>
-                                <td>
-                                    <c:forEach var="d" items="${drinks}">
-                                        <c:if test="${d.id == item.drinkId}">
-                                            ${d.name}
-                                        </c:if>
-                                    </c:forEach>
-                                </td>
+<table class="w-full text-sm text-center">
 
-                                <td>${item.quantity}</td>
+<thead style="background:linear-gradient(135deg,#dfe6c3,#cfd5a5);" class="text-[#27301B]">
+<tr>
+<th class="p-3 text-left">Món</th>
+<th>Số lượng</th>
+<th class="text-right pr-3">Giá</th>
+</tr>
+</thead>
 
-                                <td class="text-right">${item.price} đ</td>
-                            </tr>
-                        </c:forEach>
-                        </tbody>
-                    </table>
+<tbody>
 
-                    <!-- TOTAL -->
-                    <div class="text-right text-lg font-bold mb-4">
-                        Tổng: ${total} đ
-                    </div>
+<c:forEach var="item" items="${billDetails}">
+<tr class="border-t border-white/40 hover:bg-white/20 transition">
 
-                    <!-- FOOTER -->
-                    <div class="text-center text-sm text-gray-500 mb-4">
-                        Đơn hàng của bạn đang được xử lý ☕
-                    </div>
+<td class="p-3 text-left font-medium">
+<c:forEach var="d" items="${drinks}">
+    <c:if test="${d.id == item.drinkId}">
+        ${d.name}
+    </c:if>
+</c:forEach>
+</td>
 
-                    <!-- BUTTON -->
-                    <div class="flex gap-2">
-                        <a href="${pageContext.request.contextPath}/customer/order"
-                           class="w-1/2 text-center bg-gray-400 text-white py-2 rounded">
-                            Đặt thêm
-                        </a>
-                    </div>
+<td>${item.quantity}</td>
 
-                </div>
+<td class="text-right pr-3 text-[#41521E]">
+${item.price} đ
+</td>
 
-            </div>
+</tr>
+</c:forEach>
 
-        </div>
+</tbody>
 
-    </div>
+</table>
+
+</div>
+
+<!-- TOTAL -->
+<div class="text-right text-lg font-bold mt-4 text-[#27301B]">
+Tổng: ${total} đ
+</div>
+
+<!-- FOOTER -->
+<div class="text-center text-sm text-gray-500 mt-4">
+Đơn hàng của bạn đang được xử lý ☕
+</div>
+
+<!-- BUTTON -->
+<div class="mt-6">
+<a href="${pageContext.request.contextPath}/customer/order"
+   class="block text-center text-white py-2 rounded-xl shadow hover:scale-105 transition"
+   style="background:#27301B;">
+    Đặt thêm
+</a>
+</div>
+
+</div>
+
+</div>
+
+</div>
+
+</div>
 
 </div>
 

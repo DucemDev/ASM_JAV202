@@ -118,7 +118,21 @@
 
             <span class="menu-text">Cài đặt</span>
         </a>
+<!-- ONLINE ORDER (STAFF + ADMIN) -->
+<c:if test="${sessionScope.user != null && (sessionScope.user.role == 1 || sessionScope.user.role == 2)}">
+    <a href="${pageContext.request.contextPath}/seller/online-orders"
+       class="group flex items-center gap-3 px-4 py-3 rounded-xl transition hover:bg-[#909632]/40">
 
+        <svg class="w-5 h-5 transition group-hover:text-white"
+             style="color:#99A558"
+             fill="none" stroke="currentColor" stroke-width="2"
+             viewBox="0 0 24 24">
+            <path d="M5 13l4 4L19 7"/>
+        </svg>
+
+        <span class="menu-text font-medium">Đơn hàng online</span>
+    </a>
+</c:if>
     </nav>
 
     <!-- LOGOUT -->

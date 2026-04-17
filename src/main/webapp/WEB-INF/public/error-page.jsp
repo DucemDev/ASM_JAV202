@@ -7,105 +7,102 @@
 <html lang="vi">
 
 <head>
-    <meta charset="UTF-8">
-    <title>Đổi mật khẩu</title>
+<meta charset="UTF-8">
+<title>Đổi mật khẩu</title>
 
-    <script src="https://cdn.tailwindcss.com"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        cafe: {
-                            bg: '#f6efe7',
-                            brown: '#8b5e3c'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
+<script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-cafe-bg">
+<body class="min-h-screen relative"
+      style="background:linear-gradient(135deg,#e6e8dc,#cfd5a5);">
 
-<div class="flex">
+<!-- BG -->
+<div class="absolute inset-0 z-0 opacity-30 pointer-events-none"
+     style="background-image:url('https://grainy-gradients.vercel.app/noise.svg');">
+</div>
 
-    <!-- SIDEBAR -->
-    <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
+<div class="flex relative z-10">
 
-    <!-- MAIN -->
-    <div id="mainContent" class="flex-1 flex flex-col ml-64 transition-all duration-300">
+<!-- SIDEBAR -->
+<jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
 
-        <!-- HEADER -->
-        <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+<!-- MAIN -->
+<div id="mainContent" class="flex-1 flex flex-col ml-64 transition-all duration-300">
 
-        <!-- CONTENT -->
-        <div class="p-8">
+<jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 
-            <div class="max-w-[1400px] mx-auto">
+<!-- CONTENT -->
+<div class="p-8">
 
-                <!-- CARD -->
-                <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+<div class="max-w-[600px] mx-auto">
 
-                    <h1 class="text-2xl font-bold text-gray-800 mb-6">
-                        Đổi mật khẩu
-                    </h1>
+<!-- CARD -->
+<div class="rounded-2xl shadow-2xl p-8 backdrop-blur-xl border"
+     style="background:rgba(255,255,255,0.35); border:1px solid rgba(255,255,255,0.35);">
 
-                    <form method="post"
-                          action="${pageContext.request.contextPath}/change-password"
-                          class="space-y-5">
+<!-- TITLE -->
+<h1 class="text-2xl font-bold text-[#27301B] mb-6 text-center">
+    Đổi mật khẩu
+</h1>
 
-                        <!-- NEW PASSWORD -->
-                        <div>
-                            <label class="text-sm text-gray-500">Mật khẩu mới</label>
-                            <input type="password" name="newPassword"
-                                   placeholder="Nhập mật khẩu mới"
-                                   class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2
-                      focus:ring-2 focus:ring-cafe-brown outline-none">
-                        </div>
+<form method="post"
+      action="${pageContext.request.contextPath}/change-password"
+      class="space-y-5">
 
-                        <!-- CONFIRM PASSWORD -->
-                        <div>
-                            <label class="text-sm text-gray-500">Xác nhận mật khẩu</label>
-                            <input type="password" name="confirmPassword"
-                                   placeholder="Nhập lại mật khẩu"
-                                   class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2
-                      focus:ring-2 focus:ring-cafe-brown outline-none">
-                        </div>
+<!-- NEW PASSWORD -->
+<div>
+<label class="text-sm text-[#41521E]">Mật khẩu mới</label>
+<input type="password" name="newPassword"
+       placeholder="Nhập mật khẩu mới"
+       required
+       class="w-full mt-1 rounded-xl px-4 py-3 border outline-none"
+       style="background:rgba(255,255,255,0.5); border-color:#909632;">
+</div>
 
-                        <!-- ERROR MESSAGE -->
-                        <c:if test="${not empty message}">
-                            <p class="text-red-500 text-sm">${message}</p>
-                        </c:if>
+<!-- CONFIRM PASSWORD -->
+<div>
+<label class="text-sm text-[#41521E]">Xác nhận mật khẩu</label>
+<input type="password" name="confirmPassword"
+       placeholder="Nhập lại mật khẩu"
+       required
+       class="w-full mt-1 rounded-xl px-4 py-3 border outline-none"
+       style="background:rgba(255,255,255,0.5); border-color:#909632;">
+</div>
 
-                        <!-- BUTTON -->
-                        <div class="flex gap-4 pt-4">
+<!-- ERROR -->
+<c:if test="${not empty message}">
+    <p class="text-red-500 text-sm text-center">
+        ${message}
+    </p>
+</c:if>
 
-                            <button type="submit"
-                                    class="bg-cafe-brown text-white px-6 py-2 rounded-lg hover:opacity-90 transition">
-                                Đổi mật khẩu
-                            </button>
+<!-- BUTTON -->
+<div class="flex gap-4 pt-4">
 
-                            <a href="${pageContext.request.contextPath}/profile">
-                                <button type="button"
-                                        class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:opacity-90 transition">
-                                    Quay lại
-                                </button>
-                            </a>
+<button type="submit"
+        class="flex-1 text-white py-3 rounded-xl shadow hover:scale-105 transition"
+        style="background:#27301B;">
+    Đổi mật khẩu
+</button>
 
-                        </div>
+<a href="${pageContext.request.contextPath}/profile" class="flex-1">
+    <button type="button"
+            class="w-full py-3 rounded-xl border text-[#27301B] hover:bg-white/40 transition">
+        Quay lại
+    </button>
+</a>
 
-                    </form>
+</div>
 
-                </div>
+</form>
 
-            </div>
+</div>
 
-        </div>
+</div>
 
-    </div>
+</div>
+
+</div>
 
 </div>
 
