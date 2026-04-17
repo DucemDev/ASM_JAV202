@@ -1,4 +1,4 @@
-package com.cafe.servlet.CRUD;
+package com.cafe.servlet;
 
 import com.cafe.dao.UserDAOImpl;
 import com.cafe.entity.User;
@@ -17,7 +17,7 @@ import java.util.List;
         "/manager/staff/delete",
         "/manager/staff/update-status"
 })
-public class StaffSevlet extends HttpServlet {
+public class StaffManagementServlet extends HttpServlet {
     private static final int PAGE_SIZE = 10;
 
     private UserDAOImpl userDAO = new UserDAOImpl();

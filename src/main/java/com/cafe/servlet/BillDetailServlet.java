@@ -1,4 +1,4 @@
-package com.cafe.servlet.CRUD;
+package com.cafe.servlet;
 
 import com.cafe.dao.BillDAO;
 import com.cafe.dao.BillDAOImpl;

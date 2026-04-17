@@ -60,10 +60,10 @@
 
 <div>
 <label class="text-sm font-medium text-[#41521E]">Số điện thoại</label>
-<input type="tel" name="phone" required
-       pattern="^0\\d{9}$"
-       class="w-full rounded-xl px-4 py-2.5 border outline-none"
-       style="background:rgba(255,255,255,0.7); border-color:#909632;">
+    <input type="tel" name="phone" required
+           pattern="^0\d{9}$"
+           class="w-full rounded-xl px-4 py-2.5 border outline-none"
+           style="background:rgba(255,255,255,0.7); border-color:#909632;">
 </div>
 
 <div>

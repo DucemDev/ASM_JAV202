@@ -1,4 +1,4 @@
-package com.cafe.servlet.CRUD;
+package com.cafe.servlet;
 
 import com.cafe.dao.BillDAO;
 import com.cafe.dao.BillDAOImpl;
@@ -56,7 +56,7 @@ public class PosServlet extends HttpServlet {
         req.setAttribute("billDetails", billDetails);
         req.setAttribute("total", total);
 
-        req.getRequestDispatcher("/views/pos/view.jsp").forward(req, resp);
+        req.getRequestDispatcher("/WEB-INF/public/pos/view.jsp").forward(req, resp);
     }
 
 

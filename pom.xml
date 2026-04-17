@@ -8,7 +8,6 @@
     <artifactId>JAV202_Nhom01_ASM</artifactId>
     <version>1.0-SNAPSHOT</version>
 
-
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <maven.compiler.source>21</maven.compiler.source>
@@ -16,8 +15,7 @@
     </properties>
 
     <dependencies>
-
-        <!-- ================= SERVLET API ================= -->
+        <!-- ================= SERVLET & JSP API (Jakarta EE 10) ================= -->
         <dependency>
             <groupId>jakarta.servlet</groupId>
             <artifactId>jakarta.servlet-api</artifactId>
@@ -25,7 +23,6 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- ================= JSP API ================= -->
         <dependency>
             <groupId>jakarta.servlet.jsp</groupId>
             <artifactId>jakarta.servlet.jsp-api</artifactId>
@@ -33,7 +30,7 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- ================= JSTL ================= -->
+        <!-- ================= JSTL (Jakarta EE 10) ================= -->
         <dependency>
             <groupId>jakarta.servlet.jsp.jstl</groupId>
             <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
@@ -46,20 +43,6 @@
             <version>3.0.1</version>
         </dependency>
 
-        <!--        &lt;!&ndash; ================= JPA API ================= &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>jakarta.persistence</groupId>-->
-        <!--            <artifactId>jakarta.persistence-api</artifactId>-->
-        <!--            <version>3.1.0</version>-->
-        <!--        </dependency>-->
-
-        <!--        &lt;!&ndash; ================= HIBERNATE ================= &ndash;&gt;-->
-        <!--        <dependency>-->
-        <!--            <groupId>org.hibernate.orm</groupId>-->
-        <!--            <artifactId>hibernate-core</artifactId>-->
-        <!--            <version>6.4.4.Final</version>-->
-        <!--        </dependency>-->
-
         <!-- ================= SQL SERVER JDBC ================= -->
         <dependency>
             <groupId>com.microsoft.sqlserver</groupId>
@@ -67,7 +50,7 @@
             <version>12.4.2.jre11</version>
         </dependency>
 
-        <!-- ================= BEANUTILS ================= -->
+        <!-- ================= LIBRARIES ================= -->
         <dependency>
             <groupId>commons-beanutils</groupId>
             <artifactId>commons-beanutils</artifactId>
@@ -79,6 +62,7 @@
             <artifactId>commons-logging</artifactId>
             <version>1.2</version>
         </dependency>
+
         <dependency>
             <groupId>org.projectlombok</groupId>
             <artifactId>lombok</artifactId>
@@ -86,53 +70,21 @@
             <scope>provided</scope>
         </dependency>
 
-        <!-- Servlet API -->
-        <dependency>
-            <groupId>jakarta.servlet</groupId>
-            <artifactId>jakarta.servlet-api</artifactId>
-            <version>6.0.0</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- JSP API -->
-        <dependency>
-            <groupId>jakarta.servlet.jsp</groupId>
-            <artifactId>jakarta.servlet.jsp-api</artifactId>
-            <version>3.1.1</version>
-            <scope>provided</scope>
-        </dependency>
-
-        <!-- JSTL (EL nằm ở đây) -->
-        <dependency>
-            <groupId>jakarta.servlet.jsp.jstl</groupId>
-            <artifactId>jakarta.servlet.jsp.jstl-api</artifactId>
-            <version>3.0.0</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.glassfish.web</groupId>
-            <artifactId>jakarta.servlet.jsp.jstl</artifactId>
-            <version>3.0.1</version>
-        </dependency>
-
         <dependency>
             <groupId>com.sun.mail</groupId>
             <artifactId>jakarta.mail</artifactId>
             <version>2.0.1</version>
         </dependency>
-
-
     </dependencies>
 
     <build>
         <finalName>ASMGD2_JAV201</finalName>
-        <pluginManagement><!-- lock down plugins versions to avoid using Maven defaults (may be moved to parent pom) -->
+        <pluginManagement>
             <plugins>
                 <plugin>
                     <artifactId>maven-clean-plugin</artifactId>
                     <version>3.1.0</version>
                 </plugin>
-                <!-- see http://maven.apache.org/ref/current/maven-core/default-bindings.html#Plugin_bindings_for_war_packaging -->
                 <plugin>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>3.0.2</version>
@@ -160,5 +112,4 @@
             </plugins>
         </pluginManagement>
     </build>
-
 </project>

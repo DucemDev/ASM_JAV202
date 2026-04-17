@@ -1,4 +1,4 @@
-package com.cafe.servlet.CRUD;
+package com.cafe.servlet;
 
 import com.cafe.dao.TableDAO;
 import com.cafe.dao.TableDAOImpl;

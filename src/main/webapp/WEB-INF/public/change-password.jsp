@@ -24,13 +24,13 @@
 <div class="flex relative z-10">
 
     <!-- SIDEBAR -->
-    <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
+    <jsp:include page="/WEB-INF/public/layout/sidebar.jsp"/>
 
     <!-- MAIN -->
     <div id="mainContent" class="flex-1 flex flex-col ml-64 transition-all duration-300">
 
         <!-- HEADER -->
-        <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+        <jsp:include page="/WEB-INF/public/layout/header.jsp"/>
 
         <!-- CONTENT -->
         <div class="p-8">

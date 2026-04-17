@@ -1,6 +1,6 @@
 <%@ page contentType="text/html;charset=UTF-8" %>
 <%@ page isELIgnored="false" %>
-<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="jakarta.tags.core" prefix="c" %>
 
 <html>
 <head>
@@ -18,11 +18,11 @@
 
 <div class="flex relative z-10">
 
-    <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
+    <jsp:include page="/WEB-INF/public/layout/sidebar.jsp"/>
 
     <div id="mainContent" class="flex-1 flex flex-col ml-64 transition-all duration-300">
 
-        <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
+        <jsp:include page="/WEB-INF/public/layout/header.jsp"/>
 
         <div class="p-8">
             <div class="max-w-[1200px] mx-auto">
