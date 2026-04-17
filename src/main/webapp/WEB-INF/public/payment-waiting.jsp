@@ -9,15 +9,25 @@
     <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
-<body class="bg-gray-100 flex items-center justify-center min-h-screen">
+<body class="min-h-screen relative flex items-center justify-center"
+      style="background:linear-gradient(135deg,#e6e8dc,#cfd5a5);">
 
-<div class="bg-white p-10 rounded-2xl shadow-lg text-center max-w-lg w-full">
+<!-- TEXTURE -->
+<div class="absolute inset-0 z-0 opacity-30 pointer-events-none"
+     style="background-image:url('https://grainy-gradients.vercel.app/noise.svg');">
+</div>
+
+<!-- CARD -->
+<div class="relative z-10 w-full max-w-lg rounded-2xl shadow-2xl p-10 text-center backdrop-blur-xl border"
+     style="background:rgba(255,255,255,0.35); border:1px solid rgba(255,255,255,0.35);">
 
     <!-- ICON -->
-    <div class="text-6xl mb-4">⏳</div>
+    <div class="text-6xl mb-4 animate-pulse">
+        ⏳
+    </div>
 
     <!-- TITLE -->
-    <h2 class="text-2xl font-bold mb-4 text-gray-800">
+    <h2 class="text-2xl font-bold mb-4 text-[#27301B]">
         Đang chờ xác nhận thanh toán
     </h2>
 
@@ -28,13 +38,15 @@
     </p>
 
     <!-- STATUS -->
-    <div class="bg-yellow-100 text-yellow-700 px-4 py-2 rounded mb-6">
-        Trạng thái: pending_verify
+    <div class="px-4 py-2 rounded-lg mb-6 text-sm font-medium"
+         style="background:rgba(254,243,199,0.6); color:#b45309;">
+        Trạng thái: Đang chờ xác nhận
     </div>
 
     <!-- BUTTON -->
     <a href="${pageContext.request.contextPath}/customer"
-       class="bg-blue-500 text-white px-6 py-3 rounded hover:opacity-90">
+       class="inline-block text-white px-6 py-3 rounded-xl shadow-lg hover:scale-105 transition"
+       style="background:#27301B;">
         Quay lại trang chủ
     </a>
 

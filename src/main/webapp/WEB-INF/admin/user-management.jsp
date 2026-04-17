@@ -4,119 +4,111 @@
 
 <html>
 <head>
-    <title>User Management</title>
-
+    <title>Quản lý nhân viên</title>
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        cafe: {
-                            bg: '#f6efe7',
-                            brown: '#8b5e3c'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
 </head>
 
-<body class="bg-cafe-bg">
+<body class="min-h-screen relative"
+      style="background:linear-gradient(135deg,#e6e8dc,#cfd5a5);">
 
-<div class="flex">
+<!-- TEXTURE -->
+<div class="absolute inset-0 z-0 opacity-30 pointer-events-none"
+     style="background-image:url('https://grainy-gradients.vercel.app/noise.svg');">
+</div>
 
-    <!-- SIDEBAR -->
+<div class="flex relative z-10">
+
     <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
 
-    <!-- RIGHT SIDE -->
-    <div id="mainContent" class="flex-1 flex flex-col ml-64">
+    <div id="mainContent"
+         class="flex-1 flex flex-col ml-64 h-screen overflow-y-auto">
 
-        <!-- HEADER -->
         <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 
-        <!-- FORM ADD / EDIT -->
+        <!-- FORM -->
         <c:if test="${formMode != null}">
-            <div class="bg-white p-6 rounded-xl shadow-md m-6">
+            <div class="p-6">
+                <div class="rounded-2xl shadow-xl p-6 backdrop-blur-xl border"
+                     style="background:rgba(255,255,255,0.3); border:1px solid rgba(255,255,255,0.3);">
 
-                <h2 class="text-xl font-bold mb-4">
-                        ${formMode == 'add' ? 'Add User' : 'Edit User'}
-                </h2>
+                    <h2 class="text-xl font-bold mb-4 text-[#27301B]">
+                        ${formMode == 'add' ? 'Thêm nhân viên' : 'Cập nhật nhân viên'}
+                    </h2>
 
-                <c:if test="${error != null}">
-                    <div class="bg-red-100 text-red-600 px-4 py-2 rounded mb-4">
+                    <c:if test="${error != null}">
+                        <div class="bg-red-100 text-red-600 px-4 py-2 rounded mb-4">
                             ${error}
-                    </div>
-                </c:if>
+                        </div>
+                    </c:if>
 
-                <form method="post"
-                      action="${pageContext.request.contextPath}/manager/staff/${formMode}">
+                    <form method="post"
+                          action="${pageContext.request.contextPath}/manager/staff/${formMode}">
 
-                    <input type="hidden" name="userId" value="${user.id}"/>
+                        <input type="hidden" name="userId" value="${user.id}"/>
 
-                    <div class="grid grid-cols-2 gap-4">
+                        <div class="grid grid-cols-2 gap-4">
 
-                        <div>
-                            <label>Email</label>
-                            <input type="text" name="email"
-                                   value="${user.email}"
-                                   class="w-full border px-3 py-2 rounded">
+                            <div>
+                                <label>Email</label>
+                                <input type="text" name="email"
+                                       value="${user.email}"
+                                       class="w-full rounded-lg px-3 py-2 border"
+                                       style="background:rgba(255,255,255,0.4);">
+                            </div>
+
+                            <div>
+                                <label>Mật khẩu</label>
+                                <input type="password" name="password"
+                                       class="w-full rounded-lg px-3 py-2 border">
+                            </div>
+
+                            <div>
+                                <label>Họ tên</label>
+                                <input type="text" name="fullName"
+                                       value="${user.fullname}"
+                                       class="w-full rounded-lg px-3 py-2 border">
+                            </div>
+
+                            <div>
+                                <label>Số điện thoại</label>
+                                <input type="text" name="phone"
+                                       value="${user.phone}"
+                                       class="w-full rounded-lg px-3 py-2 border">
+                            </div>
+
+                            <div>
+                                <label>Trạng thái</label>
+                                <select name="active" class="w-full rounded-lg px-3 py-2 border">
+                                    <option value="1" ${user.active ? 'selected' : ''}>Hoạt động</option>
+                                    <option value="0" ${!user.active ? 'selected' : ''}>Khóa</option>
+                                </select>
+                            </div>
+
+                            <div>
+                                <label>Vai trò</label>
+                                <select name="role" class="w-full rounded-lg px-3 py-2 border">
+                                    <option value="1" ${user.role == 1 ? 'selected' : ''}>Nhân viên</option>
+                                    <option value="2" ${user.role == 2 ? 'selected' : ''}>Quản trị</option>
+                                </select>
+                            </div>
+
                         </div>
 
-                        <div>
-                            <label>Password</label>
-                            <input type="password" name="password"
-                                   class="w-full border px-3 py-2 rounded">
+                        <div class="mt-4">
+                            <button class="px-5 py-2 rounded-lg text-white"
+                                    style="background:#27301B;">
+                                ${formMode == 'add' ? 'Tạo' : 'Cập nhật'}
+                            </button>
+
+                            <a href="${pageContext.request.contextPath}/manager/staff"
+                               class="ml-3 text-gray-600">
+                                Hủy
+                            </a>
                         </div>
 
-                        <div>
-                            <label>Full Name</label>
-                            <input type="text" name="fullName"
-                                   value="${user.fullname}"
-                                   class="w-full border px-3 py-2 rounded">
-                        </div>
+                    </form>
 
-                        <div>
-                            <label>Phone</label>
-                            <input type="text" name="phone"
-                                   value="${user.phone}"
-                                   class="w-full border px-3 py-2 rounded">
-                        </div>
-
-                        <div>
-                            <label>Status</label>
-                            <select name="active" class="w-full border px-3 py-2 rounded">
-                                <option value="1" ${user.active ? 'selected' : ''}>Active</option>
-                                <option value="0" ${!user.active ? 'selected' : ''}>Locked</option>
-                            </select>
-                        </div>
-
-                        <!-- ROLE (NEW) -->
-                        <div>
-                            <label>Role</label>
-                            <select name="role" class="w-full border px-3 py-2 rounded">
-                                <option value="1" ${user.role == 1 ? 'selected' : ''}>Staff</option>
-                                <option value="2" ${user.role == 2 ? 'selected' : ''}>Admin</option>
-                            </select>
-                        </div>
-
-                    </div>
-
-                    <div class="mt-4">
-                        <button class="bg-green-600 text-white px-5 py-2 rounded">
-                                ${formMode == 'add' ? 'Create' : 'Update'}
-                        </button>
-
-                        <a href="${pageContext.request.contextPath}/manager/staff"
-                           class="ml-3 text-gray-600">
-                            Cancel
-                        </a>
-                    </div>
-
-                </form>
-
+                </div>
             </div>
         </c:if>
 
@@ -125,13 +117,14 @@
 
             <div class="max-w-[1400px] mx-auto">
 
-                <!-- TITLE -->
+                <!-- HEADER -->
                 <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-2xl font-bold text-gray-800">User Management</h1>
+                    <h1 class="text-2xl font-bold text-[#27301B]">Quản lý nhân viên</h1>
 
                     <a href="${pageContext.request.contextPath}/manager/staff/add"
-                       class="bg-cafe-brown text-white px-5 py-2 rounded-lg">
-                        + Add User
+                       class="px-5 py-2 rounded-xl text-white shadow hover:scale-105 transition"
+                       style="background:#27301B;">
+                        + Thêm
                     </a>
                 </div>
 
@@ -142,67 +135,70 @@
 
                     <input type="text" name="keyword"
                            value="${keyword}"
-                           placeholder="Search name or email..."
-                           class="border rounded-lg px-4 py-2 w-72">
+                           placeholder="Tìm theo tên hoặc email"
+                           class="rounded-lg px-4 py-2 border backdrop-blur-xl"
+                           style="background:rgba(255,255,255,0.3); border-color:#909632;">
 
-                    <select name="status" class="border rounded-lg px-3 py-2">
-                        <option value="">All</option>
-                        <option value="1" ${status == '1' ? 'selected' : ''}>Active</option>
-                        <option value="0" ${status == '0' ? 'selected' : ''}>Locked</option>
+                    <select name="status"
+                            class="rounded-lg px-3 py-2 border backdrop-blur-xl"
+                            style="background:rgba(255,255,255,0.3); border-color:#909632;">
+                        <option value="">Tất cả</option>
+                        <option value="1" ${status == '1' ? 'selected' : ''}>Hoạt động</option>
+                        <option value="0" ${status == '0' ? 'selected' : ''}>Khóa</option>
                     </select>
 
-                    <button class="bg-gray-700 text-white px-5 py-2 rounded-lg">
-                        Search
+                    <button class="px-5 py-2 rounded-lg text-white"
+                            style="background:#41521E;">
+                        Tìm kiếm
                     </button>
                 </form>
 
                 <!-- TABLE -->
-                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <div class="rounded-2xl shadow-xl backdrop-blur-xl border overflow-hidden"
+                     style="background:rgba(255,255,255,0.28); border:1px solid rgba(255,255,255,0.3);">
 
                     <table class="w-full text-sm text-center">
 
-                        <thead class="bg-[#f1e4d7]">
+                        <thead style="background:rgba(65,82,30,0.25);" class="text-[#27301B]">
                         <tr>
                             <th class="p-3">ID</th>
-                            <th>Full Name</th>
+                            <th>Họ tên</th>
                             <th>Email</th>
-                            <th>Phone</th>
-                            <th>Role</th>
-                            <th>Status</th>
-                            <th>Action</th>
+                            <th>Điện thoại</th>
+                            <th>Vai trò</th>
+                            <th>Trạng thái</th>
+                            <th>Hành động</th>
                         </tr>
                         </thead>
 
                         <tbody>
                         <c:forEach var="u" items="${staffList}">
 
-                            <tr class="border-t hover:bg-gray-50">
+                            <tr class="border-t border-white/30 hover:bg-white/15 transition">
 
                                 <td class="p-3">${u.id}</td>
-                                <td>${u.fullname}</td>
+                                <td class="font-medium">${u.fullname}</td>
                                 <td>${u.email}</td>
                                 <td>${u.phone}</td>
 
-                                <!-- ROLE -->
                                 <td>
                                     <c:choose>
                                         <c:when test="${u.role == 2}">
                                             <span class="text-purple-600 font-semibold">Admin</span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="text-gray-600">Staff</span>
+                                            <span class="text-gray-600">Nhân viên</span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
 
-                                <!-- STATUS -->
                                 <td>
                                     <c:choose>
                                         <c:when test="${u.active}">
-                                            <span class="text-green-600 font-semibold">Active</span>
+                                            <span class="text-green-600 font-semibold">Hoạt động</span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="text-red-500 font-semibold">Locked</span>
+                                            <span class="text-red-500 font-semibold">Khóa</span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
@@ -210,19 +206,19 @@
                                 <td class="space-x-2">
 
                                     <a href="${pageContext.request.contextPath}/manager/staff/edit?userId=${u.id}"
-                                       class="bg-blue-500 text-white px-3 py-1 rounded">
-                                        Edit
+                                       class="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg">
+                                        Sửa
                                     </a>
 
                                     <a href="${pageContext.request.contextPath}/manager/staff/delete?userId=${u.id}"
                                        onclick="return confirm('Bạn có chắc muốn xóa?')"
-                                       class="bg-red-500 text-white px-3 py-1 rounded">
-                                        Delete
+                                       class="px-3 py-1 bg-red-100 text-red-700 rounded-lg">
+                                        Xóa
                                     </a>
 
                                     <a href="${pageContext.request.contextPath}/manager/staff/update-status?userId=${u.id}&status=${u.active ? 0 : 1}"
-                                       class="bg-yellow-500 text-white px-3 py-1 rounded">
-                                        Toggle
+                                       class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-lg">
+                                        Khóa/Mở
                                     </a>
 
                                 </td>
@@ -239,15 +235,13 @@
                 <!-- PAGINATION -->
                 <c:if test="${totalPages > 1}">
                     <div class="flex justify-center gap-2 mt-6">
-
                         <c:forEach begin="1" end="${totalPages}" var="pageNumber">
                             <a href="${pageContext.request.contextPath}/manager/staff?page=${pageNumber}&keyword=${keyword}&status=${status}"
-                               class="px-3 py-2 border rounded
-                               ${pageNumber == currentPage ? 'bg-cafe-brown text-white' : 'bg-white'}">
+                               class="px-3 py-2 rounded-lg border"
+                               style="${pageNumber == currentPage ? 'background:#27301B;color:white;border-color:#27301B;' : 'background:white;border-color:#ccc;'}">
                                     ${pageNumber}
                             </a>
                         </c:forEach>
-
                     </div>
                 </c:if>
 

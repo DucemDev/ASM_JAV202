@@ -5,30 +5,21 @@
 <html lang="vi">
 <head>
 <meta charset="UTF-8">
-<title>Order</title>
+<title>Hóa đơn</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<script>
-tailwind.config = {
-    theme: {
-        extend: {
-            colors: {
-                cafe: {
-                    bg: '#f6efe7',
-                    brown: '#8b5e3c'
-                }
-            }
-        }
-    }
-}
-</script>
-
 </head>
 
-<body class="bg-cafe-bg">
+<body class="min-h-screen relative"
+      style="background:linear-gradient(135deg,#e6e8dc,#cfd5a5);">
 
-<div class="flex">
+<!-- TEXTURE -->
+<div class="absolute inset-0 z-0 opacity-30 pointer-events-none"
+     style="background-image:url('https://grainy-gradients.vercel.app/noise.svg');">
+</div>
+
+<div class="flex relative z-10">
 <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
 
 <div id="mainContent" class="flex-1 flex flex-col ml-64">
@@ -37,16 +28,17 @@ tailwind.config = {
 
 <div class="p-8">
 
-<div class="bg-white rounded-2xl shadow-lg p-6 border max-w-[1400px] mx-auto">
+<div class="rounded-2xl shadow-2xl p-6 border backdrop-blur-xl max-w-[1400px] mx-auto"
+     style="background:rgba(255,255,255,0.28); border:1px solid rgba(255,255,255,0.3);">
 
 <!-- HEADER -->
 <div class="flex justify-between items-center mb-6">
     <a href="${pageContext.request.contextPath}/seller/tables"
-       class="text-blue-500 hover:underline text-sm">
+       class="text-[#41521E] hover:underline text-sm">
         ← Quay lại bàn
     </a>
 
-    <h2 class="text-xl font-semibold">HÓA ĐƠN</h2>
+    <h2 class="text-xl font-semibold text-[#27301B]">HÓA ĐƠN</h2>
 </div>
 
 <!-- ERROR -->
@@ -57,8 +49,8 @@ tailwind.config = {
 </c:if>
 
 <!-- INFO -->
-<div class="mb-6 text-sm">
-    <p>Mã bill: <b>${bill.code}</b></p>
+<div class="mb-6 text-sm text-[#27301B]">
+    <p>Mã hóa đơn: <b>${bill.code}</b></p>
     <p>Bàn: <b>${tableId}</b></p>
 </div>
 
@@ -66,45 +58,53 @@ tailwind.config = {
 
 <!-- MENU -->
 <div>
-    <h3 class="font-semibold mb-3">Menu</h3>
+    <h3 class="font-semibold mb-3 text-[#27301B]">Menu</h3>
 
     <form method="get"
           action="${pageContext.request.contextPath}/seller/order"
           class="grid grid-cols-1 md:grid-cols-3 gap-3 mb-4">
+
         <input type="hidden" name="tableId" value="${tableId}">
+
         <input type="text"
                name="keyword"
                value="${keyword}"
-               placeholder="Tim mon..."
-               class="border rounded-lg px-4 py-2">
+               placeholder="Tìm món..."
+               class="rounded-lg px-4 py-2 border backdrop-blur-xl"
+               style="background:rgba(255,255,255,0.35); border-color:#909632;">
 
-        <select name="categoryId" class="border rounded-lg px-4 py-2">
-            <option value="">Tat ca loai</option>
+        <select name="categoryId"
+                class="rounded-lg px-4 py-2 border backdrop-blur-xl"
+                style="background:rgba(255,255,255,0.35); border-color:#909632;">
+            <option value="">Tất cả loại</option>
             <c:forEach items="${categories}" var="c">
                 <option value="${c.id}" ${filterCategoryId == c.id ? 'selected' : ''}>${c.name}</option>
             </c:forEach>
         </select>
 
-        <button class="bg-gray-700 text-white px-5 py-2 rounded-lg hover:opacity-90">
-            Tim kiem
+        <button class="text-white px-5 py-2 rounded-lg"
+                style="background:#41521E;">
+            Tìm kiếm
         </button>
     </form>
 
     <div class="grid grid-cols-2 gap-4">
 
         <c:forEach var="d" items="${drinks}">
-            <div class="border rounded-xl shadow hover:shadow-lg transition">
+            <div class="rounded-xl shadow border backdrop-blur-xl"
+                 style="background:rgba(255,255,255,0.3);">
 
                 <img src="${pageContext.request.contextPath}/${d.image}"
-                     class="w-full h-36 object-cover"/>
+                     class="w-full h-36 object-cover rounded-t-xl"/>
 
                 <div class="p-3">
-                    <p class="font-medium">${d.name}</p>
-                    <p class="text-sm text-gray-500">${d.price} đ</p>
+                    <p class="font-medium text-[#27301B]">${d.name}</p>
+                    <p class="text-sm text-[#41521E]">${d.price} đ</p>
 
                     <button
                         onclick="addDrink(${d.id}, ${tableId})"
-                        class="w-full bg-cafe-brown text-white py-1 mt-2 rounded hover:scale-105 transition">
+                        class="w-full text-white py-1 mt-2 rounded"
+                        style="background:#27301B;">
                         + Thêm
                     </button>
                 </div>
@@ -118,7 +118,8 @@ tailwind.config = {
         <div class="flex justify-center gap-2 mt-6">
             <c:forEach begin="1" end="${totalPages}" var="pageNumber">
                 <a href="${pageContext.request.contextPath}/seller/order?tableId=${tableId}&page=${pageNumber}&keyword=${keyword}&categoryId=${filterCategoryId}"
-                   class="px-3 py-2 rounded-lg border ${pageNumber == currentPage ? 'bg-cafe-brown text-white border-cafe-brown' : 'bg-white text-gray-700 border-gray-300 hover:bg-gray-50'}">
+                   class="px-3 py-2 rounded-lg border"
+                   style="${pageNumber == currentPage ? 'background:#27301B;color:white;border-color:#27301B;' : 'background:white;border-color:#ccc;'}">
                     ${pageNumber}
                 </a>
             </c:forEach>
@@ -129,75 +130,81 @@ tailwind.config = {
 <!-- BILL -->
 <div id="bill-area">
 
-    <h3 class="font-semibold mb-3">Chi tiết hóa đơn</h3>
+    <h3 class="font-semibold mb-4 text-[#27301B] text-lg">
+        Chi tiết hóa đơn
+    </h3>
 
-    <table class="w-full text-sm border rounded-xl overflow-hidden">
-        <thead class="bg-[#f1e4d7]">
-            <tr>
-                <th class="p-2">Món</th>
-                <th>Số lượng</th>
-                <th>Giá</th>
-            </tr>
-        </thead>
+    <div class="rounded-2xl overflow-hidden backdrop-blur-xl border shadow-xl"
+         style="background:rgba(255,255,255,0.35); border:1px solid rgba(255,255,255,0.35);">
 
-        <tbody class="text-center">
+        <table class="w-full text-sm text-center">
+
+            <thead style="background:linear-gradient(135deg,#dfe6c3,#cfd5a5);" class="text-[#27301B]">
+                <tr>
+                    <th class="p-3 text-left">Món</th>
+                    <th>Số lượng</th>
+                    <th>Giá</th>
+                </tr>
+            </thead>
+
+            <tbody>
 
             <c:forEach var="item" items="${billDetails}">
-                <tr class="border-t">
-                    <td>
+                <tr class="border-t border-white/40 hover:bg-white/20 transition">
+
+                    <td class="p-3 text-left font-medium text-[#27301B]">
                         <c:forEach var="d" items="${drinks}">
                             <c:if test="${d.id == item.drinkId}">
                                 ${d.name}
                             </c:if>
                         </c:forEach>
                     </td>
+
                     <td>
                         <div class="flex items-center justify-center gap-2">
-
-                            <!-- - -->
                             <button onclick="updateQty(${bill.id}, ${item.drinkId}, ${item.quantity - 1})"
-                                class="bg-gray-300 px-2 rounded hover:bg-gray-400">
-                                -
-                            </button>
+                                class="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300">-</button>
 
-                            <span>${item.quantity}</span>
+                            <span class="font-semibold">${item.quantity}</span>
 
-                            <!-- + -->
                             <button onclick="updateQty(${bill.id}, ${item.drinkId}, ${item.quantity + 1})"
-                                class="bg-gray-300 px-2 rounded hover:bg-gray-400">
-                                +
-                            </button>
-
+                                class="px-2 py-1 rounded bg-gray-200 hover:bg-gray-300">+</button>
                         </div>
                     </td>
-                    <td>${item.price} đ</td>
+
+                    <td class="text-[#41521E] font-medium">${item.price} đ</td>
                 </tr>
             </c:forEach>
 
-        </tbody>
-    </table>
+            <c:if test="${empty billDetails}">
+                <tr>
+                    <td colspan="3" class="p-4 text-gray-500">Chưa có món nào</td>
+                </tr>
+            </c:if>
 
-    <div class="mt-4 text-right font-semibold text-lg">
-        Tổng: ${total} đ
+            </tbody>
+        </table>
     </div>
 
-    <!-- BUTTON -->
+    <div class="mt-5 flex justify-between items-center">
+        <span class="text-sm text-gray-600">Tổng thanh toán</span>
+        <span class="text-xl font-bold text-[#27301B]">${total} đ</span>
+    </div>
+
     <div class="flex gap-2 mt-4">
 
-        <!-- HỦY -->
         <form method="post"
               action="${pageContext.request.contextPath}/seller/order/cancel"
               class="w-1/2"
-              onsubmit="event.preventDefault(); openModal(this, 'Bạn chắc chắn muốn HỦY bàn?')">
+              onsubmit="event.preventDefault(); openModal(this, 'Bạn chắc chắn muốn hủy bàn?')">
 
             <input type="hidden" name="tableId" value="${tableId}" />
 
-            <button class="w-full bg-red-500 text-white py-2 rounded hover:opacity-90">
+            <button class="w-full bg-red-500 text-white py-2 rounded">
                 Hủy bàn
             </button>
         </form>
 
-        <!-- THANH TOÁN -->
         <form method="post"
               action="${pageContext.request.contextPath}/seller/order/pay"
               class="w-1/2"
@@ -207,7 +214,7 @@ tailwind.config = {
             <input type="hidden" name="tableId" value="${tableId}"/>
 
             <button
-                class="w-full bg-blue-500 text-white py-2 rounded hover:opacity-90
+                class="w-full bg-blue-500 text-white py-2 rounded
                 ${empty billDetails ? 'opacity-50 cursor-not-allowed' : ''}"
                 ${empty billDetails ? 'disabled' : ''}>
                 Thanh toán
@@ -228,72 +235,54 @@ tailwind.config = {
 
 </div>
 
+<!-- SCRIPT GIỮ NGUYÊN -->
 <script>
 function addDrink(drinkId, tableId) {
-
     fetch("${pageContext.request.contextPath}/seller/order", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
         body: "drinkId=" + drinkId + "&tableId=" + tableId
-    })
-    .then(() => {
-        loadBill(tableId);
-    });
+    }).then(() => loadBill(tableId));
 }
-function updateQty(billId, drinkId, quantity) {
 
+function updateQty(billId, drinkId, quantity) {
     fetch("${pageContext.request.contextPath}/seller/order", {
         method: "POST",
-        headers: {
-            "Content-Type": "application/x-www-form-urlencoded"
-        },
+        headers: {"Content-Type": "application/x-www-form-urlencoded"},
         body: "action=update"
             + "&billId=" + billId
             + "&drinkId=" + drinkId
             + "&quantity=" + quantity
-            + "&tableId=${tableId}"   // 🔥 THÊM DÒNG NÀY
-    })
-    .then(() => loadBill(${tableId}));
+            + "&tableId=${tableId}"
+    }).then(() => loadBill(${tableId}));
 }
-function loadBill(tableId) {
 
+function loadBill(tableId) {
     fetch("${pageContext.request.contextPath}/seller/order?tableId=" + tableId)
         .then(res => res.text())
         .then(html => {
-
             let parser = new DOMParser();
             let doc = parser.parseFromString(html, "text/html");
-
             let newBill = doc.querySelector("#bill-area");
-
             document.querySelector("#bill-area").innerHTML = newBill.innerHTML;
         });
 }
 </script>
+
+<!-- MODAL -->
 <div id="confirmModal" class="fixed inset-0 bg-black/40 hidden items-center justify-center z-50">
-
-    <div class="bg-white rounded-xl p-6 w-[350px] text-center shadow-lg">
-
-        <h3 id="modalTitle" class="text-lg font-semibold mb-4">Xác nhận</h3>
-
+    <div class="rounded-xl p-6 w-[350px] text-center shadow-lg backdrop-blur-xl"
+         style="background:rgba(255,255,255,0.4);">
+        <h3 class="text-lg font-semibold mb-4">Xác nhận</h3>
         <p id="modalMessage" class="text-sm text-gray-600 mb-6"></p>
 
         <div class="flex gap-2">
-            <button onclick="closeModal()"
-                    class="w-1/2 bg-gray-300 py-2 rounded">
-                Hủy
-            </button>
-
-            <button id="confirmBtn"
-                    class="w-1/2 bg-blue-500 text-white py-2 rounded">
-                OK
-            </button>
+            <button onclick="closeModal()" class="w-1/2 bg-gray-300 py-2 rounded">Hủy</button>
+            <button id="confirmBtn" class="w-1/2 text-white py-2 rounded" style="background:#27301B;">Đồng ý</button>
         </div>
-
     </div>
 </div>
+
 <script>
 let currentForm = null;
 
@@ -312,5 +301,6 @@ document.getElementById("confirmBtn").onclick = function () {
     if (currentForm) currentForm.submit();
 };
 </script>
+
 </body>
 </html>

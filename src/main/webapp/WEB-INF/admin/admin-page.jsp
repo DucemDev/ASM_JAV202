@@ -8,379 +8,209 @@
 <html lang="vi">
 
 <head>
-
 <meta charset="UTF-8">
-<title>Admin Dashboard</title>
+<title>Dashboard | PolyCafe</title>
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 
-<script>
-tailwind.config = {
-    theme: {
-        extend: {
-            colors: {
-                cafe: {
-                    bg: '#f6efe7',      // 🔥 đậm hơn nhẹ
-                    brown: '#8b5e3c'
-                }
-            }
-        }
-    }
-}
-</script>
-
 </head>
 
-<body class="bg-cafe-bg">
+<body class="min-h-screen relative overflow-hidden"
+      style="
+      background:
+      linear-gradient(135deg,#e6e8dc,#cfd5a5);
+      ">
 
-<div class="flex h-screen">
+<!-- TEXTURE OVERLAY -->
+<div class="absolute inset-0 z-0 opacity-30 pointer-events-none"
+     style="
+     background-image:url('https://grainy-gradients.vercel.app/noise.svg');
+     "></div>
 
-<!-- SIDEBAR -->
+<div class="flex h-screen relative z-10">
+
 <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
 
-<!-- RIGHT CONTENT -->
 <div id="mainContent"
-class="flex-1 flex flex-col bg-cafe-bg ml-64 transition-all duration-300">
+class="flex-1 flex flex-col ml-64 transition-all duration-300">
 
-<!-- HEADER -->
 <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
 
-<!-- CONTENT -->
-<div class="p-8">
+<div class="p-8 overflow-auto">
 
-<div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
-
-<!-- HEADER -->
-<div class="flex justify-between items-center mb-5">
-    <h1 class="text-lg font-semibold text-gray-800">
-        Thống kê
+<!-- TITLE -->
+<div class="mb-8">
+    <h1 class="text-3xl font-bold text-[#27301B]">
+        Dashboard
     </h1>
-</div>
-    <form method="get" class="mb-6 flex gap-3">
-        <input type="date" name="fromDate"
-               value="${param.fromDate}"
-               class="border px-3 py-1 rounded">
-
-        <input type="date" name="toDate"
-               value="${param.toDate}"
-               class="border px-3 py-1 rounded">
-
-        <button class="bg-cafe-brown text-white px-4 py-1 rounded">
-            Lọc
-        </button>
-    </form>
-<!-- MAIN GRID -->
-<div class="max-w-[1300px] mx-auto">
-<div class="grid grid-cols-3 gap-6">
-
-<!-- LEFT -->
-<div class="col-span-2 grid grid-cols-2 gap-6">
-
-<!-- DOANH THU -->
-<div class="group bg-gradient-to-br from-white to-[#f1e4d7] border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition">
-
-<div class="flex justify-between items-center">
-<span class="text-gray-500 text-sm">Tổng doanh thu</span>
-
-<svg class="w-5 h-5 text-gray-400 group-hover:text-cafe-brown transition"
-fill="none" stroke="currentColor" stroke-width="2"
-viewBox="0 0 24 24">
-<path d="M12 1v22M17 5H9a4 4 0 000 8h6a4 4 0 010 8H7"/>
-</svg>
+    <p class="text-[#41521E]">
+        Tổng quan hoạt động quán
+    </p>
 </div>
 
-    <div class="text-2xl font-semibold text-gray-800 mt-4">
-        ${totalRevenue} ₫
-    </div>
+<!-- FILTER -->
+<form method="get" class="mb-8 flex gap-3">
 
-</div>
+    <input type="date" name="fromDate"
+           value="${param.fromDate}"
+           class="px-4 py-2 rounded-xl border backdrop-blur-xl"
+           style="
+           background:rgba(255,255,255,0.25);
+           border-color:rgba(255,255,255,0.4);
+           ">
 
-<!-- HÔM NAY -->
-<div class="group bg-gradient-to-br from-white to-[#f1e4d7] border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition">
+    <input type="date" name="toDate"
+           value="${param.toDate}"
+           class="px-4 py-2 rounded-xl border backdrop-blur-xl"
+           style="
+           background:rgba(255,255,255,0.25);
+           border-color:rgba(255,255,255,0.4);
+           ">
 
-<div class="flex justify-between items-center">
-<span class="text-gray-500 text-sm">Hôm nay</span>
+    <button class="px-6 py-2 rounded-xl text-white font-semibold shadow-lg transition hover:scale-105"
+            style="background:linear-gradient(135deg,#27301B,#41521E);">
+        Lọc
+    </button>
 
-<svg class="w-5 h-5 text-gray-400 group-hover:text-cafe-brown transition"
-fill="none" stroke="currentColor" stroke-width="2"
-viewBox="0 0 24 24">
-<path d="M3 17l6-6 4 4 7-7"/>
-</svg>
-</div>
+</form>
 
-    <div class="text-2xl font-semibold text-gray-800 mt-4">
-        ${todayRevenue} ₫
-    </div>
-
-</div>
-
-<!-- HÓA ĐƠN -->
-<div class="group bg-gradient-to-br from-white to-[#f1e4d7] border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition">
-
-<div class="flex justify-between items-center">
-<span class="text-gray-500 text-sm">Hóa đơn</span>
-
-<svg class="w-5 h-5 text-gray-400 group-hover:text-cafe-brown transition"
-fill="none" stroke="currentColor" stroke-width="2"
-viewBox="0 0 24 24">
-<path d="M6 2h12v20l-6-3-6 3z"/>
-</svg>
-</div>
-
-    <div class="text-2xl font-semibold text-gray-800 mt-4">
-        ${billCount}
-    </div>
-
-</div>
-
-<!-- BÀN -->
-<div class="group bg-gradient-to-br from-white to-[#f1e4d7] border border-gray-200 rounded-xl p-6 shadow-sm hover:shadow-lg hover:-translate-y-1 transition">
-
-<div class="flex justify-between items-center">
-<span class="text-gray-500 text-sm">Bàn đang dùng</span>
-
-<svg class="w-5 h-5 text-gray-400 group-hover:text-cafe-brown transition"
-fill="none" stroke="currentColor" stroke-width="2"
-viewBox="0 0 24 24">
-<path d="M3 10h18M5 10v10M19 10v10"/>
-</svg>
-</div>
-
-    <div class="text-2xl font-semibold text-gray-800 mt-4">
-        ${usingTables}
-    </div>
-
-</div>
-
-</div>
-
-<!-- RIGHT -->
-<div class="bg-white border border-gray-200 rounded-xl p-6 shadow-sm">
-<h2 class="text-sm text-gray-500 mb-4">
-5 Đồ uống bán chạy nhất
-</h2>
-<canvas id="pieChart"></canvas>
-</div>
-
-</div>
-</div>
-
-    <!-- REVENUE CHART -->
-    <div class="mt-10 flex justify-center">
-
-        <div class="max-w-4xl w-full bg-white rounded-2xl shadow-md p-6">
-
-            <!-- HEADER -->
-            <div class="flex justify-between items-center mb-6">
-                <div>
-                    <h2 class="text-lg font-semibold text-gray-800">
-                        Doanh thu
-                    </h2>
-                    <p class="text-sm text-gray-500">
-                        Thống kê theo ngày
-                    </p>
-                </div>
-
-                <!-- FILTER -->
-                <form method="get" action="${pageContext.request.contextPath}/admin">
-                    <select name="days"
-                            onchange="this.form.submit()"
-                            class="border px-3 py-2 rounded-lg text-sm shadow-sm">
-
-                        <option value="7" ${days == 7 ? 'selected' : ''}>7 ngày</option>
-                        <option value="30" ${days == 30 ? 'selected' : ''}>30 ngày</option>
-                        <option value="90" ${days == 90 ? 'selected' : ''}>90 ngày</option>
-
-                    </select>
-                </form>
-            </div>
-
-            <!-- CHART -->
-            <div class="h-[300px]">
-                <canvas id="revenueChart"></canvas>
-            </div>
-
-        </div>
-
-    </div>
-    <script>
-        const revenueData = ${revenueData != null ? revenueData : "[]"} || [];
-
-        const revenueLabels = revenueData.map(e => e.x);
-        const revenueValues = revenueData.map(e => e.y);
-
-        new Chart(document.getElementById('revenueChart'), {
-            type: 'bar',
-            data: {
-                labels: revenueLabels,
-                datasets: [{
-                    label: 'Doanh thu',
-                    data: revenueValues,
-                    backgroundColor: '#8b5e3c',
-                    borderRadius: 8,
-                    barThickness: 40
-                }]
-            },
-            options: {
-                responsive: true,
-                maintainAspectRatio: false,
-
-                plugins: {
-                    legend: { display: false },
-
-                    tooltip: {
-                        callbacks: {
-                            label: function(context) {
-                                return context.raw.toLocaleString('vi-VN') + ' ₫';
-                            }
-                        }
-                    }
-                },
-
-                scales: {
-                    x: {
-                        grid: { display: false }
-                    },
-                    y: {
-                        ticks: {
-                            callback: function(value) {
-                                return value.toLocaleString('vi-VN') + ' ₫';
-                            }
-                        }
-                    }
-                },
-
-                animation: {
-                    duration: 1000,
-                    easing: 'easeOutQuart'
-                }
-            }
-        });
-    </script>
-<!-- QUICK ACTION (GIỮ NGUYÊN NÚT CỦA BẠN) -->
-<div class="mt-10">
-
-<h2 class="text-lg font-semibold text-gray-800 mb-4">
-Quản lý
-</h2>
-
+<!-- CARDS -->
 <div class="grid grid-cols-4 gap-6">
 
-<!-- NHÂN VIÊN -->
+<div class="p-6 rounded-2xl shadow-xl backdrop-blur-xl border hover:scale-105 transition"
+     style="
+     background:rgba(255,255,255,0.25);
+     border:1px solid rgba(255,255,255,0.3);
+     ">
+    <p class="text-[#909632]">Tổng doanh thu</p>
+    <h2 class="text-3xl font-bold text-[#27301B] mt-2">
+        ${totalRevenue} ₫
+    </h2>
+</div>
+
+<div class="p-6 rounded-2xl shadow-xl backdrop-blur-xl border hover:scale-105 transition"
+     style="background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.3);">
+    <p class="text-[#909632]">Hôm nay</p>
+    <h2 class="text-3xl font-bold text-[#27301B] mt-2">
+        ${todayRevenue} ₫
+    </h2>
+</div>
+
+<div class="p-6 rounded-2xl shadow-xl backdrop-blur-xl border hover:scale-105 transition"
+     style="background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.3);">
+    <p class="text-[#909632]">Hóa đơn</p>
+    <h2 class="text-3xl font-bold text-[#27301B] mt-2">
+        ${billCount}
+    </h2>
+</div>
+
+<div class="p-6 rounded-2xl shadow-xl backdrop-blur-xl border hover:scale-105 transition"
+     style="background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.3);">
+    <p class="text-[#909632]">Bàn đang dùng</p>
+    <h2 class="text-3xl font-bold text-[#27301B] mt-2">
+        ${usingTables}
+    </h2>
+</div>
+
+</div>
+
+<!-- CHART -->
+<div class="grid grid-cols-3 gap-6 mt-10">
+
+<div class="col-span-2 p-6 rounded-2xl shadow-xl backdrop-blur-xl border"
+     style="background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.3);">
+    <h2 class="text-lg font-semibold mb-4 text-[#27301B]">
+        Doanh thu
+    </h2>
+    <canvas id="revenueChart"></canvas>
+</div>
+
+<div class="p-6 rounded-2xl shadow-xl backdrop-blur-xl border"
+     style="background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.3);">
+    <h2 class="text-lg font-semibold mb-4 text-[#27301B]">
+        Top đồ uống
+    </h2>
+    <canvas id="pieChart"></canvas>
+</div>
+
+</div>
+
+<!-- QUICK -->
+<div class="mt-10">
+<h2 class="text-lg font-semibold mb-4 text-[#27301B]">
+Quản lý nhanh
+</h2>
+
+<div class="grid grid-cols-5 gap-6">
+
 <a href="${pageContext.request.contextPath}/manager/staff"
-class="group bg-white border border-gray-200 p-5 rounded-xl text-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition">
-
-<svg class="w-6 h-6 mx-auto text-gray-500 group-hover:text-cafe-brown transition mb-2"
-fill="none" stroke="currentColor" stroke-width="2"
-viewBox="0 0 24 24">
-<path d="M16 14c2 0 4 2 4 4H4c0-2 2-4 4-4"/>
-<circle cx="12" cy="8" r="4"/>
-</svg>
-
-<div class="text-sm text-gray-700">Quản lý nhân viên</div>
-
+class="p-5 rounded-xl backdrop-blur-xl border shadow-xl hover:scale-105 transition text-center"
+style="background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.3);">
+Nhân viên
 </a>
 
-
-<!-- LOẠI -->
 <a href="${pageContext.request.contextPath}/manager/categories"
-class="group bg-white border border-gray-200 p-5 rounded-xl text-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition">
-
-<svg class="w-6 h-6 mx-auto text-gray-500 group-hover:text-cafe-brown transition mb-2"
-fill="none" stroke="currentColor" stroke-width="2"
-viewBox="0 0 24 24">
-<path d="M3 7h18M3 12h18M3 17h18"/>
-</svg>
-
-<div class="text-sm text-gray-700">Quản lý loại</div>
-
+class="p-5 rounded-xl backdrop-blur-xl border shadow-xl hover:scale-105 transition text-center"
+style="background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.3);">
+Loại
 </a>
 
-  <!-- BÀN -->
-    <a href="${pageContext.request.contextPath}/manager/tables"
-    class="group bg-white border border-gray-200 p-5 rounded-xl text-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition">
+<a href="${pageContext.request.contextPath}/manager/tables"
+class="p-5 rounded-xl backdrop-blur-xl border shadow-xl hover:scale-105 transition text-center"
+style="background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.3);">
+Bàn
+</a>
 
-    <svg class="w-6 h-6 mx-auto text-gray-500 group-hover:text-cafe-brown transition mb-2"
-    fill="none" stroke="currentColor" stroke-width="2"
-    viewBox="0 0 24 24">
-    <path d="M3 10h18M5 10v10M19 10v10"/>
-    </svg>
-
-    <div class="text-sm text-gray-700">Quản lý bàn</div>
-
-    </a>
-
-<!-- ĐỒ UỐNG -->
 <a href="${pageContext.request.contextPath}/manager/drinks"
-class="group bg-white border border-gray-200 p-5 rounded-xl text-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition">
-
-
-<svg class="w-6 h-6 mx-auto text-gray-500 group-hover:text-cafe-brown transition mb-2"
-fill="none" stroke="currentColor" stroke-width="2"
-viewBox="0 0 24 24">
-<path d="M8 2h8l-1 8H9z"/>
-<path d="M9 10h6v10H9z"/>
-</svg>
-
-<div class="text-sm text-gray-700">Quản lý đồ uống</div>
-
+class="p-5 rounded-xl backdrop-blur-xl border shadow-xl hover:scale-105 transition text-center"
+style="background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.3);">
+Đồ uống
 </a>
 
-
-<!-- HÓA ĐƠN -->
 <a href="${pageContext.request.contextPath}/manager/bill"
-class="group bg-white border border-gray-200 p-5 rounded-xl text-center shadow-sm hover:shadow-lg hover:-translate-y-1 transition">
-
-<svg class="w-6 h-6 mx-auto text-gray-500 group-hover:text-cafe-brown transition mb-2"
-fill="none" stroke="currentColor" stroke-width="2"
-viewBox="0 0 24 24">
-<path d="M6 2h12v20l-6-3-6 3z"/>
-</svg>
-
-<div class="text-sm text-gray-700">Quản lý hóa đơn</div>
-
+class="p-5 rounded-xl backdrop-blur-xl border shadow-xl hover:scale-105 transition text-center"
+style="background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.3);">
+Hóa đơn
 </a>
 
 </div>
-
 </div>
 
 </div>
 </div>
-
 </div>
 
-</div>
 <script>
-    const labels = ${labels != null ? labels : "['No data']"};
-    const data = ${data != null ? data : "[1]"};
+const revenueData = ${revenueData != null ? revenueData : "[]"} || [];
+const labels = revenueData.map(e => e.x);
+const values = revenueData.map(e => e.y);
 
-    new Chart(document.getElementById('pieChart'), {
-        type: 'doughnut',
-        data: {
-            labels: labels,
-            datasets: [{
-                data: data,
-                backgroundColor: [
-                    '#8b5e3c',
-                    '#a67c52',
-                    '#c19a6b',
-                    '#d6bfa9',
-                    '#f1e4d7'
-                ],
-                borderWidth: 0
-            }]
-        },
-        options: {
-            plugins: {
-                legend: {
-                    position: 'bottom'
-                }
-            },
-            cutout: '70%'
-        }
-    });
+new Chart(document.getElementById('revenueChart'), {
+    type: 'bar',
+    data: {
+        labels: labels,
+        datasets: [{
+            data: values,
+            backgroundColor: '#41521E',
+            borderRadius: 10
+        }]
+    },
+    options: { plugins: { legend: { display: false } } }
+});
+
+new Chart(document.getElementById('pieChart'), {
+    type: 'doughnut',
+    data: {
+        labels: ${labels != null ? labels : "['No data']"},
+        datasets: [{
+            data: ${data != null ? data : "[1]"},
+            backgroundColor: [
+                '#27301B','#41521E','#909632','#99A558','#DDDAA8'
+            ]
+        }]
+    }
+});
 </script>
 
 </body>

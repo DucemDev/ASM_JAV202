@@ -2,11 +2,10 @@
 <%@ page isELIgnored="false" %>
 <%@ taglib uri="jakarta.tags.core" prefix="c" %>
 
-<div class="py-4 bg-gradient-to-r from-[#f1e4d7] to-white border-b border-gray-300 flex items-center justify-between px-8 shadow-md">
-
+<div class="py-4 bg-gradient-to-r from-[#DDDAA8] to-white border-b border-[#99A558] flex items-center justify-between px-8 shadow-md">
 
     <!-- TITLE -->
-    <div class="text-xl font-bold text-gray-800 tracking-wide">
+    <div class="text-xl font-bold tracking-wide" style="color:#27301B;">
 
         <c:choose>
             <c:when test="${sessionScope.user != null && sessionScope.user.role == 2}">
@@ -28,8 +27,10 @@
     <div class="flex items-center gap-4">
 
         <!-- AVATAR -->
-        <div class="w-11 h-11 rounded-full bg-[#e6d3c3] flex items-center justify-center shadow-sm">
-            <svg class="w-5 h-5 text-[#8b5e3c]"
+        <div class="w-11 h-11 rounded-full flex items-center justify-center shadow-sm"
+             style="background:#DDDAA8;">
+            <svg class="w-5 h-5"
+                 style="color:#41521E"
                  fill="none" stroke="currentColor" stroke-width="2"
                  viewBox="0 0 24 24">
                 <path d="M12 15a4 4 0 100-8 4 4 0 000 8z"/>
@@ -41,7 +42,7 @@
         <div class="text-right">
 
             <!-- NAME -->
-            <div class="font-semibold text-gray-800">
+            <div class="font-semibold" style="color:#27301B;">
                 <c:choose>
                     <c:when test="${sessionScope.user != null}">
                         ${sessionScope.user.fullname}
@@ -53,7 +54,7 @@
             </div>
 
             <!-- ROLE -->
-            <div class="text-xs text-gray-500">
+            <div class="text-xs" style="color:#41521E;">
                 <c:choose>
                     <c:when test="${sessionScope.user != null && sessionScope.user.role == 2}">
                         Admin
@@ -76,6 +77,5 @@
         </div>
 
     </div>
-
 
 </div>

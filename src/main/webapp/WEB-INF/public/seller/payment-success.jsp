@@ -9,31 +9,22 @@
 
 <script src="https://cdn.tailwindcss.com"></script>
 
-<script>
-tailwind.config = {
-    theme: {
-        extend: {
-            colors: {
-                cafe: {
-                    bg: '#f6efe7',
-                    brown: '#8b5e3c'
-                }
-            }
-        }
-    }
-}
-</script>
-
 </head>
 
-<body class="bg-cafe-bg">
+<body class="min-h-screen relative"
+      style="background:linear-gradient(135deg,#e6e8dc,#cfd5a5);">
 
-<div class="flex">
+<!-- TEXTURE -->
+<div class="absolute inset-0 z-0 opacity-30 pointer-events-none"
+     style="background-image:url('https://grainy-gradients.vercel.app/noise.svg');">
+</div>
+
+<div class="flex relative z-10">
 
 <!-- SIDEBAR -->
 <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
 
-<!-- MAIN (CHUẨN GIỐNG HOME → KHÔNG LỆCH) -->
+<!-- MAIN -->
 <div id="mainContent" class="flex-1 flex flex-col ml-64 transition-all duration-300">
 
 <!-- HEADER -->
@@ -44,17 +35,21 @@ tailwind.config = {
 
 <div class="max-w-[600px] mx-auto">
 
-<div class="bg-white rounded-2xl shadow-lg p-6 border">
+<!-- CARD -->
+<div class="rounded-2xl shadow-2xl p-6 border backdrop-blur-xl"
+     style="background:rgba(255,255,255,0.35); border:1px solid rgba(255,255,255,0.35);">
 
 <!-- HEADER BILL -->
-<div class="text-center border-b pb-4 mb-4">
-    <h2 class="text-xl font-bold">☕ Cafe POS</h2>
-    <p class="text-xs text-gray-400">Hóa đơn thanh toán</p>
+<div class="text-center border-b pb-4 mb-5">
+    <h2 class="text-xl font-bold text-[#27301B] tracking-wide">
+        ☕ Cafe POS
+    </h2>
+    <p class="text-xs text-gray-500">Hóa đơn thanh toán</p>
 </div>
 
 <!-- INFO -->
-<div class="text-sm mb-4 space-y-1">
-    <p>Mã bill: <b>${bill.code}</b></p>
+<div class="text-sm mb-5 space-y-1 text-[#27301B]">
+    <p>Mã hóa đơn: <b>${bill.code}</b></p>
     <p>Bàn: <b>${bill.tableId}</b></p>
     <p>Thời gian:
         <b>
@@ -65,21 +60,25 @@ tailwind.config = {
 </div>
 
 <!-- TABLE -->
-<table class="w-full text-sm border-t border-b mb-4">
-<thead>
-<tr class="text-left">
-    <th>Món</th>
-    <th>SL</th>
-    <th class="text-right">Giá</th>
+<div class="rounded-xl overflow-hidden border"
+     style="border-color:rgba(255,255,255,0.4);">
+
+<table class="w-full text-sm">
+
+<thead style="background:linear-gradient(135deg,#dfe6c3,#cfd5a5);" class="text-[#27301B]">
+<tr>
+    <th class="p-3 text-left">Món</th>
+    <th class="text-center">SL</th>
+    <th class="text-right pr-3">Giá</th>
 </tr>
 </thead>
 
 <tbody>
 
 <c:forEach var="item" items="${billDetails}">
-<tr>
+<tr class="border-t border-white/40 hover:bg-white/20 transition">
 
-<td>
+<td class="p-3 font-medium">
 <c:forEach var="d" items="${drinks}">
     <c:if test="${d.id == item.drinkId}">
         ${d.name}
@@ -87,29 +86,46 @@ tailwind.config = {
 </c:forEach>
 </td>
 
-<td>${item.quantity}</td>
+<td class="text-center">${item.quantity}</td>
 
-<td class="text-right">${item.price} đ</td>
+<td class="text-right pr-3 text-[#41521E] font-medium">
+    ${item.price} đ
+</td>
 
 </tr>
 </c:forEach>
 
+<c:if test="${empty billDetails}">
+<tr>
+    <td colspan="3" class="text-center p-4 text-gray-500">
+        Chưa có món nào
+    </td>
+</tr>
+</c:if>
+
 </tbody>
+
 </table>
 
+</div>
+
 <!-- TOTAL -->
-<div class="text-right text-lg font-bold mb-4">
-    Tổng: ${total} đ
+<div class="flex justify-between items-center mt-5 border-t pt-4">
+    <span class="text-sm text-gray-600">Tổng thanh toán</span>
+    <span class="text-xl font-bold text-[#27301B]">
+        ${total} đ
+    </span>
 </div>
 
 <!-- FOOTER -->
-<div class="text-center text-xs text-gray-400 mb-4">
+<div class="text-center text-xs text-gray-500 mt-6 mb-4">
     Cảm ơn quý khách ❤️ Hẹn gặp lại!
 </div>
 
 <!-- BUTTON -->
 <a href="${pageContext.request.contextPath}/seller/tables"
-   class="block text-center bg-blue-500 text-white py-2 rounded hover:opacity-90">
+   class="block text-center text-white py-2 rounded-lg shadow hover:scale-105 transition"
+   style="background:#27301B;">
     Quay lại danh sách bàn
 </a>
 

@@ -5,36 +5,24 @@
 <html>
 
 <head>
-
-<title>Home</title>
-
+<title>Trang chủ</title>
 <script src="https://cdn.tailwindcss.com"></script>
-
-<script>
-tailwind.config = {
-    theme: {
-        extend: {
-            colors: {
-                cafe: {
-                    bg: '#f6efe7',
-                    brown: '#8b5e3c'
-                }
-            }
-        }
-    }
-}
-</script>
-
 </head>
 
-<body class="bg-cafe-bg">
+<body class="min-h-screen relative"
+      style="background:linear-gradient(135deg,#e6e8dc,#cfd5a5);">
 
-<div class="flex">
+<!-- TEXTURE -->
+<div class="absolute inset-0 z-0 opacity-30 pointer-events-none"
+     style="background-image:url('https://grainy-gradients.vercel.app/noise.svg');">
+</div>
+
+<div class="flex relative z-10">
 
 <!-- SIDEBAR -->
 <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
 
-<!-- RIGHT SIDE -->
+<!-- MAIN -->
 <div id="mainContent" class="flex-1 flex flex-col ml-64 transition-all duration-300">
 
 <!-- HEADER -->
@@ -43,12 +31,13 @@ tailwind.config = {
 <!-- CONTENT -->
 <div class="p-8">
 
-<div class="max-w-[1400px] mx-auto grid grid-cols-2 gap-6">
+<div class="max-w-[1400px] mx-auto space-y-6">
 
 <!-- SLIDESHOW -->
-<div class="col-span-2 relative rounded-2xl overflow-hidden shadow-lg">
+<div class="relative rounded-2xl overflow-hidden shadow-2xl border backdrop-blur-xl"
+     style="border:1px solid rgba(255,255,255,0.3);">
 
-    <div id="slides" class="flex transition-transform duration-700 ">
+    <div id="slides" class="flex transition-transform duration-700">
 
         <img src="${pageContext.request.contextPath}/assets/image/slide1.jpg"
         class="w-full h-[320px] object-cover flex-shrink-0">
@@ -70,62 +59,7 @@ tailwind.config = {
 
 </div>
 
-<!-- BOX 1 -->
-<div class="bg-gradient-to-br from-white to-[#f1e4d7] rounded-xl shadow-md p-6 flex flex-col justify-center">
 
-<div class="text-gray-500 text-sm mb-2">
-Số bàn đang có khách
-</div>
-
-<div class="text-3xl font-bold text-gray-800">
-0
-</div>
-
-</div>
-
-
-<!-- BOX 2 -->
-<div class="bg-white border border-gray-200 rounded-xl shadow-sm">
-
-<div class="flex justify-end gap-3 p-4">
-
-<button class="bg-cafe-brown text-white px-5 py-1 rounded-full text-sm hover:opacity-90 transition">
-Tìm kiếm
-</button>
-
-<button class="bg-gray-700 text-white px-5 py-1 rounded-full text-sm hover:opacity-90 transition">
-Bộ lọc
-</button>
-
-</div>
-
-<table class="w-full text-center text-sm">
-
-<thead class="bg-[#f1e4d7] text-gray-700">
-<tr>
-<th class="p-3">Tên</th>
-<th>Ngày tháng</th>
-<th>Chi tiết</th>
-</tr>
-</thead>
-
-<tbody>
-
-<tr class="border-t hover:bg-gray-50">
-<td class="p-3">--</td>
-<td>--</td>
-<td>--</td>
-</tr>
-
-<tr class="border-t hover:bg-gray-50">
-<td class="p-3">--</td>
-<td>--</td>
-<td>--</td>
-</tr>
-
-</tbody>
-
-</table>
 
 </div>
 
@@ -160,10 +94,7 @@ document.addEventListener("DOMContentLoaded", function(){
         showSlide(index);
     }
 
-    // chạy lần đầu
     showSlide(0);
-
-    // auto chạy
     setInterval(nextSlide, 3000);
 
 });

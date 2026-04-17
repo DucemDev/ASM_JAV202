@@ -9,33 +9,24 @@
     <title>Quản lý loại đồ uống</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        cafe: {
-                            bg: '#f6efe7',
-                            brown: '#8b5e3c'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
-
 </head>
 
-<body class="bg-cafe-bg">
+<body class="min-h-screen relative"
+      style="background:linear-gradient(135deg,#e6e8dc,#cfd5a5);">
 
-<div class="flex">
+<!-- TEXTURE -->
+<div class="absolute inset-0 z-0 opacity-30 pointer-events-none"
+     style="background-image:url('https://grainy-gradients.vercel.app/noise.svg');">
+</div>
+
+<div class="flex relative z-10">
 
     <!-- SIDEBAR -->
     <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
 
     <!-- MAIN -->
-    <div id="mainContent" class="flex-1 ml-64 transition-all duration-300">
+    <div id="mainContent"
+         class="flex-1 flex flex-col ml-64 transition-all duration-300 h-screen overflow-y-auto">
 
         <!-- HEADER -->
         <jsp:include page="/WEB-INF/views/layout/header.jsp"/>
@@ -43,9 +34,10 @@
         <div class="p-8">
 
             <!-- CARD -->
-            <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200 max-w-[1400px] mx-auto">
+            <div class="rounded-2xl shadow-xl p-8 border backdrop-blur-xl max-w-[1400px] mx-auto"
+                 style="background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.3);">
 
-                <h2 class="text-xl font-semibold text-gray-800 mb-6">
+                <h2 class="text-xl font-semibold text-[#27301B] mb-6">
                     Quản lý loại đồ uống
                 </h2>
 
@@ -65,20 +57,18 @@
                       action="${pageContext.request.contextPath}/manager/categories/${category != null ? 'edit' : 'add'}"
                       class="grid grid-cols-3 gap-4 items-end mb-8">
 
-                    <!-- ID hidden -->
                     <input type="hidden" name="id" value="${category.id}" />
 
-                    <!-- NAME -->
                     <div>
-                        <label class="block text-sm text-gray-600 mb-1">Tên loại</label>
+                        <label class="block text-sm text-[#41521E] mb-1">Tên loại</label>
                         <input type="text" name="name" value="${category.name}"
                                required
-                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cafe-brown"/>
+                               class="w-full rounded-lg px-3 py-2 outline-none border backdrop-blur-xl"
+                               style="background:rgba(255,255,255,0.3); border-color:#909632;">
                     </div>
 
-                    <!-- STATUS -->
                     <div>
-                        <label class="block text-sm text-gray-600 mb-1">Trạng thái</label>
+                        <label class="block text-sm text-[#41521E] mb-1">Trạng thái</label>
 
                         <div class="flex gap-4 mt-2">
 
@@ -91,16 +81,16 @@
                             <label class="flex items-center gap-2 text-sm">
                                 <input type="radio" name="active" value="false"
                                 ${category != null && !category.active ? 'checked' : ''}>
-                                Ngừng
+                                Ngừng hoạt động
                             </label>
 
                         </div>
                     </div>
 
-                    <!-- BUTTON -->
                     <div>
                         <button type="submit"
-                                class="w-full bg-cafe-brown text-white py-2 rounded-lg hover:opacity-90 transition">
+                                class="w-full text-white py-2 rounded-lg hover:scale-105 transition shadow-lg"
+                                style="background:#27301B;">
 
                             ${category != null ? 'Cập nhật' : 'Thêm mới'}
 
@@ -109,39 +99,45 @@
 
                 </form>
 
+                <!-- SEARCH -->
                 <form method="get"
                       action="${pageContext.request.contextPath}/manager/categories"
                       class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mb-8">
+
                     <div>
-                        <label class="block text-sm text-gray-600 mb-1">Tim theo ten loai</label>
+                        <label class="block text-sm text-[#41521E] mb-1">Tìm theo tên loại</label>
                         <input type="text" name="keyword" value="${keyword}"
-                               class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cafe-brown"/>
+                               class="w-full rounded-lg px-3 py-2 outline-none border backdrop-blur-xl"
+                               style="background:rgba(255,255,255,0.3); border-color:#909632;">
                     </div>
 
                     <div>
-                        <label class="block text-sm text-gray-600 mb-1">Loc trang thai</label>
+                        <label class="block text-sm text-[#41521E] mb-1">Lọc trạng thái</label>
                         <select name="active"
-                                class="w-full border border-gray-300 rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-cafe-brown">
-                            <option value="">Tat ca</option>
-                            <option value="true" ${active == 'true' ? 'selected' : ''}>Hoat dong</option>
-                            <option value="false" ${active == 'false' ? 'selected' : ''}>Ngung</option>
+                                class="w-full rounded-lg px-3 py-2 outline-none border backdrop-blur-xl"
+                                style="background:rgba(255,255,255,0.3); border-color:#909632;">
+                            <option value="">Tất cả</option>
+                            <option value="true" ${active == 'true' ? 'selected' : ''}>Hoạt động</option>
+                            <option value="false" ${active == 'false' ? 'selected' : ''}>Ngừng hoạt động</option>
                         </select>
                     </div>
 
                     <div>
                         <button type="submit"
-                                class="w-full bg-gray-700 text-white py-2 rounded-lg hover:opacity-90 transition">
-                            Tim kiem
+                                class="w-full text-white py-2 rounded-lg hover:scale-105 transition shadow-lg"
+                                style="background:#41521E;">
+                            Tìm kiếm
                         </button>
                     </div>
+
                 </form>
 
                 <!-- TABLE -->
                 <div class="overflow-x-auto">
 
-                    <table class="w-full border border-gray-200 rounded-xl overflow-hidden">
+                    <table class="w-full rounded-xl overflow-hidden">
 
-                        <thead class="bg-[#f1e4d7] text-gray-700 text-sm">
+                        <thead style="background:rgba(65,82,30,0.2);" class="text-[#27301B] text-sm">
                         <tr>
                             <th class="py-3">ID</th>
                             <th>Tên</th>
@@ -153,7 +149,7 @@
                         <tbody class="text-center text-sm">
 
                         <c:forEach var="item" items="${list}">
-                            <tr class="border-t hover:bg-gray-50">
+                            <tr class="border-t border-white/20 hover:bg-white/10 transition">
 
                                 <td class="py-3">${item.id}</td>
 
@@ -165,20 +161,19 @@
                                             <span class="text-green-600 font-medium">Hoạt động</span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span class="text-red-500">Ngừng</span>
+                                            <span class="text-red-500">Ngừng hoạt động</span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
 
                                 <td class="space-x-2">
 
-                                    <!-- EDIT -->
                                     <a href="${pageContext.request.contextPath}/manager/categories?id=${item.id}"
-                                       class="px-3 py-1 text-sm bg-blue-500 text-white rounded-lg hover:opacity-90">
+                                       class="px-3 py-1 text-sm text-white rounded-lg hover:scale-105 transition"
+                                       style="background:#909632;">
                                         Sửa
                                     </a>
 
-                                    <!-- DELETE -->
                                     <form method="post"
                                           action="${pageContext.request.contextPath}/manager/categories/delete"
                                           class="inline">
@@ -186,7 +181,8 @@
                                         <input type="hidden" name="id" value="${item.id}" />
 
                                         <button onclick="return confirm('Bạn có chắc muốn xóa?')"
-                                                class="px-3 py-1 text-sm bg-red-500 text-white rounded-lg hover:opacity-90">
+                                                class="px-3 py-1 text-sm text-white rounded-lg hover:scale-105 transition"
+                                                style="background:#b91c1c;">
                                             Xóa
                                         </button>
 

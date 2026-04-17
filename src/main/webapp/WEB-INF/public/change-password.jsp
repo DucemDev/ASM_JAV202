@@ -11,26 +11,17 @@
     <title>Đổi mật khẩu</title>
 
     <script src="https://cdn.tailwindcss.com"></script>
-
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        cafe: {
-                            bg: '#f6efe7',
-                            brown: '#8b5e3c'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
 </head>
 
-<body class="bg-cafe-bg">
+<body class="min-h-screen relative"
+      style="background:linear-gradient(135deg,#e6e8dc,#cfd5a5);">
 
-<div class="flex">
+<!-- TEXTURE -->
+<div class="absolute inset-0 z-0 opacity-30 pointer-events-none"
+     style="background-image:url('https://grainy-gradients.vercel.app/noise.svg');">
+</div>
+
+<div class="flex relative z-10">
 
     <!-- SIDEBAR -->
     <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
@@ -44,35 +35,38 @@
         <!-- CONTENT -->
         <div class="p-8">
 
-            <div class="max-w-[1400px] mx-auto">
+            <div class="max-w-[600px] mx-auto">
 
                 <!-- CARD -->
-                <div class="bg-white rounded-2xl shadow-lg p-8 border border-gray-200">
+                <div class="rounded-2xl shadow-2xl p-8 border backdrop-blur-xl"
+                     style="background:rgba(255,255,255,0.35); border:1px solid rgba(255,255,255,0.35);">
 
-                    <h1 class="text-2xl font-bold text-gray-800 mb-6">
+                    <!-- TITLE -->
+                    <h1 class="text-2xl font-bold text-[#27301B] mb-8 text-center">
                         Đổi mật khẩu
                     </h1>
 
+                    <!-- FORM -->
                     <form method="post"
                           action="${pageContext.request.contextPath}/change-password"
                           class="space-y-5">
 
                         <!-- NEW PASSWORD -->
                         <div>
-                            <label class="text-sm text-gray-500">Mật khẩu mới</label>
+                            <label class="text-sm text-[#909632]">Mật khẩu mới</label>
                             <input type="password" name="newPassword"
                                    placeholder="Nhập mật khẩu mới"
-                                   class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2
-                      focus:ring-2 focus:ring-cafe-brown outline-none">
+                                   class="w-full mt-1 rounded-lg px-3 py-2 border focus:ring-2 outline-none"
+                                   style="background:rgba(255,255,255,0.4); border-color:#909632;">
                         </div>
 
                         <!-- CONFIRM PASSWORD -->
                         <div>
-                            <label class="text-sm text-gray-500">Xác nhận mật khẩu</label>
+                            <label class="text-sm text-[#909632]">Xác nhận mật khẩu</label>
                             <input type="password" name="confirmPassword"
                                    placeholder="Nhập lại mật khẩu"
-                                   class="w-full mt-1 border border-gray-300 rounded-lg px-3 py-2
-                      focus:ring-2 focus:ring-cafe-brown outline-none">
+                                   class="w-full mt-1 rounded-lg px-3 py-2 border focus:ring-2 outline-none"
+                                   style="background:rgba(255,255,255,0.4); border-color:#909632;">
                         </div>
 
                         <!-- ERROR MESSAGE -->
@@ -81,16 +75,18 @@
                         </c:if>
 
                         <!-- BUTTON -->
-                        <div class="flex gap-4 pt-4">
+                        <div class="flex gap-4 pt-4 justify-center">
 
                             <button type="submit"
-                                    class="bg-cafe-brown text-white px-6 py-2 rounded-lg hover:opacity-90 transition">
+                                    class="text-white px-6 py-2 rounded-xl shadow-lg hover:scale-105 transition"
+                                    style="background:#27301B;">
                                 Đổi mật khẩu
                             </button>
 
                             <a href="${pageContext.request.contextPath}/profile">
                                 <button type="button"
-                                        class="bg-gray-500 text-white px-6 py-2 rounded-lg hover:opacity-90 transition">
+                                        class="text-white px-6 py-2 rounded-xl shadow-lg hover:scale-105 transition"
+                                        style="background:#41521E;">
                                     Quay lại
                                 </button>
                             </a>

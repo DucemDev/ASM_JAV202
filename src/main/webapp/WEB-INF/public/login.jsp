@@ -81,7 +81,7 @@
                                    name="emailIp"
                                    placeholder="Ví dụ: tenban@gmail.com"
                                    required
-                                   class="w-full rounded-xl bg-white/95 px-4 py-2.5 text-sm text-white font-normal placeholder:text-black/45 focus:outline-none focus:ring-2 focus:ring-cafe-moss shadow-sm border-0">
+                                   class="w-full rounded-xl bg-white/95 px-4 py-2.5 text-sm text-black font-normal placeholder:text-black/45 focus:outline-none focus:ring-2 focus:ring-cafe-moss shadow-sm border-0">
                         </div>
 
                         <div>

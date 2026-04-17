@@ -4,26 +4,19 @@
 
 <html>
 <head>
-    <title>Bill Detail</title>
+    <title>Chi tiết hóa đơn</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <script>
-        tailwind.config = {
-            theme: {
-                extend: {
-                    colors: {
-                        cafe: {
-                            bg: '#f6efe7',
-                            brown: '#8b5e3c'
-                        }
-                    }
-                }
-            }
-        }
-    </script>
 </head>
 
-<body class="bg-cafe-bg">
-<div class="flex">
+<body class="min-h-screen relative overflow-hidden"
+      style="background:linear-gradient(135deg,#e6e8dc,#cfd5a5);">
+
+<!-- TEXTURE -->
+<div class="absolute inset-0 z-0 opacity-30 pointer-events-none"
+     style="background-image:url('https://grainy-gradients.vercel.app/noise.svg');">
+</div>
+
+<div class="flex relative z-10">
 
     <!-- SIDEBAR -->
     <jsp:include page="/WEB-INF/views/layout/sidebar.jsp"/>
@@ -40,50 +33,71 @@
 
                 <!-- TITLE -->
                 <div class="flex justify-between items-center mb-6">
-                    <h1 class="text-2xl font-bold text-gray-800">Bill Detail #${bill.id}</h1>
+                    <h1 class="text-2xl font-bold text-[#27301B]">
+                        Chi tiết hóa đơn #${bill.id}
+                    </h1>
+
                     <a href="${pageContext.request.contextPath}/manager/bill"
-                       class="bg-gray-600 text-white px-4 py-2 rounded-lg">Back</a>
+                       class="px-4 py-2 rounded-xl text-white shadow-lg hover:scale-105 transition"
+                       style="background:#27301B;">
+                        Quay lại
+                    </a>
                 </div>
 
-                <!-- PREP DISPLAY VALUES -->
+                <!-- PREP -->
                 <c:set var="isOnline" value="${bill.type == 'online'}"/>
-                <c:set var="displayTable" value="${isOnline || bill.tableId <= 0 ? 'Online (không bàn)' : 'Table '.concat(bill.tableId)}"/>
-                <c:set var="displayCreator" value="${not empty bill.userFullName ? bill.userFullName : 'Unknown'}"/>
+                <c:set var="displayTable" value="${isOnline || bill.tableId <= 0 ? 'Online (không bàn)' : 'Bàn '.concat(bill.tableId)}"/>
+                <c:set var="displayCreator" value="${not empty bill.userFullName ? bill.userFullName : 'Không rõ'}"/>
 
                 <!-- BILL INFO -->
-                <div class="bg-white rounded-xl shadow-md p-6 mb-6 grid grid-cols-2 gap-6">
+                <div class="rounded-2xl shadow-xl p-6 mb-6 grid grid-cols-2 gap-6 backdrop-blur-xl border"
+                     style="background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.3);">
 
                     <div>
-                        <p class="text-gray-600">Table</p>
-                        <p class="font-semibold text-lg">${displayTable}</p>
+                        <p class="text-[#41521E]">Bàn</p>
+                        <p class="font-semibold text-lg text-[#27301B]">${displayTable}</p>
                     </div>
 
                     <div>
-                        <p class="text-gray-600">Status</p>
+                        <p class="text-[#41521E]">Trạng thái</p>
                         <c:choose>
                             <c:when test="${bill.status == 'waiting'}">
-                                <span class="bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">Waiting</span>
+                                <span class="px-3 py-1 rounded-full text-sm font-semibold"
+                                      style="background:rgba(65,82,30,0.2); color:#41521E;">
+                                    Đang chờ
+                                </span>
                             </c:when>
                             <c:when test="${bill.status == 'pending_verify'}">
-                                <span class="bg-amber-100 text-amber-700 px-3 py-1 rounded-full text-sm font-semibold">Pending Verify</span>
+                                <span class="px-3 py-1 rounded-full text-sm font-semibold"
+                                      style="background:rgba(144,150,50,0.2); color:#909632;">
+                                    Chờ xác nhận
+                                </span>
                             </c:when>
                             <c:when test="${bill.status == 'finish'}">
-                                <span class="bg-green-100 text-green-700 px-3 py-1 rounded-full text-sm font-semibold">Completed</span>
+                                <span class="px-3 py-1 rounded-full text-sm font-semibold"
+                                      style="background:rgba(153,165,88,0.3); color:#27301B;">
+                                    Hoàn thành
+                                </span>
                             </c:when>
                             <c:when test="${bill.status == 'cancel'}">
-                                <span class="bg-red-100 text-red-600 px-3 py-1 rounded-full text-sm font-semibold">Cancelled</span>
+                                <span class="px-3 py-1 rounded-full text-sm font-semibold"
+                                      style="background:rgba(255,0,0,0.15); color:#b91c1c;">
+                                    Đã hủy
+                                </span>
                             </c:when>
                             <c:otherwise>
-                                <span class="bg-gray-100 text-gray-700 px-3 py-1 rounded-full text-sm font-semibold">${bill.status}</span>
+                                <span class="px-3 py-1 rounded-full text-sm font-semibold bg-gray-100 text-gray-700">
+                                    ${bill.status}
+                                </span>
                             </c:otherwise>
                         </c:choose>
                     </div>
 
                     <div>
-                        <p class="text-gray-600">Type</p>
-                        <p class="font-semibold">
+                        <p class="text-[#41521E]">Loại</p>
+                        <p class="font-semibold text-[#27301B]">
                             <c:choose>
-                                <c:when test="${bill.type == 'pos'}">POS</c:when>
+                                <c:when test="${bill.type == 'pos'}">Tại quầy</c:when>
                                 <c:when test="${bill.type == 'online'}">Online</c:when>
                                 <c:otherwise>${bill.type}</c:otherwise>
                             </c:choose>
@@ -91,30 +105,32 @@
                     </div>
 
                     <div>
-                        <p class="text-gray-600">Created By</p>
-                        <p class="font-semibold">${displayCreator}</p>
+                        <p class="text-[#41521E]">Người tạo</p>
+                        <p class="font-semibold text-[#27301B]">${displayCreator}</p>
                     </div>
 
                     <div>
-                        <p class="text-gray-600">Created At</p>
-                        <p class="font-semibold">${bill.createdAt}</p>
+                        <p class="text-[#41521E]">Thời gian tạo</p>
+                        <p class="font-semibold text-[#27301B]">${bill.createdAt}</p>
                     </div>
 
                     <div>
-                        <p class="text-gray-600">Total (DB)</p>
-                        <p class="font-bold text-xl text-green-600">${bill.total} đ</p>
+                        <p class="text-[#41521E]">Tổng tiền (DB)</p>
+                        <p class="font-bold text-xl text-[#27301B]">${bill.total} đ</p>
                     </div>
                 </div>
 
-                <!-- BILL ITEMS -->
-                <div class="bg-white rounded-xl shadow-md overflow-hidden">
+                <!-- TABLE -->
+                <div class="rounded-2xl shadow-xl overflow-hidden backdrop-blur-xl border"
+                     style="background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.3);">
+
                     <table class="w-full text-sm text-center">
-                        <thead class="bg-[#f1e4d7] text-gray-700">
+                        <thead style="background:rgba(65,82,30,0.2);" class="text-[#27301B]">
                         <tr>
-                            <th class="p-3">Drink</th>
-                            <th>Price</th>
-                            <th>Quantity</th>
-                            <th>Subtotal</th>
+                            <th class="p-3">Đồ uống</th>
+                            <th>Giá</th>
+                            <th>Số lượng</th>
+                            <th>Thành tiền</th>
                         </tr>
                         </thead>
 
@@ -124,9 +140,9 @@
                             <c:set var="lineTotal" value="${item.price * item.quantity}"/>
                             <c:set var="computedTotal" value="${computedTotal + lineTotal}"/>
 
-                            <tr class="border-t hover:bg-gray-50">
+                            <tr class="border-t border-white/20 hover:bg-white/10 transition">
                                 <td class="p-3">
-                                    <c:set var="drinkName" value="Unknown"/>
+                                    <c:set var="drinkName" value="Không rõ"/>
                                     <c:forEach var="d" items="${drinks}">
                                         <c:if test="${d.id == item.drinkId}">
                                             <c:set var="drinkName" value="${d.name}"/>
@@ -142,18 +158,18 @@
 
                         <c:if test="${empty billItems}">
                             <tr>
-                                <td colspan="4" class="p-4 text-gray-500">No items found</td>
+                                <td colspan="4" class="p-4 text-gray-500">Không có dữ liệu</td>
                             </tr>
                         </c:if>
                         </tbody>
                     </table>
                 </div>
 
-                <!-- TOTAL FOOTER -->
+                <!-- TOTAL -->
                 <div class="mt-6 text-right">
-                    <p class="text-lg">
-                        Total (computed):
-                        <span class="font-bold text-green-600 text-xl">${computedTotal} đ</span>
+                    <p class="text-lg text-[#27301B]">
+                        Tổng:
+                        <span class="font-bold text-xl">${computedTotal} đ</span>
                     </p>
                 </div>
 
