@@ -33,7 +33,7 @@
 <body class="h-screen overflow-hidden bg-cafe-bone/70">
 <div class="relative h-full w-full">
     <!-- Nền ngoài: ảnh tĩnh -->
-    <img src="<c:url value='/assets/image/background.jpg'/>"
+    <img src="<c:url value='/assets/image/background2.jpg'/>"
          alt="Nền cà phê"
          class="absolute inset-0 w-full h-full object-cover">
     <div class="absolute inset-0 bg-gradient-to-br from-cafe-kombu/70 via-cafe-noir/55 to-cafe-moss/45"></div>
