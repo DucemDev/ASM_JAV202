@@ -99,7 +99,7 @@
 
                 <div class="p-3">
                     <p class="font-medium text-[#27301B]">${d.name}</p>
-                    <p class="text-sm text-[#41521E]">${d.price} đ</p>
+                    <p class="text-sm text-[#41521E]">${String.format("%,d", d.price)} đ</p>
 
                     <button
                         onclick="addDrink(${d.id}, ${tableId})"

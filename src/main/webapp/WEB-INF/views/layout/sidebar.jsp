@@ -153,34 +153,36 @@
     </div>
 
 </div>
-
+<style>
+.sidebar-collapsed #sidebar {
+    width: 5rem !important; /* w-20 */
+}
+.sidebar-collapsed #mainContent {
+    margin-left: 5rem !important;
+}
+.sidebar-collapsed .menu-text {
+    display: none !important;
+}
+</style>
 <script>
-let collapsed = false;
-
-function toggleSidebar() {
-    const sidebar = document.getElementById("sidebar");
-    const text = document.querySelectorAll(".menu-text");
-    const main = document.getElementById("mainContent");
-
-    collapsed = !collapsed;
-
+// load trạng thái khi vào trang (KHÔNG GIẬT)
+(function () {
+    const collapsed = localStorage.getItem("sidebarCollapsed") === "true";
     if (collapsed) {
-        sidebar.classList.replace("w-64", "w-20");
-        if (main) main.classList.replace("ml-64", "ml-20");
+        document.documentElement.classList.add("sidebar-collapsed");
+    }
+})();
 
-        text.forEach(t => {
-            t.classList.add("opacity-0");
-            setTimeout(() => t.classList.add("hidden"), 200);
-        });
+// toggle
+function toggleSidebar() {
+    const isCollapsed = document.documentElement.classList.contains("sidebar-collapsed");
 
+    if (isCollapsed) {
+        document.documentElement.classList.remove("sidebar-collapsed");
+        localStorage.setItem("sidebarCollapsed", "false");
     } else {
-        sidebar.classList.replace("w-20", "w-64");
-        if (main) main.classList.replace("ml-20", "ml-64");
-
-        text.forEach(t => {
-            t.classList.remove("hidden");
-            setTimeout(() => t.classList.remove("opacity-0"), 50);
-        });
+        document.documentElement.classList.add("sidebar-collapsed");
+        localStorage.setItem("sidebarCollapsed", "true");
     }
 }
 </script>

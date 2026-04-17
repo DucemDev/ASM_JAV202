@@ -58,7 +58,51 @@
     </div>
 
 </div>
+<div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
+    <!-- WELCOME -->
+    <div class="p-6 rounded-2xl shadow-xl backdrop-blur-xl border"
+         style="background:rgba(255,255,255,0.35); border:1px solid rgba(255,255,255,0.35);">
+
+        <p class="text-sm text-[#909632]">Xin chào 👋</p>
+
+        <h2 class="text-2xl font-bold text-[#27301B] mt-2">
+            ${sessionScope.user.fullname}
+        </h2>
+
+        <p class="text-gray-600 mt-2">
+            Chúc bạn một ngày làm việc hiệu quả ☕
+        </p>
+
+        <!-- ROLE -->
+        <p class="text-sm mt-3 text-[#41521E]">
+            Vai trò:
+            <c:choose>
+                <c:when test="${sessionScope.user.role == 2}">Admin</c:when>
+                <c:when test="${sessionScope.user.role == 1}">Nhân viên</c:when>
+                <c:otherwise>Khách</c:otherwise>
+            </c:choose>
+        </p>
+
+    </div>
+
+    <!-- CLOCK -->
+    <div class="p-6 rounded-2xl shadow-xl backdrop-blur-xl border text-center"
+         style="background:rgba(255,255,255,0.35); border:1px solid rgba(255,255,255,0.35);">
+
+        <p class="text-sm text-[#909632] mb-2">Thời gian hiện tại</p>
+
+        <h2 id="clock"
+            class="text-3xl font-bold text-[#27301B]">
+        </h2>
+
+        <p class="text-gray-500 text-sm mt-2">
+            Hệ thống PolyCafe
+        </p>
+
+    </div>
+
+</div>
 
 
 </div>
@@ -99,7 +143,15 @@ document.addEventListener("DOMContentLoaded", function(){
 
 });
 </script>
-
+<script>
+function updateClock(){
+    const now = new Date();
+    const time = now.toLocaleTimeString('vi-VN');
+    document.getElementById("clock").innerText = time;
+}
+setInterval(updateClock, 1000);
+updateClock();
+</script>
 </body>
 
 </html>
