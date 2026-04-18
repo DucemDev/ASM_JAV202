@@ -30,6 +30,8 @@ public class SellerTableServlet extends HttpServlet {
             String keyword = req.getParameter("keyword");
 
             List<Table> list = tableDAO.search(status, keyword);
+            list.removeIf(t -> t.getName() != null
+                    && t.getName().equalsIgnoreCase("Online Order"));
 
             req.setAttribute("tables", list);
             req.setAttribute("currentStatus", status);

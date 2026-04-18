@@ -26,7 +26,7 @@ public interface BillDAO {
     public List<Bill> findByUserId(int userId);
 
     public List<Bill> findBySql(String sql, Object... value);
-
+    public int countBySql(String sql, Object... params);
     public Bill findById(int id);
     public void expireOldOrders();
     public Bill findOpenByTableId(int tableId);

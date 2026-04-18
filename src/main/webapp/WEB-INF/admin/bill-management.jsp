@@ -79,7 +79,7 @@
 
                 <!-- TOTAL -->
                 <p class="mb-4 text-[#27301B] font-medium">
-                    Tổng số hóa đơn: ${billList.size()}
+                    Tổng số hóa đơn: ${totalRecords}
                 </p>
 
                 <!-- TABLE -->
@@ -183,7 +183,34 @@
                     </table>
 
                 </div>
+                <div class="flex justify-center mt-6 gap-2 flex-wrap">
 
+                    <!-- Prev -->
+                    <c:if test="${currentPage > 1}">
+                        <a href="?page=${currentPage - 1}&keyword=${keyword}&status=${status}&fromDate=${fromDate}&toDate=${toDate}"
+                           class="px-3 py-1 rounded-lg bg-white border hover:bg-gray-100">
+                            «
+                        </a>
+                    </c:if>
+
+                    <!-- Page numbers -->
+                    <c:forEach begin="1" end="${totalPages}" var="i">
+                        <a href="?page=${i}&keyword=${keyword}&status=${status}&fromDate=${fromDate}&toDate=${toDate}"
+                           class="px-3 py-1 rounded-lg border
+           ${i == currentPage ? 'bg-[#27301B] text-white' : 'bg-white'}">
+                                ${i}
+                        </a>
+                    </c:forEach>
+
+                    <!-- Next -->
+                    <c:if test="${currentPage < totalPages}">
+                        <a href="?page=${currentPage + 1}&keyword=${keyword}&status=${status}&fromDate=${fromDate}&toDate=${toDate}"
+                           class="px-3 py-1 rounded-lg bg-white border hover:bg-gray-100">
+                            »
+                        </a>
+                    </c:if>
+
+                </div>
             </div>
         </div>
 

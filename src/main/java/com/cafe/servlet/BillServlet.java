@@ -1,5 +1,4 @@
-
-        package com.cafe.servlet;
+package com.cafe.servlet;
 
 import com.cafe.dao.BillDAO;
 import com.cafe.dao.BillDAOImpl;
@@ -10,6 +9,7 @@ import jakarta.servlet.annotation.WebServlet;
 import jakarta.servlet.http.*;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 @WebServlet("/manager/bill")
@@ -21,19 +21,29 @@ public class BillServlet extends HttpServlet {
     protected void doGet(HttpServletRequest req, HttpServletResponse resp)
             throws ServletException, IOException {
 
-        // ✅ Lấy tất cả bill
         String keyword = req.getParameter("keyword");
         String status = req.getParameter("status");
         String fromDate = req.getParameter("fromDate");
         String toDate = req.getParameter("toDate");
 
+        int page = 1;
+        int pageSize = 10;
+
+        try {
+            page = Integer.parseInt(req.getParameter("page"));
+        } catch (Exception ignored) {}
+
+        int offset = (page - 1) * pageSize;
+
+        // ===== BUILD SQL =====
         StringBuilder sql = new StringBuilder("""
-SELECT b.*, u.full_name AS user_fullname
-FROM bills b
-LEFT JOIN users u ON b.user_id = u.id
-WHERE 1=1
-""");
-        java.util.List<Object> params = new java.util.ArrayList<>();
+            SELECT b.*, u.full_name AS user_fullname
+            FROM bills b
+            LEFT JOIN users u ON b.user_id = u.id
+            WHERE 1=1
+        """);
+
+        List<Object> params = new ArrayList<>();
 
         if (keyword != null && !keyword.trim().isEmpty()) {
             sql.append(" AND CAST(b.id AS VARCHAR(20)) LIKE ?");
@@ -55,10 +65,24 @@ WHERE 1=1
             params.add(toDate.trim());
         }
 
-        sql.append(" ORDER BY b.id DESC");
+        // ===== COUNT =====
+        String countSql = "SELECT COUNT(*) FROM (" + sql.toString() + ") AS total";
+        int totalRecords = billDAO.countBySql(countSql, params.toArray());
+        int totalPages = (int) Math.ceil((double) totalRecords / pageSize);
+
+        // ===== PAGINATION =====
+        sql.append(" ORDER BY b.id DESC OFFSET ? ROWS FETCH NEXT ? ROWS ONLY");
+        params.add(offset);
+        params.add(pageSize);
+
         List<Bill> list = billDAO.findBySql(sql.toString(), params.toArray());
 
+        // ===== SET ATTR =====
         req.setAttribute("billList", list);
+        req.setAttribute("currentPage", page);
+        req.setAttribute("totalPages", totalPages);
+        req.setAttribute("totalRecords", totalRecords);
+
         req.setAttribute("keyword", keyword);
         req.setAttribute("status", status);
         req.setAttribute("fromDate", fromDate);
@@ -68,4 +92,3 @@ WHERE 1=1
                 .forward(req, resp);
     }
 }
-

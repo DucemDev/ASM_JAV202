@@ -349,4 +349,17 @@ public class BillDAOImpl implements BillDAO {
             e.printStackTrace();
         }
     }
+
+    @Override
+    public int countBySql(String sql, Object... params) {
+        try {
+            ResultSet rs = DBConnect.executeQuery(sql, params);
+            if (rs.next()) {
+                return rs.getInt(1);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return 0;
+    }
 }

@@ -44,22 +44,6 @@
                             Danh sách bàn
                         </h2>
 
-                        <!-- ADD -->
-                        <form method="post"
-                              action="${pageContext.request.contextPath}/seller/tables/add"
-                              class="flex gap-2">
-
-                            <input type="text" name="name"
-                                   class="rounded-lg px-3 py-2 border backdrop-blur-xl"
-                                   style="background:rgba(255,255,255,0.4); border-color:#909632;"
-                                   placeholder="Tên bàn" required>
-
-                            <button class="text-white px-4 rounded-lg shadow hover:scale-105 transition"
-                                    style="background:#27301B;">
-                                + Thêm
-                            </button>
-
-                        </form>
 
                     </div>
 

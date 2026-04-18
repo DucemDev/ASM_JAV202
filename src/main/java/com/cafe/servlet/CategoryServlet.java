@@ -61,7 +61,8 @@ public class CategoryServlet extends HttpServlet {
         String name = req.getParameter("name");
         boolean active = Boolean.parseBoolean(req.getParameter("active"));
 
-        if (!name.matches("^[a-zA-Z]+$")) {
+        if (name.contains("?")||name.contains("=")||name.contains("&")||name.contains("=")
+                ||name.contains(">")||name.contains("<")||name.contains("@")||name.contains("%")) {
             req.getSession().setAttribute("error", "Tên loại không đúng cú pháp!");
             return false;
         }
