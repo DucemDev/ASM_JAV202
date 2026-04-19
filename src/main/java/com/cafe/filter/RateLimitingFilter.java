@@ -73,7 +73,7 @@ public class RateLimitingFilter implements Filter {
     private int getLimitByEndpoint(String uri) {
 
         if (uri.contains("/login")) {
-            return 5;
+            return 4;
         }
 
         if (uri.contains("/confirm")) {
