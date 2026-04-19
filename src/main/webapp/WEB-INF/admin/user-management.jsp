@@ -142,16 +142,32 @@
                     <select name="status"
                             class="rounded-lg px-3 py-2 border backdrop-blur-xl"
                             style="background:rgba(255,255,255,0.3); border-color:#909632;">
-                        <option value="">Tất cả</option>
+                        <option value="">Tất cả trạng thái</option>
                         <option value="1" ${status == '1' ? 'selected' : ''}>Hoạt động</option>
                         <option value="0" ${status == '0' ? 'selected' : ''}>Khóa</option>
                     </select>
 
-                    <button class="px-5 py-2 rounded-lg text-white"
+                    <button type="submit" class="px-5 py-2 rounded-lg text-white"
                             style="background:#41521E;">
                         Tìm kiếm
                     </button>
+
+                    <a href="${pageContext.request.contextPath}/manager/staff" 
+                       class="px-5 py-2 rounded-lg text-white flex items-center gap-2"
+                       style="background:#6b7280;">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                        </svg>
+                        Làm mới
+                    </a>
                 </form>
+
+                <c:if test="${error != null && formMode == null}">
+                    <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded-xl mb-4 relative shadow-sm" role="alert">
+                        <strong class="font-bold">Thông báo:</strong>
+                        <span class="block sm:inline">${error}</span>
+                    </div>
+                </c:if>
 
                 <!-- TABLE -->
                 <div class="rounded-2xl shadow-xl backdrop-blur-xl border overflow-hidden"
@@ -174,10 +190,10 @@
                         <tbody>
                         <c:forEach var="u" items="${staffList}">
 
-                            <tr class="border-t border-white/30 hover:bg-white/15 transition">
+                            <tr class="border-t border-white/30 hover:bg-white/15 transition ${u.id == sessionScope.user.id ? 'bg-yellow-50/30' : ''}">
 
                                 <td class="p-3">${u.id}</td>
-                                <td class="font-medium">${u.fullname}</td>
+                                <td class="font-medium">${u.fullname} ${u.id == sessionScope.user.id ? '(Tôi)' : ''}</td>
                                 <td>${u.email}</td>
                                 <td>${u.phone}</td>
 
@@ -203,24 +219,38 @@
                                     </c:choose>
                                 </td>
 
-                                <td class="space-x-2">
+                                <td class="p-3">
+                                    <div class="flex justify-center items-center gap-2">
+                                        <a href="${pageContext.request.contextPath}/manager/staff/edit?userId=${u.id}"
+                                           class="w-16 py-1.5 bg-blue-100 text-blue-700 rounded-lg hover:bg-blue-200 transition text-xs font-semibold flex items-center justify-center">
+                                            Sửa
+                                        </a>
 
-                                    <a href="${pageContext.request.contextPath}/manager/staff/edit?userId=${u.id}"
-                                       class="px-3 py-1 bg-blue-100 text-blue-700 rounded-lg">
-                                        Sửa
-                                    </a>
+                                        <c:choose>
+                                            <c:when test="${u.id != sessionScope.user.id}">
+                                                <a href="${pageContext.request.contextPath}/manager/staff/delete?userId=${u.id}"
+                                                   onclick="return confirm('Bạn có chắc muốn xóa nhân viên này? Hành động này sẽ khóa tài khoản.')"
+                                                   class="w-16 py-1.5 bg-red-100 text-red-700 rounded-lg hover:bg-red-200 transition text-xs font-semibold flex items-center justify-center">
+                                                    Xóa
+                                                </a>
 
-                                    <a href="${pageContext.request.contextPath}/manager/staff/delete?userId=${u.id}"
-                                       onclick="return confirm('Bạn có chắc muốn xóa?')"
-                                       class="px-3 py-1 bg-red-100 text-red-700 rounded-lg">
-                                        Xóa
-                                    </a>
-
-                                    <a href="${pageContext.request.contextPath}/manager/staff/update-status?userId=${u.id}&status=${u.active ? 0 : 1}"
-                                       class="px-3 py-1 bg-yellow-100 text-yellow-700 rounded-lg">
-                                        Khóa/Mở
-                                    </a>
-
+                                                <a href="${pageContext.request.contextPath}/manager/staff/update-status?userId=${u.id}&status=${u.active ? 0 : 1}"
+                                                   class="w-20 py-1.5 ${u.active ? 'bg-yellow-100 text-yellow-700 hover:bg-yellow-200' : 'bg-green-100 text-green-700 hover:bg-green-200'} rounded-lg transition text-xs font-semibold flex items-center justify-center">
+                                                    ${u.active ? 'Khóa' : 'Mở khóa'}
+                                                </a>
+                                            </c:when>
+                                            <c:otherwise>
+                                                <span class="w-16 py-1.5 bg-gray-100 text-gray-400 rounded-lg cursor-not-allowed opacity-60 text-xs font-semibold flex items-center justify-center" 
+                                                      title="Bạn không thể tự xóa bản thân">
+                                                    Xóa
+                                                </span>
+                                                <span class="w-20 py-1.5 bg-gray-100 text-gray-400 rounded-lg cursor-not-allowed opacity-60 text-xs font-semibold flex items-center justify-center" 
+                                                      title="Bạn không thể tự khóa bản thân">
+                                                    Khóa
+                                                </span>
+                                            </c:otherwise>
+                                        </c:choose>
+                                    </div>
                                 </td>
 
                             </tr>

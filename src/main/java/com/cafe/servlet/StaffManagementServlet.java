@@ -41,6 +41,7 @@ public class StaffManagementServlet extends HttpServlet {
             case "/manager/staff/add":
                 listStaff(req);
                 req.setAttribute("formMode", "add");
+                req.setAttribute("user", new User()); // Đặt user mới để tránh lấy user từ session
                 req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp")
                         .forward(req, resp);
                 break;
@@ -236,7 +237,7 @@ public class StaffManagementServlet extends HttpServlet {
 
         // 🚨 CHẶN TỰ XÓA
         if (currentUser != null && currentUser.getId() == id) {
-            req.setAttribute("error", "Bạn không thể tự xóa chính mình!");
+            req.setAttribute("error", "Bạn không thể tự xóa tài khoản của chính mình!");
             listStaff(req);
             req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp")
                     .forward(req, resp);
@@ -249,10 +250,23 @@ public class StaffManagementServlet extends HttpServlet {
 
     // STATUS
     private void updateStatus(HttpServletRequest req, HttpServletResponse resp)
-            throws IOException {
+            throws IOException, ServletException {
 
         int id = ParamUtil.getInt(req, "userId");
         int status = ParamUtil.getInt(req, "status");
+
+        // 👉 Lấy user đang login
+        HttpSession session = req.getSession();
+        User currentUser = (User) session.getAttribute("user");
+
+        // 🚨 CHẶN TỰ KHÓA
+        if (currentUser != null && currentUser.getId() == id && status == 0) {
+            req.setAttribute("error", "Bạn không thể tự khóa tài khoản của chính mình!");
+            listStaff(req);
+            req.getRequestDispatcher("/WEB-INF/admin/user-management.jsp")
+                    .forward(req, resp);
+            return;
+        }
 
         userDAO.updateStatus(id, status == 1);
 
