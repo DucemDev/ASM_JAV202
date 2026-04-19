@@ -38,7 +38,7 @@
 
     <!-- INFO -->
     <div class="text-sm text-[#27301B] space-y-1 mb-4">
-        <p>Số tiền: <b>${total} đ</b></p>
+        <p>Số tiền: <b>${String.format("%,d", total).replace(",", ".")} đ</b></p>
         <p>Nội dung: <b>${bill.code}</b></p>
     </div>
 

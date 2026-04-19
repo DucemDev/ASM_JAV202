@@ -114,7 +114,7 @@
 </td>
 
 <td class="text-[#41521E] font-medium">
-${item.price} đ
+${String.format("%,d", item.price).replace(",", ".")} đ
 </td>
 
 </tr>
@@ -134,7 +134,9 @@ Chưa có món
 
 <div class="flex justify-between items-center p-4 border-t">
 <span>Tổng</span>
-<span class="font-bold text-lg">${total} đ</span>
+<span class="font-bold text-lg">
+    ${String.format("%,d", total).replace(",", ".")} đ
+</span>
 </div>
 
 <form method="post"

@@ -130,9 +130,16 @@
             <path d="M5 13l4 4L19 7"/>
         </svg>
 
-        <span class="menu-text font-medium">Đơn hàng online</span>
+        <span class="menu-text font-medium inline-flex items-center gap-2">
+            Đơn hàng online
+            <c:if test="${hasPendingOnlineOrders}">
+                <span class="w-2.5 h-2.5 rounded-full bg-red-500 animate-pulse inline-block"
+                      title="Có đơn hàng online mới"></span>
+            </c:if>
+        </span>
     </a>
 </c:if>
+
     </nav>
 
     <!-- LOGOUT -->

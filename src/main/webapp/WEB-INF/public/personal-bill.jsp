@@ -121,7 +121,7 @@ Online
 </td>
 
 <td class="text-[#41521E] font-medium">
-${b.total} đ
+${String.format("%,d", b.total).replace(",", ".")} đ
 </td>
 
 <td>

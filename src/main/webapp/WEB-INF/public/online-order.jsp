@@ -101,7 +101,7 @@
 <td>${o.createdAt}</td>
 
 <td class="font-semibold text-[#41521E]">
-${o.total} đ
+    ${String.format("%,d", o.total).replace(",", ".")} đ
 </td>
 
 <td>

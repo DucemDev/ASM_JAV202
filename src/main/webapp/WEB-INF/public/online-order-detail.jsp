@@ -81,7 +81,9 @@
 <div class="p-4 rounded-xl shadow backdrop-blur-xl"
      style="background:rgba(255,255,255,0.35);">
     <p class="text-sm text-[#909632]">Tổng bill</p>
-    <p class="font-semibold text-[#41521E]">${bill.total} đ</p>
+    <p class="font-semibold text-[#41521E]">
+    ${String.format("%,d", bill.total).replace(",", ".")} đ
+</p>
 </div>
 
 </div>
@@ -121,12 +123,14 @@
 ${drinkName}
 </td>
 
-<td class="text-[#41521E]">${item.price} đ</td>
+<td class="text-[#41521E]">
+    ${String.format("%,d", item.price).replace(",", ".")} đ
+</td>
 
 <td>${item.quantity}</td>
 
 <td class="font-semibold text-[#27301B]">
-${lineTotal} đ
+    ${String.format("%,d", lineTotal).replace(",", ".")} đ
 </td>
 
 </tr>
@@ -151,7 +155,7 @@ Không có món trong hóa đơn
 <div class="mt-6 flex justify-end items-center text-lg">
 <span class="mr-2 text-gray-600">Tổng chi tiết:</span>
 <span class="font-bold text-xl text-[#27301B]">
-${sum} đ
+    ${String.format("%,d", sum).replace(",", ".")} đ
 </span>
 </div>
 

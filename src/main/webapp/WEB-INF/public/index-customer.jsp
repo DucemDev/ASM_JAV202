@@ -103,7 +103,9 @@ Chưa có đơn hàng nào
 
 <td>${o.createdAt}</td>
 
-<td class="text-[#41521E] font-medium">${o.total} đ</td>
+<td class="text-[#41521E] font-medium">
+    ${String.format("%,d", o.total).replace(",", ".")} đ
+</td>
 
 <td>
 

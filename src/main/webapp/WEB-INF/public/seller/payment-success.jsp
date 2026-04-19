@@ -42,7 +42,7 @@
 <!-- HEADER BILL -->
 <div class="text-center border-b pb-4 mb-5">
     <h2 class="text-xl font-bold text-[#27301B] tracking-wide">
-        ☕ Cafe POS
+         Cafe POS
     </h2>
     <p class="text-xs text-gray-500">Hóa đơn thanh toán</p>
 </div>
@@ -89,7 +89,7 @@
 <td class="text-center">${item.quantity}</td>
 
 <td class="text-right pr-3 text-[#41521E] font-medium">
-    ${item.price} đ
+    ${String.format("%,d", item.price).replace(",", ".")} đ
 </td>
 
 </tr>
@@ -113,8 +113,8 @@
 <div class="flex justify-between items-center mt-5 border-t pt-4">
     <span class="text-sm text-gray-600">Tổng thanh toán</span>
     <span class="text-xl font-bold text-[#27301B]">
-        ${total} đ
-    </span>
+    ${String.format("%,d", total).replace(",", ".")} đ
+</span>
 </div>
 
 <!-- FOOTER -->

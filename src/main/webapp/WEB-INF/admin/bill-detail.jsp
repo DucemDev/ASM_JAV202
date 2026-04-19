@@ -116,7 +116,9 @@
 
                     <div>
                         <p class="text-[#41521E]">Tổng tiền (DB)</p>
-                        <p class="font-bold text-xl text-[#27301B]">${bill.total} đ</p>
+                        <p class="font-bold text-xl text-[#27301B]">
+                            ${String.format("%,d", bill.total).replace(",", ".")} đ
+                        </p>
                     </div>
                 </div>
 
@@ -150,9 +152,11 @@
                                     </c:forEach>
                                     ${drinkName}
                                 </td>
-                                <td>${item.price} đ</td>
+                                <td>${String.format("%,d", item.price).replace(",", ".")} đ</td>
                                 <td>${item.quantity}</td>
-                                <td class="font-semibold">${lineTotal} đ</td>
+                                <td class="font-semibold">
+                                    ${String.format("%,d", lineTotal).replace(",", ".")} đ
+                                </td>
                             </tr>
                         </c:forEach>
 
@@ -169,7 +173,9 @@
                 <div class="mt-6 text-right">
                     <p class="text-lg text-[#27301B]">
                         Tổng:
-                        <span class="font-bold text-xl">${computedTotal} đ</span>
+                        <span class="font-bold text-xl">
+                            ${String.format("%,d", computedTotal).replace(",", ".")} đ
+                        </span>
                     </p>
                 </div>
 

@@ -85,7 +85,7 @@ class="flex-1 flex flex-col ml-64 transition-all duration-300">
      ">
     <p class="text-[#909632]">Tổng doanh thu</p>
     <h2 class="text-3xl font-bold text-[#27301B] mt-2">
-        ${totalRevenue} ₫
+        ${String.format("%,d", totalRevenue).replace(",", ".")} ₫
     </h2>
 </div>
 
@@ -93,7 +93,7 @@ class="flex-1 flex flex-col ml-64 transition-all duration-300">
      style="background:rgba(255,255,255,0.25); border:1px solid rgba(255,255,255,0.3);">
     <p class="text-[#909632]">Hôm nay</p>
     <h2 class="text-3xl font-bold text-[#27301B] mt-2">
-        ${todayRevenue} ₫
+        ${String.format("%,d", todayRevenue).replace(",", ".")} ₫
     </h2>
 </div>
 

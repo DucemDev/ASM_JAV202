@@ -172,7 +172,9 @@
                         </div>
                     </td>
 
-                    <td class="text-[#41521E] font-medium">${item.price} đ</td>
+                    <td class="text-[#41521E] font-medium">
+    ${String.format("%,d", item.price).replace(",", ".")} đ
+</td>
                 </tr>
             </c:forEach>
 
@@ -188,7 +190,9 @@
 
     <div class="mt-5 flex justify-between items-center">
         <span class="text-sm text-gray-600">Tổng thanh toán</span>
-        <span class="text-xl font-bold text-[#27301B]">${total} đ</span>
+        <span class="text-xl font-bold text-[#27301B]">
+    ${String.format("%,d", total).replace(",", ".")} đ
+</span>
     </div>
 
     <div class="flex gap-2 mt-4">

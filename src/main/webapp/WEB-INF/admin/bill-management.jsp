@@ -135,7 +135,7 @@
                                     </c:choose>
                                 </td>
 
-                                <td class="font-semibold">${b.total} đ</td>
+                                <td class="font-semibold">${String.format("%,d", b.total).replace(",", ".")} đ</td>
 
                                 <td>
                                     <c:choose>
