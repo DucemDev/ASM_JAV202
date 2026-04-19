@@ -45,42 +45,64 @@
                 <!-- FILTER -->
                 <form method="get"
                       action="${pageContext.request.contextPath}/manager/bill"
-                      class="mb-6 flex gap-3 flex-wrap">
+                      class="mb-6 flex gap-3 flex-wrap items-end">
 
-                    <input type="text" name="keyword"
-                           value="${keyword}"
-                           placeholder="Tìm theo mã hóa đơn..."
-                           class="px-4 py-2 rounded-xl backdrop-blur-xl border"
-                           style="background:rgba(255,255,255,0.25); border-color:rgba(255,255,255,0.4);">
+                    <div class="flex-1 min-w-[250px]">
+                        <label class="block text-xs font-semibold text-[#41521E] mb-1 ml-1 uppercase">Tìm kiếm</label>
+                        <input type="text" name="keyword"
+                               value="${keyword}"
+                               placeholder="Mã hóa đơn hoặc tên nhân viên..."
+                               class="w-full px-4 py-2 rounded-xl backdrop-blur-xl border focus:ring-2 focus:ring-[#909632] outline-none"
+                               style="background:rgba(255,255,255,0.25); border-color:rgba(255,255,255,0.4);">
+                    </div>
 
-                    <select name="status"
-                            class="px-4 py-2 rounded-xl backdrop-blur-xl border"
-                            style="background:rgba(255,255,255,0.25); border-color:rgba(255,255,255,0.4);">
-                        <option value="">Tất cả trạng thái</option>
-                        <option value="waiting" ${status == 'waiting' ? 'selected' : ''}>Đang chờ</option>
-                        <option value="pending_verify" ${status == 'pending_verify' ? 'selected' : ''}>Chờ xác nhận</option>
-                        <option value="finish" ${status == 'finish' ? 'selected' : ''}>Hoàn thành</option>
-                        <option value="cancel" ${status == 'cancel' ? 'selected' : ''}>Đã hủy</option>
-                    </select>
+                    <div>
+                        <label class="block text-xs font-semibold text-[#41521E] mb-1 ml-1 uppercase">Trạng thái</label>
+                        <select name="status"
+                                class="px-4 py-2 rounded-xl backdrop-blur-xl border focus:ring-2 focus:ring-[#909632] outline-none"
+                                style="background:rgba(255,255,255,0.25); border-color:rgba(255,255,255,0.4);">
+                            <option value="">Tất cả trạng thái</option>
+                            <option value="waiting" ${status == 'waiting' ? 'selected' : ''}>Đang chờ</option>
+                            <option value="pending_verify" ${status == 'pending_verify' ? 'selected' : ''}>Chờ xác nhận</option>
+                            <option value="finish" ${status == 'finish' ? 'selected' : ''}>Hoàn thành</option>
+                            <option value="cancel" ${status == 'cancel' ? 'selected' : ''}>Đã hủy</option>
+                        </select>
+                    </div>
 
-                    <input type="date" name="fromDate" value="${fromDate}"
-                           class="px-4 py-2 rounded-xl backdrop-blur-xl border"
-                           style="background:rgba(255,255,255,0.25); border-color:rgba(255,255,255,0.4);">
+                    <div>
+                        <label class="block text-xs font-semibold text-[#41521E] mb-1 ml-1 uppercase">Từ ngày</label>
+                        <input type="date" name="fromDate" value="${fromDate}"
+                               class="px-4 py-2 rounded-xl backdrop-blur-xl border focus:ring-2 focus:ring-[#909632] outline-none"
+                               style="background:rgba(255,255,255,0.25); border-color:rgba(255,255,255,0.4);">
+                    </div>
 
-                    <input type="date" name="toDate" value="${toDate}"
-                           class="px-4 py-2 rounded-xl backdrop-blur-xl border"
-                           style="background:rgba(255,255,255,0.25); border-color:rgba(255,255,255,0.4);">
+                    <div>
+                        <label class="block text-xs font-semibold text-[#41521E] mb-1 ml-1 uppercase">Đến ngày</label>
+                        <input type="date" name="toDate" value="${toDate}"
+                               class="px-4 py-2 rounded-xl backdrop-blur-xl border focus:ring-2 focus:ring-[#909632] outline-none"
+                               style="background:rgba(255,255,255,0.25); border-color:rgba(255,255,255,0.4);">
+                    </div>
 
-                    <button class="px-5 py-2 rounded-xl text-white shadow-lg hover:scale-105 transition"
-                            style="background:#27301B;">
-                        Lọc
-                    </button>
+                    <div class="flex gap-2">
+                        <button type="submit" class="px-6 py-2 rounded-xl text-white shadow-lg hover:scale-105 transition font-semibold"
+                                style="background:#27301B;">
+                            Lọc
+                        </button>
+                        
+                        <a href="${pageContext.request.contextPath}/manager/bill" 
+                           class="px-6 py-2 rounded-xl text-white shadow hover:scale-105 transition font-semibold flex items-center gap-2"
+                           style="background:#6b7280;">
+                            Làm mới
+                        </a>
+                    </div>
                 </form>
 
                 <!-- TOTAL -->
-                <p class="mb-4 text-[#27301B] font-medium">
-                    Tổng số hóa đơn: ${totalRecords}
-                </p>
+                <div class="mb-4 flex justify-between items-center">
+                    <p class="text-[#27301B] font-medium">
+                        Tổng số hóa đơn: <span class="font-bold text-lg">${totalRecords}</span>
+                    </p>
+                </div>
 
                 <!-- TABLE -->
                 <div class="rounded-2xl shadow-xl overflow-hidden backdrop-blur-xl border"
@@ -88,12 +110,13 @@
 
                     <table class="w-full text-sm text-center">
 
-                        <thead style="background:rgba(65,82,30,0.2);" class="text-[#27301B]">
+                        <thead style="background:rgba(65,82,30,0.25);" class="text-[#27301B] uppercase tracking-wider">
                         <tr>
-                            <th class="p-3">Mã</th>
+                            <th class="p-4">STT</th>
+                            <th>Mã Bill</th>
                             <th>Bàn</th>
                             <th>Loại</th>
-                            <th>Người tạo</th>
+                            <th>Nhân viên</th>
                             <th>Tổng tiền</th>
                             <th>Trạng thái</th>
                             <th>Thời gian</th>
@@ -102,15 +125,24 @@
                         </thead>
 
                         <tbody>
-                        <c:forEach var="b" items="${billList}">
-                            <tr class="border-t border-white/20 hover:bg-white/10 transition">
+                        <c:forEach var="b" items="${billList}" varStatus="status">
+                            <tr class="border-t border-white/30 hover:bg-white/15 transition">
 
-                                <td class="p-3">#${b.id}</td>
+                                <td class="p-4 font-semibold text-gray-600">
+                                    ${(currentPage - 1) * 10 + status.index + 1}
+                                </td>
 
-                                <td>
+                                <td class="font-bold text-[#27301B]">
+                                    <c:choose>
+                                        <c:when test="${not empty b.code}">${b.code}</c:when>
+                                        <c:otherwise>#${b.id}</c:otherwise>
+                                    </c:choose>
+                                </td>
+
+                                <td class="font-medium">
                                     <c:choose>
                                         <c:when test="${b.type == 'online' || b.tableId <= 0}">
-                                            Online
+                                            <span class="text-blue-600 italic">Online</span>
                                         </c:when>
                                         <c:otherwise>
                                             Bàn ${b.tableId}
@@ -126,45 +158,50 @@
                                     </c:choose>
                                 </td>
 
-                                <td>
+                                <td class="font-medium">
                                     <c:choose>
                                         <c:when test="${not empty b.userFullName}">
                                             ${b.userFullName}
                                         </c:when>
-                                        <c:otherwise>Không rõ</c:otherwise>
+                                        <c:otherwise><span class="text-gray-400 italic">Hệ thống</span></c:otherwise>
                                     </c:choose>
                                 </td>
 
-                                <td class="font-semibold">${String.format("%,d", b.total).replace(",", ".")} đ</td>
+                                <td class="font-bold text-[#41521E]">${String.format("%,d", b.total).replace(",", ".")} đ</td>
 
                                 <td>
                                     <c:choose>
                                         <c:when test="${b.status == 'waiting'}">
-                                            <span class="font-semibold text-blue-500">Đang chờ</span>
+                                            <span class="px-3 py-1 rounded-full bg-blue-100 text-blue-700 text-xs font-bold">Đang chờ</span>
                                         </c:when>
                                         <c:when test="${b.status == 'pending_verify'}">
-                                            <span class="font-semibold text-yellow-500">Chờ xác nhận</span>
+                                            <span class="px-3 py-1 rounded-full bg-yellow-100 text-yellow-700 text-xs font-bold">Chờ xác nhận</span>
                                         </c:when>
                                         <c:when test="${b.status == 'finish'}">
-                                            <span class="font-semibold text-green-500">Hoàn thành</span>
+                                            <span class="px-3 py-1 rounded-full bg-green-100 text-green-700 text-xs font-bold">Hoàn thành</span>
                                         </c:when>
                                         <c:when test="${b.status == 'cancel'}">
-                                            <span class="font-semibold text-red-500">Đã hủy</span>
+                                            <span class="px-3 py-1 rounded-full bg-red-100 text-red-700 text-xs font-bold">Đã hủy</span>
+                                        </c:when>
+                                        <c:when test="${b.status == 'expired'}">
+                                            <span class="px-3 py-1 rounded-full bg-orange-100 text-orange-700 text-xs font-bold">Hết hạn</span>
                                         </c:when>
                                         <c:otherwise>
-                                            <span>${b.status}</span>
+                                            <span class="px-3 py-1 rounded-full bg-gray-100 text-gray-700 text-xs font-bold">${b.status}</span>
                                         </c:otherwise>
                                     </c:choose>
                                 </td>
 
-                                <td>${b.createdAt}</td>
+                                <td class="text-gray-600">${b.createdAt}</td>
 
                                 <td>
-                                    <a href="${pageContext.request.contextPath}/manager/bill-detail?id=${b.id}"
-                                       class="px-3 py-1 rounded-lg text-white shadow hover:scale-105 transition"
-                                       style="background:#41521E;">
-                                        Xem
-                                    </a>
+                                    <div class="flex justify-center">
+                                        <a href="${pageContext.request.contextPath}/manager/bill-detail?id=${b.id}"
+                                           class="px-4 py-1.5 rounded-lg text-white text-xs font-bold shadow hover:scale-105 transition"
+                                           style="background:#41521E;">
+                                            Chi tiết
+                                        </a>
+                                    </div>
                                 </td>
 
                             </tr>

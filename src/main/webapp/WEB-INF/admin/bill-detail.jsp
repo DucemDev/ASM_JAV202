@@ -85,6 +85,12 @@
                                     Đã hủy
                                 </span>
                             </c:when>
+                            <c:when test="${bill.status == 'expired'}">
+                                <span class="px-3 py-1 rounded-full text-sm font-semibold"
+                                      style="background:rgba(255,165,0,0.15); color:#f97316;">
+                                    Hết hạn
+                                </span>
+                            </c:when>
                             <c:otherwise>
                                 <span class="px-3 py-1 rounded-full text-sm font-semibold bg-gray-100 text-gray-700">
                                     ${bill.status}

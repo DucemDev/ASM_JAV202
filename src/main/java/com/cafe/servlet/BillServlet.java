@@ -46,8 +46,10 @@ public class BillServlet extends HttpServlet {
         List<Object> params = new ArrayList<>();
 
         if (keyword != null && !keyword.trim().isEmpty()) {
-            sql.append(" AND CAST(b.id AS VARCHAR(20)) LIKE ?");
-            params.add("%" + keyword.trim() + "%");
+            sql.append(" AND (b.code LIKE ? OR u.full_name LIKE ?)");
+            String k = "%" + keyword.trim() + "%";
+            params.add(k);
+            params.add(k);
         }
 
         if (status != null && !status.trim().isEmpty()) {

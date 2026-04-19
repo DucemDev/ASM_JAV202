@@ -7,10 +7,9 @@
 <html lang="vi">
 
 <head>
-<meta charset="UTF-8">
-<title>Đổi mật khẩu</title>
-
-<script src="https://cdn.tailwindcss.com"></script>
+    <meta charset="UTF-8">
+    <title>Thông báo lỗi - PolyCafe</title>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body class="min-h-screen relative"
@@ -23,86 +22,65 @@
 
 <div class="flex relative z-10">
 
-<!-- SIDEBAR -->
-<jsp:include page="/WEB-INF/public/layout/sidebar.jsp"/>
+    <!-- SIDEBAR -->
+    <jsp:include page="/WEB-INF/public/layout/sidebar.jsp"/>
 
-<!-- MAIN -->
-<div id="mainContent" class="flex-1 flex flex-col ml-64 transition-all duration-300">
+    <!-- MAIN -->
+    <div id="mainContent" class="flex-1 flex flex-col ml-64 transition-all duration-300">
 
-<jsp:include page="/WEB-INF/public/layout/header.jsp"/>
+        <jsp:include page="/WEB-INF/public/layout/header.jsp"/>
 
-<!-- CONTENT -->
-<div class="p-8">
+        <!-- CONTENT -->
+        <div class="p-8 flex items-center justify-center min-h-[70vh]">
 
-<div class="max-w-[600px] mx-auto">
+            <div class="max-w-[500px] w-full">
 
-<!-- CARD -->
-<div class="rounded-2xl shadow-2xl p-8 backdrop-blur-xl border"
-     style="background:rgba(255,255,255,0.35); border:1px solid rgba(255,255,255,0.35);">
+                <!-- CARD -->
+                <div class="rounded-3xl shadow-2xl p-10 backdrop-blur-xl border text-center"
+                     style="background:rgba(255,255,255,0.4); border:1px solid rgba(255,255,255,0.4);">
 
-<!-- TITLE -->
-<h1 class="text-2xl font-bold text-[#27301B] mb-6 text-center">
-    Đổi mật khẩu
-</h1>
+                    <!-- ICON -->
+                    <div class="w-20 h-20 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-6">
+                        <svg xmlns="http://www.w3.org/2000/svg" class="h-10 w-10 text-red-600" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" />
+                        </svg>
+                    </div>
 
-<form method="post"
-      action="${pageContext.request.contextPath}/change-password"
-      class="space-y-5">
+                    <!-- TITLE -->
+                    <h1 class="text-3xl font-bold text-[#27301B] mb-4">
+                        Đã có lỗi xảy ra!
+                    </h1>
 
-<!-- NEW PASSWORD -->
-<div>
-<label class="text-sm text-[#41521E]">Mật khẩu mới</label>
-<input type="password" name="newPassword"
-       placeholder="Nhập mật khẩu mới"
-       required
-       class="w-full mt-1 rounded-xl px-4 py-3 border outline-none"
-       style="background:rgba(255,255,255,0.5); border-color:#909632;">
-</div>
+                    <p class="text-gray-600 mb-8 leading-relaxed">
+                        Rất tiếc, hệ thống gặp sự cố không mong muốn hoặc trang bạn tìm không tồn tại.
+                    </p>
 
-<!-- CONFIRM PASSWORD -->
-<div>
-<label class="text-sm text-[#41521E]">Xác nhận mật khẩu</label>
-<input type="password" name="confirmPassword"
-       placeholder="Nhập lại mật khẩu"
-       required
-       class="w-full mt-1 rounded-xl px-4 py-3 border outline-none"
-       style="background:rgba(255,255,255,0.5); border-color:#909632;">
-</div>
+                    <!-- BUTTON -->
+                    <div class="space-y-3">
+                        <a href="${pageContext.request.contextPath}/home" 
+                           class="block w-full text-white py-3 rounded-xl shadow-lg hover:scale-105 transition font-semibold"
+                           style="background:#27301B;">
+                            Về trang chủ
+                        </a>
+                        
+                        <button onclick="history.back()" 
+                                class="block w-full py-3 rounded-xl border border-gray-400 text-[#27301B] hover:bg-white/40 transition font-semibold">
+                            Quay lại trang trước
+                        </button>
+                    </div>
 
-<!-- ERROR -->
-<c:if test="${not empty message}">
-    <p class="text-red-500 text-sm text-center">
-        ${message}
-    </p>
-</c:if>
+                    <!-- FOOTER -->
+                    <p class="mt-8 text-xs text-gray-500 italic">
+                        Nếu lỗi vẫn tiếp diễn, vui lòng liên hệ bộ phận hỗ trợ kỹ thuật.
+                    </p>
 
-<!-- BUTTON -->
-<div class="flex gap-4 pt-4">
+                </div>
 
-<button type="submit"
-        class="flex-1 text-white py-3 rounded-xl shadow hover:scale-105 transition"
-        style="background:#27301B;">
-    Đổi mật khẩu
-</button>
+            </div>
 
-<a href="${pageContext.request.contextPath}/profile" class="flex-1">
-    <button type="button"
-            class="w-full py-3 rounded-xl border text-[#27301B] hover:bg-white/40 transition">
-        Quay lại
-    </button>
-</a>
+        </div>
 
-</div>
-
-</form>
-
-</div>
-
-</div>
-
-</div>
-
-</div>
+    </div>
 
 </div>
 
