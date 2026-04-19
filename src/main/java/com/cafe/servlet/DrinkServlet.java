@@ -113,6 +113,7 @@ public class DrinkServlet extends HttpServlet {
 
             loadPageData(req, page);
 
+            req.setAttribute("error", "Vui lòng kiểm tra lại thông tin nhập liệu!");
             req.setAttribute("oldName", name);
             req.setAttribute("oldPrice", priceStr);
             req.setAttribute("oldCategory", categoryId);
@@ -125,6 +126,7 @@ public class DrinkServlet extends HttpServlet {
         // ===== CHECK TRÙNG =====
         if (DAO.isNameExists(name)) {
 
+            req.setAttribute("error", "Tên đồ uống đã tồn tại trong hệ thống!");
             req.setAttribute("errorName", "Tên đồ uống đã tồn tại!");
 
             loadPageData(req, page);
@@ -142,7 +144,12 @@ public class DrinkServlet extends HttpServlet {
         Drink d = getData(req);
         d.setPrice(price); // dùng giá đã validate
 
-        DAO.create(d);
+        int result = DAO.create(d);
+        if (result > 0) {
+            req.getSession().setAttribute("message", "Thêm đồ uống mới thành công!");
+        } else {
+            req.getSession().setAttribute("error", "Không thể thêm đồ uống. Vui lòng thử lại!");
+        }
 
         resp.sendRedirect(req.getContextPath() + "/manager/drinks?page=" + page);
     }
@@ -205,11 +212,23 @@ public class DrinkServlet extends HttpServlet {
         }
 
         // ===== UPDATE =====
+        Drink oldDrink = DAO.findById(id); // Lấy dữ liệu cũ để giữ lại ảnh nếu không thay đổi
         Drink d = getData(req);
         d.setId(id);
         d.setPrice(price);
-        d.setActive(active); // 🔥 thêm dòng này
-        DAO.update(d);
+        d.setActive(active); 
+        
+        // Nếu không có ảnh mới, giữ lại ảnh cũ
+        if (d.getImage() == null || d.getImage().isEmpty()) {
+            d.setImage(oldDrink.getImage());
+        }
+        
+        int result = DAO.update(d);
+        if (result > 0) {
+            req.getSession().setAttribute("message", "Cập nhật đồ uống thành công!");
+        } else {
+            req.getSession().setAttribute("error", "Không thể cập nhật đồ uống!");
+        }
 
         resp.sendRedirect(req.getContextPath() + "/manager/drinks?page=" + page);
     }
