@@ -102,7 +102,7 @@
                 <!-- SEARCH -->
                 <form method="get"
                       action="${pageContext.request.contextPath}/manager/categories"
-                      class="grid grid-cols-1 md:grid-cols-3 gap-4 items-end mb-8">
+                      class="grid grid-cols-1 md:grid-cols-4 gap-4 items-end mb-8">
 
                     <div>
                         <label class="block text-sm text-[#41521E] mb-1">Tìm theo tên loại</label>
@@ -122,12 +122,21 @@
                         </select>
                     </div>
 
-                    <div>
+                    <div class="flex gap-2">
                         <button type="submit"
-                                class="w-full text-white py-2 rounded-lg hover:scale-105 transition shadow-lg"
+                                class="flex-1 text-white py-2 rounded-lg hover:scale-105 transition shadow-lg"
                                 style="background:#41521E;">
                             Tìm kiếm
                         </button>
+                        
+                        <a href="${pageContext.request.contextPath}/manager/categories"
+                           class="flex-1 text-white py-2 rounded-lg hover:scale-105 transition shadow-lg text-center flex items-center justify-center gap-2"
+                           style="background:#6b7280;">
+                            <svg xmlns="http://www.w3.org/2000/svg" class="h-4 w-4" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 004.582 9m0 0H9m11 11v-5h-.581m0 0a8.003 8.003 0 01-15.357-2m15.357 2H15" />
+                            </svg>
+                            Làm mới
+                        </a>
                     </div>
 
                 </form>
@@ -139,7 +148,7 @@
 
                         <thead style="background:rgba(65,82,30,0.2);" class="text-[#27301B] text-sm">
                         <tr>
-                            <th class="py-3">ID</th>
+                            <th class="py-3">STT</th>
                             <th>Tên</th>
                             <th>Trạng thái</th>
                             <th>Hành động</th>
@@ -148,10 +157,10 @@
 
                         <tbody class="text-center text-sm">
 
-                        <c:forEach var="item" items="${list}">
+                        <c:forEach var="item" items="${list}" varStatus="status">
                             <tr class="border-t border-white/20 hover:bg-white/10 transition">
 
-                                <td class="py-3">${item.id}</td>
+                                <td class="py-3 font-semibold">${status.index + 1}</td>
 
                                 <td>${item.name}</td>
 
