@@ -14,7 +14,7 @@
 
   <!-- ================= FILTER ================= -->
 
-  <!-- 1. UTF-8 (BẮT BUỘC chạy đầu tiên) -->
+
   <filter>
     <filter-name>EncodingFilter</filter-name>
     <filter-class>com.cafe.filter.CharacterEncodingFilter</filter-class>
@@ -24,7 +24,7 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
-  <!-- 2. RATE LIMIT (chặn spam sớm) -->
+
   <filter>
     <filter-name>RateLimitFilter</filter-name>
     <filter-class>com.cafe.filter.RateLimitingFilter</filter-class>
@@ -34,7 +34,7 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
-  <!-- 3. AUTH / LOGIN -->
+
   <filter>
     <filter-name>LoginFilter</filter-name>
     <filter-class>com.cafe.filter.FilterLogin</filter-class>
@@ -44,7 +44,7 @@
     <url-pattern>/*</url-pattern>
   </filter-mapping>
 
-  <!-- ❌ KHÔNG cần FilterError nữa vì đã dùng error-page -->
+
 
   <!-- ================= ERROR HANDLER ================= -->
   <error-page>
